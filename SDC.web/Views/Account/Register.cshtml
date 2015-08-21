@@ -1,0 +1,44 @@
+﻿@model SDC.web.Models.RegisterModel
+
+@{
+    ViewBag.Title = "Register";
+}
+
+<div class="login-box">
+    <div class="login-logo"><b>SCHIMB</b>de<b>CARTE</b></div>
+
+    <div class="login-box-body">
+        <p class="login-box-msg">Register a new membership</p>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-group has-feedback">
+                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = "Username" })
+                <span class="glyphicon glyphicon-user form-control-feedback" />
+            </div>
+
+            <div class="form-group has-feedback">
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password" })
+                <span class="glyphicon glyphicon-lock form-control-feedback" />
+            </div>
+
+            <div class="form-group has-feedback">
+                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Repeat password" })
+                <span class="glyphicon glyphicon-lock form-control-feedback" />
+            </div>
+
+            <div class="row">
+                <div class="col-xs-8">
+                </div>
+                <div class="col-xs-4">
+                    <button type="submit" class="btn btn-primary btn-block btn-flat">Register</button>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+
+

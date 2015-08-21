@@ -1,0 +1,17 @@
+﻿
+@{
+    ViewBag.Title = "_LoginPartial";
+}
+
+<!-- Navbar Right Menu -->
+<div class="navbar-custom-menu">
+    <ul class="nav navbar-nav">
+        <li class="dropdown">
+            @Html.ActionLink("Login", "Login", "Account")
+        </li>
+
+        <li class="dropdown">
+            @Html.ActionLink("New member", "Register", "Account")
+        </li>
+    </ul>
+</div>

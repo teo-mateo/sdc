@@ -1,0 +1,40 @@
+﻿@model SDC.web.Models.LoginModel
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<div class="login-box">
+    <div class="login-logo"><b>SCHIMB</b>de<b>CARTE</b></div>
+
+    <div class="login-box-body">
+        <p class="login-box-msg">Sign in to start your session</p>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-group has-feedback">
+                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = "Username" })
+                <span class="glyphicon glyphicon-user form-control-feedback" />
+            </div>
+
+            <div class="form-group has-feedback">
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password" })
+                <span class="glyphicon glyphicon-lock form-control-feedback" />
+            </div>
+
+            <div class="row">
+                <div class="col-xs-8">
+                    <input type="checkbox" /> Remember me
+                </div>
+                <div class="col-xs-4">
+                    <button type="submit" class="btn btn-primary btn-block btn-flat">Sign in</button>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+
+
