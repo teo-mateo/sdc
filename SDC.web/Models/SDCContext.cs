@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SDC.web.Models.Audit;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -14,5 +15,7 @@ namespace SDC.web.Models
         }
 
         public DbSet<UserProfile> UserProfiles { get; set; }
+        public DbSet<LogInTrace> LogInTraces { get; set; }
+        public DbSet<Avatar> Avatars { get; set; }
     }
 }

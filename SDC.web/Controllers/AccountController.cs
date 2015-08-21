@@ -2,6 +2,7 @@
 using Microsoft.Web.WebPages.OAuth;
 using SDC.web.Filters;
 using SDC.web.Models;
+using SDC.web.Models.Audit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,14 +18,79 @@ namespace SDC.web.Controllers
     [InitializeSimpleMembership]
     public class AccountController : Controller
     {
+        private void SaveLoginTrace(string userName)
+        {
+            //save log in trace
+
+            using (var db = new SDCContext())
+            {
+                var profile = db.UserProfiles.First(p => p.UserName == userName);
+
+                string ip = this.Request.ServerVariables["REMOTE_ADDR"];
+                var trace = new LogInTrace()
+                {
+                    User = profile,
+                    Timestamp = DateTime.Now,
+                    IPAddress = ip
+                };
+
+                db.LogInTraces.Add(trace);
+                db.SaveChanges();
+            }
+        }
+
         //
         // GET: /Account/Login
 
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl)
+        public ActionResult Login()
         {
-            ViewBag.ReturnUrl = returnUrl;
             return View();
+        }
+
+        /// <summary>
+        /// used to render the top-left panel showing the user avatar
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult UserPanel()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                using (var db = new SDCContext())
+                {
+                    var profile = db.UserProfiles
+                        .Include("Avatar")
+                        .First(p => p.UserName == User.Identity.Name);
+
+                    if (profile.Avatar == null)
+                        profile.Avatar = new Avatar() { Url = "/Content/dist/img/default.png" };
+
+                    return PartialView("_SidebarUserPanelPartial", profile);
+                }
+            }
+            else
+            {
+                return PartialView("_SidebarNoUserPanelPartial");
+            }
+        }
+
+        /// <summary>
+        /// used to render the partial view of top-right with the controls related to the user account.
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult UserControls()
+        {
+            using (var db = new SDCContext())
+            {
+                var profile = db.UserProfiles
+                    .Include("Avatar")
+                    .First(p => p.UserName == User.Identity.Name);
+
+                if (profile.Avatar == null)
+                    profile.Avatar = new Avatar() { Url = "/Content/dist/img/default.png" };
+
+                return PartialView("_UserControls", profile);
+            }
         }
 
         //
@@ -33,11 +99,12 @@ namespace SDC.web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(LoginModel model, string returnUrl)
+        public ActionResult Login(LoginModel model)
         {
             if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
             {
-                return RedirectToLocal(returnUrl);
+                SaveLoginTrace(model.UserName);
+                return RedirectToAction("Index", "Home");
             }
 
             // If we got this far, something failed, redisplay form
@@ -80,7 +147,11 @@ namespace SDC.web.Controllers
                 try
                 {
                     WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
-                    WebSecurity.Login(model.UserName, model.Password);
+                    if(WebSecurity.Login(model.UserName, model.Password))
+                    {
+                        SaveLoginTrace(model.UserName);
+                    }
+                    
                     return RedirectToAction("Index", "Home");
                 }
                 catch (MembershipCreateUserException e)

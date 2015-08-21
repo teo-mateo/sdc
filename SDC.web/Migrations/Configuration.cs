@@ -10,6 +10,7 @@ namespace SDC.web.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
         }
 
         protected override void Seed(SDC.web.Models.SDCContext context)
