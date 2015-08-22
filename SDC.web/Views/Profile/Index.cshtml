@@ -1,0 +1,33 @@
+﻿@model SDC.web.Models.UserProfile
+
+@{
+    ViewBag.Title = "Index";
+}
+<div>
+    <h4>UserProfile</h4>
+    <hr />
+ 
+    <!-- Custom Tabs -->
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab_1" data-toggle="tab">Profile</a></li>
+            <li><a href="#tab_2" data-toggle="tab">Privacy</a></li>
+            <li><a href="#tab_3" data-toggle="tab">Notifications</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab_1">
+                <p>General details</p>
+                <div class="form-group">
+                    @Html.LabelFor(p=>p.UserId, new { @class = "col-sm-2" })
+                </div>
+            </div>
+            <div class="tab-pane" id="tab_2">
+                <b>Privacy</b>
+            </div><!-- /.tab-pane -->
+            <div class="tab-pane" id="tab_3">
+                <b>Notifications</b>
+            </div><!-- /.tab-pane -->
+        </div><!-- /.tab-content -->
+    </div><!-- nav-tabs-custom -->
+
+</div>

@@ -22,8 +22,16 @@ namespace SDC.web.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
-            var profile = db.UserProfiles.First(p => p.UserName == User.Identity.Name);
-            return View(profile);
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Redirect("/");
+            }
+            else
+            {
+                var profile = db.UserProfiles.First(p => p.UserName == User.Identity.Name);
+                return View(profile);
+            }
+            
         }
     }
 }
