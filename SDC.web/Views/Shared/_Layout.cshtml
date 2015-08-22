@@ -25,6 +25,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
     -->
     <link rel="stylesheet" href="~/Content/dist/css/skins/skin-blue.min.css">
 
+    <!-- site-specific css-->
+    <link rel="stylesheet" href="~/Content/Site.css">
+
     <!-- REQUIRED JS SCRIPTS -->
     <!-- jQuery 2.1.4 -->
     <script src="~/Content/plugins/jQuery/jQuery-2.1.4.min.js"></script>
@@ -133,13 +136,14 @@ desired effect
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
             <section class="content-header">
-                @RenderBody()
+                
             </section>
 
             <!-- Main content -->
             <section class="content">
-
                 <!-- Your Page Content Here -->
+                @RenderBody()
+
 
             </section><!-- /.content -->
         </div><!-- /.content-wrapper -->
@@ -150,7 +154,7 @@ desired effect
                 Anything you want
             </div>
             <!-- Default to the left -->
-            <strong>Copyright &copy; 2015 <a href="#">S.C. HEAPZILLA SRL</a>.</strong> All rights reserved.
+            <strong>Copyright &copy; 2015 <a href="#"></a>.</strong> All rights reserved.
         </footer>
 
         <!-- Control Sidebar -->

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDC.web", "SDC.web\SDC.web.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDC.Library", "SDC.Library\SDC.Library.csproj", "{54BB2F49-FC1A-4226-A45D-94426DAAA5BE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDC.Tests", "SDC.Tests\SDC.Tests.csproj", "{AECF442A-B756-49A5-995F-0A67C037DB0D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{54BB2F49-FC1A-4226-A45D-94426DAAA5BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54BB2F49-FC1A-4226-A45D-94426DAAA5BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54BB2F49-FC1A-4226-A45D-94426DAAA5BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AECF442A-B756-49A5-995F-0A67C037DB0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AECF442A-B756-49A5-995F-0A67C037DB0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AECF442A-B756-49A5-995F-0A67C037DB0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AECF442A-B756-49A5-995F-0A67C037DB0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

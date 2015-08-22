@@ -16,3 +16,6 @@ textarea {
     max-width: 280px;
 }
 
+.row-spaced{
+    margin-top: 5px;
+}

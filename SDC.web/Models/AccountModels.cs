@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SDC.web.Models.Location;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -22,6 +23,10 @@ namespace SDC.web.Models
         public DateTime LastSeen { get; set; }
         public bool IsLocked { get; set; }
         public Avatar Avatar { get; set; }
+        public City City { get; set; }
+
+        public bool ShowEmail { get; set; }
+       
     }
 
     public class RegisterExternalLoginModel

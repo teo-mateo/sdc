@@ -1,33 +1,164 @@
-﻿@model SDC.web.Models.UserProfile
+﻿@model SDC.web.ViewModels.UserProfileViewModel
 
 @{
     ViewBag.Title = "Index";
 }
-<div>
-    <h4>UserProfile</h4>
-    <hr />
+
+
+
+<h4>UserProfile: @Model.UserName</h4>
+<hr />
  
-    <!-- Custom Tabs -->
-    <div class="nav-tabs-custom">
-        <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab_1" data-toggle="tab">Profile</a></li>
-            <li><a href="#tab_2" data-toggle="tab">Privacy</a></li>
-            <li><a href="#tab_3" data-toggle="tab">Notifications</a></li>
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane active" id="tab_1">
-                <p>General details</p>
-                <div class="form-group">
-                    @Html.LabelFor(p=>p.UserId, new { @class = "col-sm-2" })
+<!-- Custom Tabs -->
+<div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+        <li id="tabProfile" class="active"><a href="#Profile" data-toggle="tab">Profile</a></li>
+        <li id="tabPrivacy"><a href="#Privacy" data-toggle="tab">Privacy</a></li>
+        <li id="tabNotifications"><a href="#Notifications" data-toggle="tab">Notifications</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="Profile">
+            <div class="row row-spaced">
+                <div class="col-sm-3"><strong>Id:</strong></div>
+                <div class="col-sm-9">@Model.UserId</div>
+            </div>
+            <div class="row row-spaced">
+                <div class="col-sm-3"><strong>User name:</strong></div>
+                <div class="col-sm-3">@Model.UserName</div>
+                <div class="col-sm-6"><a href="/Profile/ChangePassword">change password</a></div>
+            </div>
+            <div class="row row-spaced">
+                <div class="col-sm-3"><strong>E-mail:</strong></div>
+                <div class="col-sm-3">@Model.Email</div>
+                <div class="col-sm-6"><a href="/Profile/ChangeEmail">change e-mail</a></div>
+            </div>
+            <div class="row row-spaced">
+                <div class="col-sm-3"><strong>Avatar:</strong></div>
+                <img src="@Model.Avatar.Url" class="col-sm-2" />
+                <div class="col-sm-7"></div>
+            </div>
+            <div class="row row-spaced">
+                <div class="col-sm-3"></div>
+                <div class="dropdown col-sm-2">
+                    <button class="btn flat dropdown-toggle"
+                            type="button" id="dropdownAvatars"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="true">
+                        <span>Choose</span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu"
+                        aria-labelledby="dropdownAvatars">
+                        @foreach (var avatar in Model.DefaultAvatars)
+                        {
+                            <li>
+                                <a href="@Url.Action("ChangeAvatar", "Profile", new { avatarId = avatar.Id})">
+                                    <img src="@avatar.Url" width="30" height="30" />
+                                    <span>Avatar @avatar.Id</span>
+                                </a>
+                            </li>
+                        }
+                    </ul>
                 </div>
             </div>
-            <div class="tab-pane" id="tab_2">
-                <b>Privacy</b>
-            </div><!-- /.tab-pane -->
-            <div class="tab-pane" id="tab_3">
-                <b>Notifications</b>
-            </div><!-- /.tab-pane -->
-        </div><!-- /.tab-content -->
-    </div><!-- nav-tabs-custom -->
 
-</div>
+            <div class="row row-spaced">
+                <div class="col-sm-3"><strong>City:</strong></div>
+                <div class="dropdown col-sm-2">
+                    <button class="btn flat dropdown-toggle"
+                            type="button" id="dropdownCities"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="true">
+                        @if (Model.City.Id == 0)
+                        {
+                            <span>Choose</span>
+                            <span class="caret"></span>
+                        }
+                        else
+                        {
+                            <span>@Model.City.Name</span>
+                            <span class="caret"></span>
+                        }
+                    </button>
+                    <ul class="dropdown-menu"
+                        aria-labelledby="dropdownCities">
+                        @foreach(var city in Model.AllCities)
+                        {
+                            <li>
+                                <a href="@Url.Action("ChangeCity", "Profile", new { cityId = city.Id })">
+                                @city.Name
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row row-spaced">
+                <div class="col-sm-3"><strong>Member since:</strong></div>
+                <div class="col-sm-9">12-12-2012</div>
+            </div>
+
+            <div class="row row-spaced">
+                <div class="col-sm-3"><strong>Bookshelves:</strong></div>
+                <div class="col-sm-3">3</div>
+                <div class="col-sm-6">
+                    <a href="#">manage shelves</a>
+                </div>
+            </div>
+
+            <div class="row row-spaced">
+                <div class="col-sm-3"><strong>Books:</strong></div>
+                <div class="col-sm-9">25</div>
+            </div>
+
+            <div class="row row-spaced">
+                <div class="col-sm-3"><strong>Rating:</strong></div>
+                <div class="col-sm-9">4.5</div>
+            </div>
+
+        </div>
+        <div class="tab-pane" id="Privacy">
+            @using (Html.BeginForm("SavePrivacyChanges", "Profile"))
+            { 
+                <div class="row row-spaced">
+                    <div class="col-sm-12">
+                        @Html.CheckBoxFor(m => m.ShowEmail)
+                        @Html.HiddenFor(m => m.UserId)
+                        <span>Show Email to other users</span>
+                    </div>
+                </div>
+
+                <div class="row row-spaced">
+                    <div class="col-sm-12">
+                        <button type="submit" class="btn btn-danger pull-right">Save changes</button>
+                    </div>
+                        
+                </div>
+            }
+        </div><!-- /.tab-pane -->
+        <div class="tab-pane" id="Notifications">
+            <b>Notifications</b>
+        </div><!-- /.tab-pane -->
+    </div><!-- /.tab-content -->
+</div><!-- nav-tabs-custom -->
+
+
+<script>
+var url = document.location.toString();
+if (url.match("#")) {
+    var tab = url.split('#')[1];
+    var q = $('#tab'+tab);
+    q.find('a[data-toggle="tab"]').click();
+}
+
+
+$(function () {
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var target = $(e.target).attr("href") // activated tab
+        window.location.hash = target;
+    });
+});
+</script>
