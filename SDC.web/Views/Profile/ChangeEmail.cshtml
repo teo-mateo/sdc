@@ -1,8 +1,53 @@
-﻿
+﻿@model SDC.web.Models.Profile.ChangeEmailModel
 
-@{
-    ViewBag.Title = "ChangeEmail";
-}
+<h4>Change your E-mail</h4>
+<hr />
 
-<h2>ChangeEmail</h2>
+<!-- Custom Tabs -->
+<div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#">Change password</a></li>
+    </ul>
+    <div class="tab-content">
+
+        @if (Model.UserMessage != null)
+        {
+            <div class="alert alert-warning">
+                <a href="#" class="close" data-dissmiss="alert">&times;</a>
+                @Model.UserMessage
+            </div>
+        }
+
+        @using (Html.BeginForm("ChangeEmail", "Profile"))
+        {
+            <div class="row row-spaced">
+                <div class="col-sm-3"><strong>Password:</strong></div>
+                <div class="col-sm-9">
+                    @Html.PasswordFor(m => m.Password)
+                </div>
+            </div>
+
+            <div class="row row-spaced">
+                <div class="col-sm-3"><strong>E-mail:</strong></div>
+                <div class="col-sm-9">
+                    @Html.EditorFor(m => m.Email)
+                </div>
+            </div>
+
+            <div class="row row-spaced">
+                <div class="col-sm-12">
+                    <div class="pull-right">
+
+                        <button type="submit" class="btn btn-danger">Save changes</button>
+                        <a href="@Url.Action("Index", "Profile")"
+                           class="btn btn-primary">Go back</a>
+                    </div>
+
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
 

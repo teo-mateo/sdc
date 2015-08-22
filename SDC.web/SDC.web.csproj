@@ -989,6 +989,7 @@
     <Compile Include="Models\Audit\LogInTrace.cs" />
     <Compile Include="Models\Location\Country.cs" />
     <Compile Include="Models\MyHub1.cs" />
+    <Compile Include="Models\Profile\ChangeEmailModel.cs" />
     <Compile Include="Models\Profile\ChangePasswordModel.cs" />
     <Compile Include="Models\Roles.cs" />
     <Compile Include="Models\SDCContext.cs" />
@@ -1029,6 +1030,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\Uploads\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SDC.Library\SDC.Library.csproj">

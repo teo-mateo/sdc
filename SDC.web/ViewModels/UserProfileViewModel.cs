@@ -2,6 +2,7 @@
 using SDC.web.Models.Location;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -17,6 +18,11 @@ namespace SDC.web.ViewModels
         public Avatar Avatar { get; set; }
         public string ComputedProperty { get; set; }
         public City City { get; set; }
+        public Avatar CustomAvatar { get; set; }
+
+
+        [DataType(DataType.Upload)]
+        public HttpPostedFileBase ImageUpload { get; set; }
 
         public bool ShowEmail { get; set; }
 

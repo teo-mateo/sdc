@@ -39,7 +39,7 @@
             </div>
             <div class="row row-spaced">
                 <div class="col-sm-3"></div>
-                <div class="dropdown col-sm-2">
+                <div class="dropdown col-sm-3">
                     <button class="btn flat dropdown-toggle"
                             type="button" id="dropdownAvatars"
                             data-toggle="dropdown"
@@ -50,6 +50,17 @@
                     </button>
                     <ul class="dropdown-menu"
                         aria-labelledby="dropdownAvatars">
+
+                        @if(Model.CustomAvatar != null)
+                        {
+                            <li>
+                                <a href="@Url.Action("ChangeAvatar", "Profile", new { avatarId = Model.CustomAvatar.Id})">
+                                    <img src="@Model.CustomAvatar.Url" width="30" height="30" />
+                                    <span>Custom</span>
+                                </a>
+                            </li>
+                        }
+
                         @foreach (var avatar in Model.DefaultAvatars)
                         {
                             <li>
@@ -60,6 +71,13 @@
                             </li>
                         }
                     </ul>
+                </div>
+                <div class="col-sm-6">
+                    @using(Html.BeginForm("UploadAvatar", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <input type="file" name="ImageUpload" id="ImageUpload"/>
+                        <button type="submit" class="btn btn-primary btn-xs">Upload</button>
+                    }
                 </div>
             </div>
 
