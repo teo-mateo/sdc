@@ -1,16 +1,15 @@
-using System;
-using System.Data.Entity;
-using System.Data.Entity.Migrations;
-using System.Linq;
-
 namespace SDC.web.Migrations
 {
+    using System;
+    using System.Data.Entity;
+    using System.Data.Entity.Migrations;
+    using System.Linq;
+
     internal sealed class Configuration : DbMigrationsConfiguration<SDC.web.Models.SDCContext>
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
-            AutomaticMigrationDataLossAllowed = true;
+            AutomaticMigrationsEnabled = false;
         }
 
         protected override void Seed(SDC.web.Models.SDCContext context)

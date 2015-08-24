@@ -20,23 +20,26 @@ namespace SDC.web.Controllers
     {
         private void SaveLoginTrace(string userName)
         {
-            //save log in trace
-
             using (var db = new SDCContext())
             {
-                var profile = db.UserProfiles.First(p => p.UserName == userName);
-
-                string ip = this.Request.ServerVariables["REMOTE_ADDR"];
-                var trace = new LogInTrace()
-                {
-                    User = profile,
-                    Timestamp = DateTime.Now,
-                    IPAddress = ip
-                };
-
-                db.LogInTraces.Add(trace);
-                db.SaveChanges();
+                SaveLoginTrace(userName, db);
             }
+        }
+        
+        private void SaveLoginTrace(string userName, SDCContext db)
+        {
+            var profile = db.UserProfiles.First(p => p.UserName == userName);
+
+            string ip = this.Request.ServerVariables["REMOTE_ADDR"];
+            var trace = new LogInTrace()
+            {
+                User = profile,
+                Timestamp = DateTime.Now,
+                IPAddress = ip
+            };
+
+            db.LogInTraces.Add(trace);
+            db.SaveChanges();
         }
 
         //
@@ -130,7 +133,8 @@ namespace SDC.web.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+            var v = View("Register");
+            return v;
         }
 
         //
@@ -146,13 +150,24 @@ namespace SDC.web.Controllers
                 // Attempt to register the user
                 try
                 {
-                    WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
-                    if(WebSecurity.Login(model.UserName, model.Password))
+                    using (var db = new SDCContext())
                     {
-                        SaveLoginTrace(model.UserName);
+                        var avatar = db.Avatars.Where(a => a.CustomForUserId == 0).OrderBy(a=>a.Id).First();
+
+                        WebSecurity.CreateUserAndAccount(model.UserName, model.Password, 
+                            new {
+                                Email = model.Email,
+                                Avatar_Id = avatar.Id // by default, use the first avatar that is available.
+                        });
+                        if (WebSecurity.Login(model.UserName, model.Password))
+                        {
+                            SaveLoginTrace(model.UserName, db);
+                        }
+
+                        return RedirectToAction("Index", "Home");
                     }
-                    
-                    return RedirectToAction("Index", "Home");
+
+
                 }
                 catch (MembershipCreateUserException e)
                 {

@@ -192,9 +192,9 @@
     <Content Include="Content\dist\css\skins\_all-skins.css" />
     <Content Include="Content\dist\css\skins\_all-skins.min.css" />
     <Content Include="Content\dist\img\avatar.png" />
-    <Content Include="Content\dist\img\avatar04.png" />
     <Content Include="Content\dist\img\avatar2.png" />
     <Content Include="Content\dist\img\avatar3.png" />
+    <Content Include="Content\dist\img\avatar4.png" />
     <Content Include="Content\dist\img\avatar5.png" />
     <Content Include="Content\dist\img\boxed-bg.jpg" />
     <Content Include="Content\dist\img\boxed-bg.png" />
@@ -206,6 +206,7 @@
     <Content Include="Content\dist\img\credit\paypal2.png" />
     <Content Include="Content\dist\img\credit\visa.png" />
     <Content Include="Content\dist\img\default-50x50.gif" />
+    <Content Include="Content\dist\img\default.png" />
     <Content Include="Content\dist\img\icons.png" />
     <Content Include="Content\dist\img\photo1.png" />
     <Content Include="Content\dist\img\photo2.png" />
@@ -967,6 +968,7 @@
     <Content Include="Content\plugins\datatables\extensions\TableTools\Readme.md" />
     <Content Include="Content\plugins\input-mask\phone-codes\phone-be.json" />
     <Content Include="Content\plugins\input-mask\phone-codes\phone-codes.json" />
+    <None Include="Properties\PublishProfiles\schimbdecarte.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -983,6 +985,10 @@
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508241350091_init.cs" />
+    <Compile Include="Migrations\201508241350091_init.Designer.cs">
+      <DependentUpon>201508241350091_init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountModels.cs" />
@@ -1037,6 +1043,11 @@
       <Project>{54bb2f49-fc1a-4226-a45d-94426daaa5be}</Project>
       <Name>SDC.Library</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201508241350091_init.resx">
+      <DependentUpon>201508241350091_init.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

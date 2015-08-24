@@ -73,7 +73,7 @@ desired effect
             <!-- Logo -->
             <a href="#" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini"><b>S</b>d<b>C</b></span>
+                <span class="logo-mini"><b>b</b>X<b>c</b></span>
                 <!-- logo for regular state and mobile devices -->
                 <span class="logo-lg"><b>book</b>X<b>change</b></span>
             </a>
@@ -101,8 +101,10 @@ desired effect
 
             <!-- sidebar: style can be found in sidebar.less -->
             <section class="sidebar">
-
-                @{Html.RenderAction("UserPanel", "Account");}
+                @if (User.Identity.IsAuthenticated)
+                {
+                    Html.RenderAction("UserPanel", "Account");
+                }
 
                 <!-- search form (Optional) -->
                 <form action="#" method="get" class="sidebar-form">

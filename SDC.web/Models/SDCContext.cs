@@ -11,7 +11,7 @@ namespace SDC.web.Models
     public class SDCContext : DbContext
     {
         public SDCContext()
-            : base("DefaultConnection")
+            : base(MvcApplication.GetConnectionString())
         {
         }
 
