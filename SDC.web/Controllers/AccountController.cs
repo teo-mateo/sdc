@@ -157,7 +157,8 @@ namespace SDC.web.Controllers
                         WebSecurity.CreateUserAndAccount(model.UserName, model.Password, 
                             new {
                                 Email = model.Email,
-                                Avatar_Id = avatar.Id // by default, use the first avatar that is available.
+                                Avatar_Id = avatar.Id, // by default, use the first avatar that is available.
+                                LastSeen = DateTime.Now
                         });
                         if (WebSecurity.Login(model.UserName, model.Password))
                         {
