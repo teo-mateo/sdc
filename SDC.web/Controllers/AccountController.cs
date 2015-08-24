@@ -60,17 +60,7 @@ namespace SDC.web.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                using (var db = new SDCContext())
-                {
-                    var profile = db.UserProfiles
-                        .Include("Avatar")
-                        .First(p => p.UserName == User.Identity.Name);
-
-                    if (profile.Avatar == null)
-                        profile.Avatar = new Avatar() { Url = "/Content/dist/img/default.png" };
-
-                    return PartialView("_SidebarUserPanelPartial", profile);
-                }
+                return PartialView("_SidebarUserPanelPartial", Session["UserInfo"]);
             }
             else
             {
@@ -107,6 +97,15 @@ namespace SDC.web.Controllers
         {
             if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
             {
+                using(var db = new SDCContext())
+                {
+                    var profile = db.UserProfiles
+                        .Include("Avatar")
+                        .First(p => p.UserName == model.UserName);
+                    profile.Role = Roles.GetRolesForUser(model.UserName)[0];
+                    Session["UserInfo"] = profile;
+                }
+
                 SaveLoginTrace(model.UserName);
                 return RedirectToAction("Index", "Home");
             }
@@ -170,6 +169,12 @@ namespace SDC.web.Controllers
                         if (WebSecurity.Login(model.UserName, model.Password))
                         {
                             SaveLoginTrace(model.UserName, db);
+
+                            var profile = db.UserProfiles
+                                .Include("Avatar")
+                                .First(p => p.UserName == model.UserName);
+                            profile.Role = Roles.GetRolesForUser(model.UserName)[0];
+                            Session["UserInfo"] = profile;
                         }
 
                         return RedirectToAction("Index", "Home");

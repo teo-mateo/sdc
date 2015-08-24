@@ -23,6 +23,8 @@ namespace SDC.web.ViewModels
         public string Password { get; set; }
         public string Message { get; set; }
 
+        public string Role { get; set; }
+
 
         [DataType(DataType.Upload)]
         public HttpPostedFileBase ImageUpload { get; set; }

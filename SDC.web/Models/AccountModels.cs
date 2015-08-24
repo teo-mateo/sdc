@@ -27,6 +27,9 @@ namespace SDC.web.Models
         public City City { get; set; }
 
         public bool ShowEmail { get; set; }
+
+        [NotMapped]
+        public string Role { get; set; }
        
     }
 
