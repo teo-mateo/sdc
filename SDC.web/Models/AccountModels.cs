@@ -20,6 +20,7 @@ namespace SDC.web.Models
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+        
         public DateTime LastSeen { get; set; }
         public bool IsLocked { get; set; }
         public Avatar Avatar { get; set; }

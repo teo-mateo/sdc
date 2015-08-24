@@ -5,7 +5,7 @@ using System.Web;
 
 namespace SDC.web.Models
 {
-    public static class Roles
+    public static class RolesCustom
     {
         public static readonly string USER = "user";
         public static readonly string CURATOR = "curator";

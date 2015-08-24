@@ -15,6 +15,7 @@
         <li id="tabProfile" class="active"><a href="#Profile" data-toggle="tab">Profile</a></li>
         <li id="tabPrivacy"><a href="#Privacy" data-toggle="tab">Privacy</a></li>
         <li id="tabNotifications"><a href="#Notifications" data-toggle="tab">Notifications</a></li>
+        <li id="tabDeleteProfile"><a href="#DeleteProfile" data-toggle="tab">Delete profile</a></li>
     </ul>
     <div class="tab-content">
         <div class="tab-pane active" id="Profile">
@@ -160,6 +161,25 @@
         <div class="tab-pane" id="Notifications">
             <b>Notifications</b>
         </div><!-- /.tab-pane -->
+        <div id="DeleteProfile" class="tab-pane">
+            <p>To delete your profile, please enter your password:</p>
+            
+                @using (Html.BeginForm("DeleteAccount", "Profile"))
+                {
+                    <div class="row row-spaced">
+                        <div class="col-sm-3"><strong>Password:</strong></div>
+                        <div class="col-sm-9">
+                            <input type="password" id="Password" name="Password" />
+                        </div>
+                    </div>
+
+                    <div class="row row-spaced">
+                        <div class="col-sm-12">
+                            <button type="submit" class="btn btn-danger pull-right">Delete profile</button>
+                        </div>
+                    </div>
+                }
+        </div>
     </div><!-- /.tab-content -->
 </div><!-- nav-tabs-custom -->
 

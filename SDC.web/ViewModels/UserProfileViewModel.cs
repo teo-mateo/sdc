@@ -20,6 +20,9 @@ namespace SDC.web.ViewModels
         public City City { get; set; }
         public Avatar CustomAvatar { get; set; }
 
+        public string Password { get; set; }
+        public string Message { get; set; }
+
 
         [DataType(DataType.Upload)]
         public HttpPostedFileBase ImageUpload { get; set; }

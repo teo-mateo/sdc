@@ -9,6 +9,8 @@ using System.Data.Entity;
 using System.Web.Security;
 using SDC.web.Models.Profile;
 using System.IO;
+using WebMatrix.WebData;
+using Microsoft.AspNet.Identity;
 
 namespace SDC.web.Controllers
 {
@@ -175,6 +177,64 @@ namespace SDC.web.Controllers
             model.Email = profile.Email;
 
             return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteAccount(UserProfileViewModel model)
+        {
+            try
+            {
+                if (Membership.ValidateUser(User.Identity.Name, model.Password))
+                {
+                    //delete profile and log out.
+                    using (var db = new SDCContext())
+                    using (var t = db.Database.BeginTransaction())
+                    {
+                        var profile = db.UserProfiles.First(p => p.UserName == User.Identity.Name);
+
+
+                        //delete login traces for this account
+                        var login_traces = db.LogInTraces.Where(p => p.User.UserId == profile.UserId).ToList();
+                        db.LogInTraces.RemoveRange(login_traces);
+                        //delete custom avatar
+                        var custom_avatar = db.Avatars.FirstOrDefault(p => p.CustomForUserId == profile.UserId);
+                        if (custom_avatar != null)
+                        {
+                            var relative_avatar_path = VirtualPathUtility.ToAppRelative(custom_avatar.Url);
+                            var path = Server.MapPath(relative_avatar_path);
+                            System.IO.File.Delete(path);
+                            db.Avatars.Remove(custom_avatar);
+                        }
+                            
+
+                        db.SaveChanges();
+                        t.Commit();
+
+
+                    }
+
+                    //delete user profile
+                    // I wonder if the transaction has anything to do with it... 
+                    Membership.DeleteUser(User.Identity.Name, true);
+                    WebSecurity.Logout();
+                }
+                else
+                {
+                    model.Message = "Enter your password to delete your account.";
+                    //redirect to /profile/index#privacy
+                    return Redirect(Url.RouteUrl(new
+                    {
+                        controller = "Profile",
+                        action = "Index"
+                    }) + "#DeleteProfile");
+                }
+            }
+            catch (Exception ex)
+            {
+                //todo: log this shit.
+            }
+
+            return Redirect("/");
         }
 
         [HttpPost]

@@ -3,6 +3,7 @@ using Microsoft.Web.WebPages.OAuth;
 using SDC.web.Filters;
 using SDC.web.Models;
 using SDC.web.Models.Audit;
+using SDC.web.Models.Profile;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -158,7 +159,10 @@ namespace SDC.web.Controllers
                             new {
                                 Email = model.Email,
                                 Avatar_Id = avatar.Id, // by default, use the first avatar that is available.
-                                LastSeen = DateTime.Now
+                                LastSeen = DateTime.Now,
+                                IsLocked = false,
+                                ShowEmail = false,
+                                City_Id = 1
                         });
                         if (WebSecurity.Login(model.UserName, model.Password))
                         {
@@ -179,6 +183,9 @@ namespace SDC.web.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
+
+
+
 
         //
         // POST: /Account/Disassociate
