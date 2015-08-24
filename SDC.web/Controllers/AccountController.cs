@@ -164,6 +164,9 @@ namespace SDC.web.Controllers
                                 ShowEmail = false,
                                 City_Id = 1
                         });
+
+                        Roles.AddUsersToRole(new string[] { model.UserName }, RolesCustom.USER);
+
                         if (WebSecurity.Login(model.UserName, model.Password))
                         {
                             SaveLoginTrace(model.UserName, db);
