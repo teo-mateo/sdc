@@ -1,8 +1,8 @@
 ﻿using DotNetOpenAuth.AspNet;
 using Microsoft.Web.WebPages.OAuth;
-using SDC.web.Filters;
 using SDC.web.Models;
 using SDC.web.Models.Audit;
+using SDC.web.Models.Books;
 using SDC.web.Models.Profile;
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,6 @@ using WebMatrix.WebData;
 namespace SDC.web.Controllers
 {
     [Authorize]
-    [InitializeSimpleMembership]
     public class AccountController : Controller
     {
         private void SaveLoginTrace(string userName)
@@ -68,6 +67,11 @@ namespace SDC.web.Controllers
             }
         }
 
+        public ActionResult SidebarMenu()
+        {
+            return PartialView("_SidebarMenu", Session["UserInfo"]);
+        }
+
         /// <summary>
         /// used to render the partial view of top-right with the controls related to the user account.
         /// </summary>
@@ -76,9 +80,7 @@ namespace SDC.web.Controllers
         {
             using (var db = new SDCContext())
             {
-                var profile = db.UserProfiles
-                    .Include("Avatar")
-                    .First(p => p.UserName == User.Identity.Name);
+                var profile = (UserProfile)this.Session["UserInfo"];
 
                 if (profile.Avatar == null)
                     profile.Avatar = new Avatar() { Url = "/Content/dist/img/default.png" };
@@ -168,11 +170,24 @@ namespace SDC.web.Controllers
 
                         if (WebSecurity.Login(model.UserName, model.Password))
                         {
-                            SaveLoginTrace(model.UserName, db);
-
                             var profile = db.UserProfiles
                                 .Include("Avatar")
                                 .First(p => p.UserName == model.UserName);
+
+                            //create default shelf
+                            Shelf defaultShelf = new Shelf()
+                            {
+                                CreationDate = DateTime.Now,
+                                Name = String.Format("{0}'s shelf", model.UserName),
+                                IsVisible = true,
+                                Owner = profile
+                            };
+                            db.Shelves.Add(defaultShelf);
+                            db.SaveChanges();
+
+                            SaveLoginTrace(model.UserName, db);
+
+
                             profile.Role = Roles.GetRolesForUser(model.UserName)[0];
                             Session["UserInfo"] = profile;
                         }

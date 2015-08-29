@@ -9,6 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDC.Library", "SDC.Library\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDC.Tests", "SDC.Tests\SDC.Tests.csproj", "{AECF442A-B756-49A5-995F-0A67C037DB0D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "etc", "etc", "{89BA8EB6-F6B6-4E6A-8620-8543E06225AF}"
+	ProjectSection(SolutionItems) = preProject
+		etc\membership.sql = etc\membership.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

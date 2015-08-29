@@ -1,4 +1,5 @@
 ﻿using SDC.web.Models.Audit;
+using SDC.web.Models.Books;
 using SDC.web.Models.Location;
 using System;
 using System.Collections.Generic;
@@ -20,5 +21,12 @@ namespace SDC.web.Models
         public DbSet<Avatar> Avatars { get; set; }
 
         public DbSet<City> Cities { get; set; }
+        
+        public DbSet<Shelf> Shelves { get; set; }
+        public DbSet<Author> Authors { get; set; }
+        public DbSet<Publisher> Publishers { get; set; }
+        public DbSet<Genre> Genres { get; set; }
+        public DbSet<Book> Books { get; set; }
+
     }
 }

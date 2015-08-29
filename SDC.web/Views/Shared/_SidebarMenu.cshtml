@@ -1,0 +1,64 @@
+﻿@model SDC.web.Models.UserProfile
+<!-- Sidebar Menu -->
+<ul class="sidebar-menu">
+    <li class="header">Areas</li>
+    <!-- Optionally, you can add icons to the links -->
+
+    <!-- ADMIN: 
+        Manage Users
+        CURATOR: 
+        Manage Books
+        USER:
+        My Shelves
+        -->
+
+    @if (Model.Role == SDC.web.Models.RolesCustom.ADMIN)
+    {
+        <li>
+            <a href="@Url.Action("Users", "Administration")">
+                <i class="fa fa-link"></i>
+                <span>Manage users</span>
+            </a>
+        </li>
+    }
+    else if (Model.Role == SDC.web.Models.RolesCustom.CURATOR)
+    {
+        <li>
+            <a href="@Url.Action("Books", "Maintenance")">
+                <i class="fa fa-link"></i>
+                <span>Manage books</span>
+            </a>
+        </li>
+    }
+
+    <li>
+        <a href="@Url.Action("Index", "Directory")">
+            <i class="fa fa-link"></i>
+            <span>Directory</span>
+        </a>
+    </li>    
+
+    <li>
+        <a href="@Url.Action("Index", "Shelves")">
+            <i class="fa fa-link"></i>
+            <span>My shelves</span>
+        </a>
+    </li>
+
+    <li>
+        <a href="@Url.Action("Index", "Exchanges")">
+            <i class="fa fa-link"></i>
+            <span>My exchanges</span>
+        </a>
+    </li>
+
+    <li>
+        <a href="@Url.Action("Index", "Wishlist")">
+            <i class="fa fa-link"></i>
+            <span>My wishlist</span>
+        </a>
+    </li>
+
+
+
+</ul><!-- /.sidebar-menu -->
