@@ -22,7 +22,7 @@
         //set up input values
         //show modal
         
-        $('#editShelfModal').find('#ShelfId').val(id);
+        $('#EditShelfId').val(id);
         $('#editShelfModal').find('#Name').val(name);
         $('#editShelfModal').find('#IsVisible').prop("checked", isVisible);
         $('#editShelfModal').modal('show');
@@ -32,9 +32,7 @@
 <h4>Shelves - Index</h4>
 <hr />
 
-<a class="btn btn-primary"
-   data-toggle="modal"
-   data-target="#newShelfModal">
+<a class="btn btn-primary" onclick="$('#newShelfModal').modal('show');">
     New shelf
 </a>
 
@@ -79,7 +77,11 @@
     </div>
 </div>
 
-<script>$('#newShelfModal').validate();</script>
+<script>
+    $('#newShelfModal').on('shown.bs.modal', function () {
+        $('#newShelfModal').find('#Name').focus();
+    });
+</script>
 
 <!-- edit shelf modal -->
 <div class="modal fade" id="editShelfModal" role="dialog">
@@ -87,7 +89,7 @@
         <div class="modal-content">
             @using (Html.BeginForm("EditShelf", "Shelves", FormMethod.Post))
             {
-                <input type="hidden" id="ShelfId" name="ShelfId" />
+                <input type="hidden" id="EditShelfId" name="EditShelfId" />
 
                 <div class="modal-header">
                     <div class="modal-title">
@@ -124,6 +126,12 @@
     </div>
 </div>
 
+<script>
+    $('#editShelfModal').on('shown.bs.modal', function () {
+        $('#editShelfModal').find('#Name').focus();
+    });
+</script>
+
 
 <table class="table table-hover table-striped">
     <thead>
@@ -144,7 +152,7 @@
                 </a>
             </td>
             <td>@shelf.BookCount</td>
-            <td>@shelf.IsVisible</td>
+            <td>@(shelf.IsVisible == true ? "yes" : "no")</td>
             <td>
                 <a href="#" onclick="deleteShelf('@shelf.Name', @shelf.Id);">
                     <span class="glyphicon glyphicon-trash"></span>
@@ -161,7 +169,8 @@
 
     @using (Html.BeginForm("DeleteShelf", "Shelves", FormMethod.Post, new { @id = "deleteShelfForm" }))
     {
-        @Html.HiddenFor(m=>m.ShelfId)
+        <input type="hidden" id="DeleteShelfId" name="DeleteShelfId" />
+        
         
     }
 

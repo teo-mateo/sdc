@@ -79,7 +79,7 @@ namespace SDC.web.Controllers
             if (String.IsNullOrEmpty(model.Name))
                 return RedirectToAction("Index");
 
-            int id = model.ShelfId;
+            int id = model.EditShelfId;
             using(var db = new SDCContext())
             {
                 var shelf = db.Shelves.Find(id);
@@ -105,7 +105,7 @@ namespace SDC.web.Controllers
         [HttpPost]
         public ActionResult DeleteShelf(ShelvesViewModel model)
         {
-            int id = model.ShelfId;
+            int id = model.DeleteShelfId;
             using (var db = new SDCContext())
             {
                 //sanity check: this shelf exists.

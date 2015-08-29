@@ -11,7 +11,8 @@ namespace SDC.web.ViewModels
         public List<ShelfViewModel> Shelves { get; set; }
         public string Name { get; set; }
         public bool IsVisible { get; set; }
-        public int ShelfId { get; set; }
+        public int EditShelfId { get; set; }
+        public int DeleteShelfId { get; set; }
         public string Message { get; set; }
     }
 }
