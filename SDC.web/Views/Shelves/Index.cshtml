@@ -1,0 +1,168 @@
+﻿@model SDC.web.ViewModels.ShelvesViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<script type="text/javascript">
+    function deleteShelf(name, id) {
+        bootbox.confirm(
+            "Are you sure you want to delete the shelf <strong>\""+ name +"\" </strong> and all the books it contains?",
+            function (result) {
+                if (result) {
+
+                    $('#DeleteShelfId').val(id);
+                    $('#deleteShelfForm').submit();
+                }
+            });
+        return false;
+    }
+
+    function editShelf(name, isVisible, id) {
+        //set up input values
+        //show modal
+        
+        $('#editShelfModal').find('#ShelfId').val(id);
+        $('#editShelfModal').find('#Name').val(name);
+        $('#editShelfModal').find('#IsVisible').prop("checked", isVisible);
+        $('#editShelfModal').modal('show');
+    }
+</script>
+
+<h4>Shelves - Index</h4>
+<hr />
+
+<a class="btn btn-primary"
+   data-toggle="modal"
+   data-target="#newShelfModal">
+    New shelf
+</a>
+
+<!-- new shelf modal -->
+<div class="modal fade" id="newShelfModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm("NewShelf", "Shelves", FormMethod.Post))
+            {
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <h4>Create a new shelf</h4>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Name:</label>
+                            <div class="col-sm-9">
+                                @Html.TextBoxFor(m => m.Name, new { required = "required", @class="form-control"})
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Visible to others:</label> 
+                            <div class="col-sm-9">
+                                @Html.CheckBoxFor(m=>m.IsVisible)
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="btn-toolbar">
+                        <button type="button" class="btn btn-default pull-right" onclick="$('#newShelfModal').modal('hide');">Go back</button> 
+                        <button type="submit" class="btn btn-primary pull-right">Save changes</button>   
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>$('#newShelfModal').validate();</script>
+
+<!-- edit shelf modal -->
+<div class="modal fade" id="editShelfModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm("EditShelf", "Shelves", FormMethod.Post))
+            {
+                <input type="hidden" id="ShelfId" name="ShelfId" />
+
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <h4>Edit shelf</h4>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Name:</label>
+                            <div class="col-sm-9">
+                                @Html.TextBoxFor(m => m.Name, new { required = "required", @class="form-control"})
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Visible to others:</label>
+                            <div class="col-sm-9">
+                                @Html.CheckBoxFor(m=>m.IsVisible)
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="btn-toolbar">
+                        <button type="button" class="btn btn-default pull-right" onclick="$('#editShelfModal').modal('hide');">Go back</button>
+                        <button type="submit" class="btn btn-primary pull-right">Save changes</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <td><strong>Name</strong></td>
+            <td><strong>Books</strong></td>
+            <td><strong>Visible to others?</strong></td>
+            <td>Actions</td>
+        </tr>
+    </thead>
+
+    @foreach(var shelf in Model.Shelves)
+    {
+        <tr>
+            <td>
+                <a href="@Url.Action("Details", new { id = shelf.Id })">
+                @shelf.Name
+                </a>
+            </td>
+            <td>@shelf.BookCount</td>
+            <td>@shelf.IsVisible</td>
+            <td>
+                <a href="#" onclick="deleteShelf('@shelf.Name', @shelf.Id);">
+                    <span class="glyphicon glyphicon-trash"></span>
+                    <span>Delete</span>
+                </a>
+                |
+                <a href="#" onclick="editShelf('@shelf.Name', @shelf.IsVisible.ToString().ToLower(), @shelf.Id);">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                    <span>Edit</span>
+                </a>
+            </td>
+        </tr>
+    }
+
+    @using (Html.BeginForm("DeleteShelf", "Shelves", FormMethod.Post, new { @id = "deleteShelfForm" }))
+    {
+        @Html.HiddenFor(m=>m.ShelfId)
+        
+    }
+
+</table>

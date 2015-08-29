@@ -50,14 +50,19 @@ namespace SDC.web.Controllers
         [HttpPost]
         public ActionResult NewShelf(ShelvesViewModel model)
         {
+            if (String.IsNullOrEmpty(model.Name))
+            {
+                return RedirectToAction("Index");
+            }
+
             //save
             using(var db = new SDCContext())
             {
                 Shelf newShelf = new Shelf()
                 {
                     CreationDate = DateTime.Now,
-                    Name = model.NewShelfName,
-                    IsVisible = true,
+                    Name = model.Name,
+                    IsVisible = model.IsVisible,
                     Owner = db.UserProfiles.Find(((UserProfile)Session["UserInfo"]).UserId)
                 };
 
@@ -69,24 +74,48 @@ namespace SDC.web.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteShelf(ShelvesViewModel model)
+        public ActionResult EditShelf(ShelvesViewModel model)
         {
-            int id = model.DeleteShelfId;
+            if (String.IsNullOrEmpty(model.Name))
+                return RedirectToAction("Index");
 
-            //first, check that the user owns the shelf.
-            using (var db = new SDCContext())
+            int id = model.ShelfId;
+            using(var db = new SDCContext())
             {
                 var shelf = db.Shelves.Find(id);
                 if (shelf == null)
                     return RedirectToAction("Index");
 
                 var userProfile = (UserProfile)this.Session["UserInfo"];
+                if (shelf.CanBeEdited(userProfile))
+                {
+                    shelf.Name = model.Name;
+                    shelf.IsVisible = model.IsVisible;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return RedirectToAction("Index");
+                }
+            }
 
-                bool userIsOwner = shelf.Owner.UserId == userProfile.UserId;
-                bool userIsCurator = (userProfile.Role == RolesCustom.CURATOR ||
-                    userProfile.Role == RolesCustom.ADMIN);
+        }
 
-                if (userIsOwner || userIsCurator)
+        [HttpPost]
+        public ActionResult DeleteShelf(ShelvesViewModel model)
+        {
+            int id = model.ShelfId;
+            using (var db = new SDCContext())
+            {
+                //sanity check: this shelf exists.
+                var shelf = db.Shelves.Find(id);
+                if (shelf == null)
+                    return RedirectToAction("Index");
+
+                var userProfile = (UserProfile)this.Session["UserInfo"];
+
+                if (shelf.CanBeEdited(userProfile))
                 {
                     //we allow deletion 
 
