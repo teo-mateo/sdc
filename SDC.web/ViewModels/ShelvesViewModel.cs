@@ -8,7 +8,7 @@ namespace SDC.web.ViewModels
 {
     public class ShelvesViewModel
     {
-        public List<ShelfViewModel> Shelves { get; set; }
+        public ShelfViewModel[] Shelves { get; set; }
         public string Name { get; set; }
         public bool IsVisible { get; set; }
         public int EditShelfId { get; set; }

@@ -5,7 +5,10 @@
 }
 
 <script type="text/javascript">
-    function deleteShelf(name, id) {
+    function deleteShelf(id) {
+
+        var name = $('#shelf-' + id).attr('data-sdc-shelfName');
+
         bootbox.confirm(
             "Are you sure you want to delete the shelf <strong>\""+ name +"\" </strong> and all the books it contains?",
             function (result) {
@@ -18,7 +21,11 @@
         return false;
     }
 
-    function editShelf(name, isVisible, id) {
+    function editShelf(id) {
+
+        var name = $('#shelf-' + id).attr('data-sdc-shelfName');
+        var isVisible = $('#shelf-' + id).attr('data-sdc-shelfIsVisible');
+
         //set up input values
         //show modal
         
@@ -55,7 +62,6 @@
                                 @Html.TextBoxFor(m => m.Name, new { required = "required", @class="form-control"})
                             </div>
                         </div>
-
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Visible to others:</label> 
                             <div class="col-sm-9">
@@ -145,7 +151,7 @@
 
     @foreach(var shelf in Model.Shelves)
     {
-        <tr>
+        <tr id="shelf-@shelf.Id" data-sdc-shelfName="@shelf.Name" data-sdc-shelfId="@shelf.Id" data-sdc-shelfIsVisible="@(shelf.IsVisible.ToString().ToLower())">
             <td>
                 <a href="@Url.Action("Details", new { id = shelf.Id })">
                 @shelf.Name
@@ -154,12 +160,12 @@
             <td>@shelf.BookCount</td>
             <td>@(shelf.IsVisible == true ? "yes" : "no")</td>
             <td>
-                <a href="#" onclick="deleteShelf('@shelf.Name', @shelf.Id);">
+                <a href="#" onclick="deleteShelf(@shelf.Id);">
                     <span class="glyphicon glyphicon-trash"></span>
                     <span>Delete</span>
                 </a>
                 |
-                <a href="#" onclick="editShelf('@shelf.Name', @shelf.IsVisible.ToString().ToLower(), @shelf.Id);">
+                <a href="#" onclick="editShelf(@shelf.Id);">
                     <span class="glyphicon glyphicon-pencil"></span>
                     <span>Edit</span>
                 </a>

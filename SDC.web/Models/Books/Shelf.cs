@@ -16,6 +16,8 @@ namespace SDC.web.Models.Books
         public DateTime CreationDate { get; set; }
         public bool IsVisible { get; set; }
 
+        public virtual ICollection<Book> Books { get; set; }
+
         public bool CanBeEdited(UserProfile profile)
         {
             //check that the user owns the shelf or is ADMIN/CURATOR.

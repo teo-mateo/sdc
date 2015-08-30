@@ -18,23 +18,35 @@ namespace SDC.web.Controllers
         {
             var userProfile = (UserProfile)this.Session["UserInfo"];
 
+            if(userProfile == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             using (var db = new SDCContext())
             {
                 var shelves = (from s in db.Shelves
                                orderby s.Name
                                where s.Owner.UserId == userProfile.UserId
-                               select new ShelfViewModel()
-                               {
-                                   Id = s.Id,
-                                   Name = s.Name,
-                                   CreationDate = s.CreationDate,
-                                   IsVisible = s.IsVisible,
-                                   BookCount = 0
-                               }).ToList();
+                               select s).ToList();
+
+                var shelvesVMs = shelves.Select(s =>
+                {
+                    return new ShelfViewModel()
+                    {
+                        Id = s.Id,
+                        Name = s.Name,
+                        CreationDate = s.CreationDate,
+                        IsVisible = s.IsVisible,
+                        BookCount = db.Entry(s).Collection(p=>p.Books).Query().Count()
+                    };
+                }).ToArray();
+
+                
 
                 return View(new ShelvesViewModel()
                 {
-                    Shelves = shelves
+                    Shelves = shelvesVMs
                 });
             }
 
