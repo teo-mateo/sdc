@@ -1,5 +1,6 @@
 ﻿using SDC.web.Models;
 using SDC.web.Models.Books;
+using SDC.web.Models.Common;
 using SDC.web.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -51,12 +52,6 @@ namespace SDC.web.Controllers
             }
 
                 
-        }
-
-        [HttpGet]
-        public ActionResult Details(int id)
-        {
-            return View("Details");
         }
 
         [HttpPost]
@@ -148,5 +143,139 @@ namespace SDC.web.Controllers
                 }
             }
         }
+
+        /// <summary>
+        /// Details of a shelf. books that it contains
+        /// </summary>
+        /// <param name="id">id of the shelf</param>
+        /// <returns>view</returns>
+        [HttpGet]
+        public ActionResult Details(int id=0)
+        {
+            var profile = (UserProfile)this.Session["UserInfo"];
+
+            using(var db= new SDCContext())
+            {
+                var shelf = db.Shelves.Find(id);
+                if (shelf == null)
+                    return RedirectToAction("Index");
+
+                if (!shelf.CanBeEdited(profile))
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+
+                var vm = new ShelfViewModel()
+                {
+                    Name = shelf.Name,
+                    IsVisible = shelf.IsVisible,
+                    BookCount = shelf.Books.Count(),
+                    Books = shelf.Books.ToList(),
+                    Languages = Language.GetAll(db), 
+                    Genres = Genre.GetAll(db)
+                };
+                return View(vm);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult AddBook(BookViewModel book)
+        {
+            var profile = (UserProfile)Session["UserInfo"];
+            if (profile == null)
+                return RedirectToAction("Index", "Home");
+
+            using (var db = new SDCContext())
+            using(var t = db.Database.BeginTransaction())
+            {
+                profile = db.UserProfiles.Find(profile.UserId);
+                Book newBook = new Book();
+
+                //add existing authors
+                var existing_authors = (from a in db.Authors
+                                        where a.Id != 0
+                                        select db.Authors.Find(a.Id));
+                foreach (var a in existing_authors)
+                    newBook.Authors.Add(a);
+
+                //add new authors
+                var new_authors = (from a in book.Authors
+                                   where a.Id == 0
+                                   select a);
+                foreach (var a in new_authors)
+                {
+                    a.AddedBy = profile;
+                    newBook.Authors.Add(a);
+                }
+
+
+                //genre
+                if (book.Genres != null)
+                {
+                    foreach(var g in book.Genres)
+                    {
+                        newBook.Genres.Add(db.Genres.Find(g.Id));
+                    }
+                }
+
+                //publisher
+                if(book.Publisher != null)
+                {
+                    if(book.Publisher.Id == 0)
+                    {
+                        book.Publisher.AddedBy = profile;
+                        db.Publishers.Add(book.Publisher);
+                        db.SaveChanges();
+                        newBook.Publisher = book.Publisher;
+                    }
+                    else
+                    {
+                        newBook.Publisher = db.Publishers.Find(book.Publisher.Id);
+                    }
+
+                    
+                }
+
+                //simple properties
+                newBook.Title = book.Title;
+                newBook.Year = book.Year;
+                newBook.ISBN = book.ISBN;
+
+                db.Books.Add(newBook);
+                db.SaveChanges();
+                t.Commit();
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult ChangeBook(BookViewModel book)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpGet]
+        public JsonResult GetNewBook()
+        {
+            BookViewModel b = new BookViewModel()
+            {
+                Title = "new book",
+                Authors = new List<Author>()
+                {
+                    new Author() { Id = 0, Name = "Mihail Sadoveanu" }
+                },
+                Publisher = new Publisher() { Id = 0, Name = "Pearson, Specter, Litt"},
+                Genres = new List<Genre>()
+                {
+                    new Genre() {Id = 1, Name = "Science fiction" }
+                },
+                ISBN = "ISBN UNKNOWN",
+                Year = 1984
+            };
+
+            return Json(b, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

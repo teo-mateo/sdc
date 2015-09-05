@@ -5,9 +5,14 @@ using System.Web;
 
 namespace SDC.web.Models.Books
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Publisher
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public bool IsVerified { get; set; }
+        public UserProfile AddedBy { get; set; }
     }
 }

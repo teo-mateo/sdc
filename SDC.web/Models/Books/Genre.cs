@@ -9,6 +9,13 @@ namespace SDC.web.Models.Books
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public virtual ICollection<Book> Books { get; set; }
+        public ICollection<Book> Books { get; set; }
+
+        internal static Genre[] GetAll(SDCContext db)
+        {
+            return (from g in db.Genres
+                    orderby g.Name
+                    select g).ToArray();
+        }
     }
 }

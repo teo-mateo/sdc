@@ -31,9 +31,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- styled checkbox css-->
     <link rel="stylesheet" href="~/Content/checkbox.css" />
 
+    <!-- all jquery ui css-->
+    <link rel="stylesheet" href="~/Content/themes/base/all.css" />
+
     <!-- REQUIRED JS SCRIPTS -->
     <!-- jQuery 2.1.4 -->
-    <script src="~/Content/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+    <script src="~/Scripts/jquery-2.1.4.min.js"></script>
+    <!-- jQuery.UI-->
+    <script src="~/Scripts/jquery-ui-1.11.4.js"></script>
+    
     <!-- Bootstrap 3.3.5 -->
     <script src="~/Content/bootstrap/js/bootstrap.min.js"></script>
     <!-- AdminLTE App -->
@@ -44,6 +50,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- jquery validation -->
     <script src="~/Scripts/jquery.validate.js"></script>
+
+    <!-- bootstrap multiselect -->
+    <script src="~/Content/plugins/multiselect/js/bootstrap-multiselect.js"></script>
+    <link rel="stylesheet" href="~/Content/plugins/multiselect/css/bootstrap-multiselect.css" />
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -136,9 +146,11 @@ desired effect
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
+
+
             <section class="content-header">
-                
+                <h1>@ViewBag.Title</h1>
+                <small>@ViewBag.Description</small>
             </section>
 
             <!-- Main content -->

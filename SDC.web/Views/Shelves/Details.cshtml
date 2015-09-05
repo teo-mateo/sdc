@@ -1,0 +1,202 @@
+﻿@model SDC.web.ViewModels.ShelfViewModel
+
+@{
+    ViewBag.Title = "Details - " + Model.Name;
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('#newBookModal').find('.btnAddAuthor').click(function () {
+
+            var sbox = $('#newBookModal').find('.searchAuthor');
+            var container = $('#newBookModal').find('.listAuthors');
+
+            if (sbox.val().length == 0)
+                return false;
+
+            var authId = sbox.attr('data-selected-id');
+            var authName = sbox.attr('data-selected-name');
+            if (authId == undefined || authName == undefined) {
+                authId = 0;
+                authName = sbox.val();
+            }
+            var elem = $('<li></li>');
+            container.append(elem);
+            elem.html("<span>" + authName + "</span><a href='#' class='glyphicon glyphicon-remove'></a>");
+            elem.attr('data-auth-id', authId);
+            elem.attr('data-auth-name', authName);
+
+            sbox.val(null);
+            return false;
+        });
+
+        $('#newBookModal').find('.searchAuthor').focus(function () {
+            $('#newBookModal').find('.searchAuthor').attr('data-selected-id', null);
+            $('#newBookModal').find('.searchAuthor').attr('data-selected-name', null);
+        });
+
+        //autocomplete for new book modal - author
+        $('#newBookModal').find('.searchAuthor').autocomplete({
+            source: "@Url.Action("GetAuthorsJson", "Helper")",
+            minLength: 2,
+            open: function (event, ui) {
+                $(".ui-autocomplete").css("z-index", 1100);
+            },
+            focus: function (event, ui) {
+                $('#newBookModal').find('.searchAuthor').val(ui.item.label);
+                return false;
+            },
+            select: function (event, ui) {
+                event.preventDefault();
+                $('#newBookModal').find('.searchAuthor').val(ui.item.label);
+                $('#newBookModal').find('.searchAuthor').attr('data-selected-id', ui.item.value);
+                $('#newBookModal').find('.searchAuthor').attr('data-selected-name', ui.item.label);
+            }
+        })
+        .data("ui-autocomplete")._renderItem = function (ul, item) {
+            return $("<li></li>")
+                .data("item.autocomplete", item)
+                .append("<a href='#'>" + item.label + "</a>")
+                .appendTo(ul);
+        };
+
+        //autocomplete for new book modal - publisher
+        $('#newBookModal').find('.searchPublisher').autocomplete({
+            source: "@Url.Action("GetPublishersJson", "Helper")",
+            minLength: 2,
+            open: function (event, ui) {
+                $(".ui-autocomplete").css("z-index", 1100);
+            },
+            focus: function (event, ui) {
+                $('#newBookModal').find('searchPublisher').val(ui.item.label);
+                return false;
+            },
+            select: function (event, ui) {
+                event.preventDefault();
+                $('#newBookModal').find('.searchPublisher').val(ui.item.label);
+                $('#newBookModal').find('.searchPublisher').attr('data-selected-id', ui.item.value);
+                $('#newBookModal').find('.searchPublisher').attr('data-selected-name', ui.item.label);
+            }
+        })
+        .data('ui-autocomplete')._renderItem = function (ul, item) {
+            return $("<li></li>")
+                .data("item.autocomplete", item)
+                .append("<a href='#'>" + item.label + "</a>")
+                .appendTo(ul);
+        };
+
+        //multiselect genres
+        $('#newBookModal').find('.bookGenres').multiselect({
+            enableCaseInsensitiveFiltering: true,
+            maxHeight: 300
+        });
+
+    });
+
+
+</script>
+
+<a class="btn btn-primary margin-bottom" onclick="$('#newBookModal').modal('show');">
+    New book
+</a>
+
+<a class="btn btn-default margin-bottom" href="@Url.Action("Index")">Go back</a>
+
+<input id="searchAuthorX" />
+
+<!-- new shelf modal -->
+<div class="modal fade" id="newBookModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm("NewBook", "Shelves", FormMethod.Post))
+            {
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <h4>Add a new book</h4>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Title:</label>
+                            <input type="text" class="form-control col-sm-7 bookName" /> 
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Author(s):</label>
+                            <!-- search box-->
+                            <input type="text" class="col-sm-4 searchAuthor form-control pull-left" />
+                            <!-- add-->
+                            <button class="btn btn-default col-sm-1 btnAddAuthor">
+                                Add
+                            </button>
+                            <!-- list-->
+                            <ul class="listAuthors col-sm-4"></ul>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Genres:</label> 
+                            <select class="col-sm-4 form-control bookGenres" multiple="multiple" size="10">
+                                @foreach(var genre in Model.Genres)
+                                {
+                                    <option value="@genre.Id">@genre.Name</option>
+                                }
+                            </select> 
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Year:</label>
+                            <input type="number" class="col-sm-9 form-control bookYear" min="1" max="2016" />
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Language:</label>
+                            <select class="col-sm-9 form-control bookLanguage">
+                                @foreach(var lang in Model.Languages)
+                                {
+                                    <option value="@lang.Code">@lang.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">ISBN:</label>
+                            <input class="col-sm-9 bookISBN form-control" type="text"/>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Publisher:</label>
+                            <!-- publisher search box-->
+                            <input type="text" class="col-sm-9 searchPublisher form-control pull-left"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="btn-toolbar">
+                        <button type="button" class="btn btn-default pull-right" onclick="$('#newBookModal').modal('hide');">Go back</button>
+                        <button type="submit" class="btn btn-primary pull-right">Save changes</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="box">
+    <div class="box-header">
+        <div class="box-title">Books in @Model.Name</div>
+    </div>
+    <div class="box-body">
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <td><strong>Name</strong></td>
+                    <td><strong>Author(s)</strong></td>
+                    <td><strong>Genre</strong></td>
+                    <td><strong>Year</strong></td>
+                    <td><strong>Publisher</strong></td>
+                    <td></td>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>

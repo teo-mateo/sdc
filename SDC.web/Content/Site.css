@@ -19,3 +19,11 @@ textarea {
 .row-spaced{
     margin-top: 5px;
 }
+
+
+@media screen and (min-width: 768px) {
+	
+	#newBookModal .modal-dialog  {width:900px;}
+    #editBookModal .modal-dialog  {width:900px;}
+
+}

@@ -1,4 +1,4 @@
-﻿using SDC.web.Models.Location;
+﻿using SDC.web.Models.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

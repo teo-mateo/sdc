@@ -1,7 +1,7 @@
 ﻿@model SDC.web.ViewModels.ShelvesViewModel
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "My shelves";
 }
 
 <script type="text/javascript">
@@ -28,7 +28,7 @@
 
         //set up input values
         //show modal
-        
+
         $('#EditShelfId').val(id);
         $('#editShelfModal').find('#Name').val(name);
         $('#editShelfModal').find('#IsVisible').prop("checked", isVisible);
@@ -36,10 +36,7 @@
     }
 </script>
 
-<h4>Shelves - Index</h4>
-<hr />
-
-<a class="btn btn-primary" onclick="$('#newShelfModal').modal('show');">
+<a class="btn btn-primary margin-bottom" onclick="$('#newShelfModal').modal('show');">
     New shelf
 </a>
 
@@ -59,13 +56,13 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Name:</label>
                             <div class="col-sm-9">
-                                @Html.TextBoxFor(m => m.Name, new { required = "required", @class="form-control"})
+                                @Html.TextBoxFor(m => m.Name, new { required = "required", @class = "form-control" })
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Visible to others:</label> 
+                            <label class="col-sm-3 control-label">Visible to others:</label>
                             <div class="col-sm-9">
-                                @Html.CheckBoxFor(m=>m.IsVisible)
+                                @Html.CheckBoxFor(m => m.IsVisible)
                             </div>
                         </div>
 
@@ -74,8 +71,8 @@
 
                 <div class="modal-footer">
                     <div class="btn-toolbar">
-                        <button type="button" class="btn btn-default pull-right" onclick="$('#newShelfModal').modal('hide');">Go back</button> 
-                        <button type="submit" class="btn btn-primary pull-right">Save changes</button>   
+                        <button type="button" class="btn btn-default pull-right" onclick="$('#newShelfModal').modal('hide');">Go back</button>
+                        <button type="submit" class="btn btn-primary pull-right">Save changes</button>
                     </div>
                 </div>
             }
@@ -107,14 +104,14 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Name:</label>
                             <div class="col-sm-9">
-                                @Html.TextBoxFor(m => m.Name, new { required = "required", @class="form-control"})
+                                @Html.TextBoxFor(m => m.Name, new { required = "required", @class = "form-control" })
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Visible to others:</label>
                             <div class="col-sm-9">
-                                @Html.CheckBoxFor(m=>m.IsVisible)
+                                @Html.CheckBoxFor(m => m.IsVisible)
                             </div>
                         </div>
 
@@ -138,46 +135,54 @@
     });
 </script>
 
+<div class="box">
+    <div class="box-header">
+        <div class="box-title">My shelves</div>
+    </div>
+    <div class="box-body">
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <td><strong>Name</strong></td>
+                    <td><strong>Books</strong></td>
+                    <td><strong>Visible to others?</strong></td>
+                    <td></td>
+                </tr>
+            </thead>
 
-<table class="table table-hover table-striped">
-    <thead>
-        <tr>
-            <td><strong>Name</strong></td>
-            <td><strong>Books</strong></td>
-            <td><strong>Visible to others?</strong></td>
-            <td>Actions</td>
-        </tr>
-    </thead>
+            @foreach (var shelf in Model.Shelves)
+            {
+                <tr id="shelf-@shelf.Id" data-sdc-shelfName="@shelf.Name" data-sdc-shelfId="@shelf.Id" data-sdc-shelfIsVisible="@(shelf.IsVisible.ToString().ToLower())">
+                    <td>
+                        <a href="@Url.Action("Details", new { id = shelf.Id })">
+                            @shelf.Name
+                        </a>
+                    </td>
+                    <td>@shelf.BookCount</td>
+                    <td>@(shelf.IsVisible == true ? "yes" : "no")</td>
+                    <td>
+                        <a href="#" onclick="deleteShelf(@shelf.Id);">
+                            <span class="glyphicon glyphicon-trash"></span>
+                            <span>Delete</span>
+                        </a>
+                        |
+                        <a href="#" onclick="editShelf(@shelf.Id);">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                            <span>Edit</span>
+                        </a>
+                    </td>
+                </tr>
+            }
 
-    @foreach(var shelf in Model.Shelves)
-    {
-        <tr id="shelf-@shelf.Id" data-sdc-shelfName="@shelf.Name" data-sdc-shelfId="@shelf.Id" data-sdc-shelfIsVisible="@(shelf.IsVisible.ToString().ToLower())">
-            <td>
-                <a href="@Url.Action("Details", new { id = shelf.Id })">
-                @shelf.Name
-                </a>
-            </td>
-            <td>@shelf.BookCount</td>
-            <td>@(shelf.IsVisible == true ? "yes" : "no")</td>
-            <td>
-                <a href="#" onclick="deleteShelf(@shelf.Id);">
-                    <span class="glyphicon glyphicon-trash"></span>
-                    <span>Delete</span>
-                </a>
-                |
-                <a href="#" onclick="editShelf(@shelf.Id);">
-                    <span class="glyphicon glyphicon-pencil"></span>
-                    <span>Edit</span>
-                </a>
-            </td>
-        </tr>
-    }
+            @using (Html.BeginForm("DeleteShelf", "Shelves", FormMethod.Post, new { @id = "deleteShelfForm" }))
+            {
+                <input type="hidden" id="DeleteShelfId" name="DeleteShelfId" />
 
-    @using (Html.BeginForm("DeleteShelf", "Shelves", FormMethod.Post, new { @id = "deleteShelfForm" }))
-    {
-        <input type="hidden" id="DeleteShelfId" name="DeleteShelfId" />
+
+            }
+
+        </table>
+    </div>
+</div>
+
         
-        
-    }
-
-</table>

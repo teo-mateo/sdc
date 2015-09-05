@@ -8,6 +8,13 @@ namespace SDC.web.Models.Books
 {
     public class Book
     {
+        public Book()
+        {
+            Authors = new List<Author>();
+            Genres = new List<Genre>();
+            Pictures = new List<BookPicture>();
+        }
+
         public int Id { get; set; }
         public virtual ICollection<Author> Authors { get; set; }
         public string Title { get; set; }
