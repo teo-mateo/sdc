@@ -80,10 +80,13 @@ namespace SDC.web.Controllers
         {
             using (var db = new SDCContext())
             {
+                
+
+
                 var profile = (UserProfile)this.Session["UserInfo"];
 
                 if (profile.Avatar == null)
-                    profile.Avatar = new Avatar() { Url = "/Content/dist/img/default.png" };
+                    profile.Avatar = new Avatar() { Url = Server.MapPath("Content/dist/img/default.png") };
 
                 return PartialView("_UserControls", profile);
             }
