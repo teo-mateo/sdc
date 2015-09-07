@@ -76,17 +76,17 @@
             #endregion
 
             #region some authors
-            context.Authors.AddOrUpdate(new Models.Books.Author() { Id = 1, Name = "Douglas Adams" });
-            context.Authors.AddOrUpdate(new Models.Books.Author() { Id = 2, Name = "Isaac Asimov" });
-            context.Authors.AddOrUpdate(new Models.Books.Author() { Id = 3, Name = "Tom Clancy" });
-            context.Authors.AddOrUpdate(new Models.Books.Author() { Id = 4, Name = "Bill Bryson" });
-            context.Authors.AddOrUpdate(new Models.Books.Author() { Id = 5, Name = "Mikhail Bulgakov" });
-            context.Authors.AddOrUpdate(new Models.Books.Author() { Id = 6, Name = "Agatha Christie" });
-            context.Authors.AddOrUpdate(new Models.Books.Author() { Id = 7, Name = "Albert Camus" });
-            context.Authors.AddOrUpdate(new Models.Books.Author() { Id = 8, Name = "Aldous Huxley" });
-            context.Authors.AddOrUpdate(new Models.Books.Author() { Id = 9, Name = "Alexander Pushkin" });
-            context.Authors.AddOrUpdate(new Models.Books.Author() { Id = 10, Name = "Alexandre Dumas" });
-            context.Authors.AddOrUpdate(new Models.Books.Author() { Id = 11, Name = "Anne Frank" });
+            context.Authors.AddOrUpdate(new Models.Books.Author() { Id = 1, Name = "Douglas Adams", IsVerified=true});
+            context.Authors.AddOrUpdate(new Models.Books.Author() { Id = 2, Name = "Isaac Asimov", IsVerified = true });
+            context.Authors.AddOrUpdate(new Models.Books.Author() { Id = 3, Name = "Tom Clancy", IsVerified = true });
+            context.Authors.AddOrUpdate(new Models.Books.Author() { Id = 4, Name = "Bill Bryson", IsVerified = true });
+            context.Authors.AddOrUpdate(new Models.Books.Author() { Id = 5, Name = "Mikhail Bulgakov", IsVerified = true });
+            context.Authors.AddOrUpdate(new Models.Books.Author() { Id = 6, Name = "Agatha Christie", IsVerified = true });
+            context.Authors.AddOrUpdate(new Models.Books.Author() { Id = 7, Name = "Albert Camus", IsVerified = true });
+            context.Authors.AddOrUpdate(new Models.Books.Author() { Id = 8, Name = "Aldous Huxley", IsVerified = true });
+            context.Authors.AddOrUpdate(new Models.Books.Author() { Id = 9, Name = "Alexander Pushkin", IsVerified = true });
+            context.Authors.AddOrUpdate(new Models.Books.Author() { Id = 10, Name = "Alexandre Dumas", IsVerified = true });
+            context.Authors.AddOrUpdate(new Models.Books.Author() { Id = 11, Name = "Anne Frank", IsVerified = true });
 
             #endregion
 
