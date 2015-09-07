@@ -29,11 +29,11 @@
             //
 
             #region Default avatars
-            context.Avatars.AddOrUpdate(new Models.Avatar() { Id = 1, Url = "/Content/dist/img/avatar.png", CustomForUserId = 0 });
-            context.Avatars.AddOrUpdate(new Models.Avatar() { Id = 2, Url = "/Content/dist/img/avatar2.png", CustomForUserId = 0 });
-            context.Avatars.AddOrUpdate(new Models.Avatar() { Id = 3, Url = "/Content/dist/img/avatar3.png", CustomForUserId = 0 });
-            context.Avatars.AddOrUpdate(new Models.Avatar() { Id = 4, Url = "/Content/dist/img/avatar4.png", CustomForUserId = 0 });
-            context.Avatars.AddOrUpdate(new Models.Avatar() { Id = 5, Url = "/Content/dist/img/avatar5.png", CustomForUserId = 0 });
+            context.Avatars.AddOrUpdate(new Models.Avatar() { Id = 1, Url = "Content/dist/img/avatar.png", CustomForUserId = 0 });
+            context.Avatars.AddOrUpdate(new Models.Avatar() { Id = 2, Url = "Content/dist/img/avatar2.png", CustomForUserId = 0 });
+            context.Avatars.AddOrUpdate(new Models.Avatar() { Id = 3, Url = "Content/dist/img/avatar3.png", CustomForUserId = 0 });
+            context.Avatars.AddOrUpdate(new Models.Avatar() { Id = 4, Url = "Content/dist/img/avatar4.png", CustomForUserId = 0 });
+            context.Avatars.AddOrUpdate(new Models.Avatar() { Id = 5, Url = "Content/dist/img/avatar5.png", CustomForUserId = 0 });
             #endregion
 
             #region Some (few) Cities in Romania
