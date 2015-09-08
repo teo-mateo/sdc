@@ -13,5 +13,7 @@ namespace SDC.web.Models.Books
         public bool IsVerified { get; set; }
         public UserProfile AddedBy { get; set; }
         public ICollection<Book> Books { get; set; }
+        //link to wikipedia url
+        public string Url { get; set; }
     }
 }

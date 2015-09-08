@@ -24,5 +24,12 @@ namespace SDC.Tests
             Assert.IsTrue(res.Length == 1);
         }
 
+        [TestMethod]
+        public void ScrapeAuthors_Test()
+        {
+            HelperController c = new HelperController();
+            c.AuthorScrapeWiki();
+        }
+
     }
 }
