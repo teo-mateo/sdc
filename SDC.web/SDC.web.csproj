@@ -16,7 +16,7 @@
     <RootNamespace>SDC.web</RootNamespace>
     <AssemblyName>SDC.web</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -1018,10 +1018,52 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
     <None Include="Properties\PublishProfiles\schimbdecarte.pubxml" />
+    <Content Include="Scripts\jqfu\server\gae-go\app.yaml" />
+    <Content Include="Scripts\jqfu\server\gae-go\app\main.go" />
+    <Content Include="Scripts\jqfu\server\gae-python\app.yaml" />
+    <Content Include="Scripts\jqfu\server\gae-python\main.py" />
+    <Content Include="Scripts\jqfu\server\php\files\.htaccess" />
+    <Content Include="Scripts\jqfu\server\php\index.php" />
+    <Content Include="Scripts\jqfu\server\php\UploadHandler.php" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-2.1.4-vsdoc.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\jqfu\cors\postmessage.html" />
+    <Content Include="Scripts\jqfu\cors\result.html" />
+    <Content Include="Scripts\jqfu\css\demo-ie8.css" />
+    <Content Include="Scripts\jqfu\css\demo.css" />
+    <Content Include="Scripts\jqfu\css\jquery.fileupload-noscript.css" />
+    <Content Include="Scripts\jqfu\css\jquery.fileupload-ui-noscript.css" />
+    <Content Include="Scripts\jqfu\css\jquery.fileupload-ui.css" />
+    <Content Include="Scripts\jqfu\css\jquery.fileupload.css" />
+    <Content Include="Scripts\jqfu\css\style.css" />
+    <Content Include="Scripts\jqfu\img\loading.gif" />
+    <Content Include="Scripts\jqfu\img\progressbar.gif" />
+    <Content Include="Scripts\jqfu\index.html" />
+    <Content Include="Scripts\jqfu\jquery-ui.html" />
+    <Content Include="Scripts\jqfu\js\app.js" />
+    <Content Include="Scripts\jqfu\js\cors\jquery.postmessage-transport.js" />
+    <Content Include="Scripts\jqfu\js\cors\jquery.xdr-transport.js" />
+    <Content Include="Scripts\jqfu\js\jquery.fileupload-angular.js" />
+    <Content Include="Scripts\jqfu\js\jquery.fileupload-audio.js" />
+    <Content Include="Scripts\jqfu\js\jquery.fileupload-image.js" />
+    <Content Include="Scripts\jqfu\js\jquery.fileupload-jquery-ui.js" />
+    <Content Include="Scripts\jqfu\js\jquery.fileupload-process.js" />
+    <Content Include="Scripts\jqfu\js\jquery.fileupload-ui.js" />
+    <Content Include="Scripts\jqfu\js\jquery.fileupload-validate.js" />
+    <Content Include="Scripts\jqfu\js\jquery.fileupload-video.js" />
+    <Content Include="Scripts\jqfu\js\jquery.fileupload.js" />
+    <Content Include="Scripts\jqfu\js\jquery.iframe-transport.js" />
+    <Content Include="Scripts\jqfu\js\main.js" />
+    <Content Include="Scripts\jqfu\js\vendor\jquery.ui.widget.js" />
+    <Content Include="Scripts\jqfu\server\gae-go\static\favicon.ico" />
+    <Content Include="Scripts\jqfu\server\gae-go\static\robots.txt" />
+    <Content Include="Scripts\jqfu\server\gae-python\static\favicon.ico" />
+    <Content Include="Scripts\jqfu\server\gae-python\static\robots.txt" />
+    <Content Include="Scripts\jqfu\server\php\files\.gitignore" />
+    <Content Include="Scripts\jqfu\test\index.html" />
+    <Content Include="Scripts\jqfu\test\test.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />
     <Content Include="Scripts\jquery-ui-1.11.4.js" />
@@ -1129,7 +1171,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>58525</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:58525/</IISUrl>
+          <IISUrl>http://localhost/SDC.web</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

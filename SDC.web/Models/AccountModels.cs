@@ -22,6 +22,8 @@ namespace SDC.web.Models
         public string Email { get; set; }
         
         public DateTime LastSeen { get; set; }
+        public DateTime Created { get; set; }
+
         public bool IsLocked { get; set; }
         public Avatar Avatar { get; set; }
         public City City { get; set; }

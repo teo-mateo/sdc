@@ -4,8 +4,79 @@
     ViewBag.Title = "Details - " + Model.Name;
 }
 
+@section Page_Styles{
+    <!--css/style.css-->
+<!-- Generic page styles -->
+<link rel="stylesheet" href="~/Scripts/jqfu/css/style.css">
+<!-- blueimp Gallery styles -->
+<!-- <link rel="stylesheet" href="//blueimp.github.io/Gallery/css/blueimp-gallery.min.css">-->
+<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+<link rel="stylesheet" href="~/Scripts/jqfu/css/jquery.fileupload.css">
+<link rel="stylesheet" href="~/Scripts/jqfu/css/jquery.fileupload-ui.css">
+<!-- CSS adjustments for browsers with JavaScript disabled -->
+<noscript><link rel="stylesheet" href="~/Scripts/jqfu/css/jquery.fileupload-noscript.css"></noscript>
+<noscript><link rel="stylesheet" href="~/Scripts/jqfu/css/jquery.fileupload-ui-noscript.css"></noscript>
+}
+
+@section Page_Scripts{
+
+<!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>-->
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="~/Scripts/jqfu/js/vendor/jquery.ui.widget.js"></script>
+
+@*<!-- The Templates plugin is included to render the upload/download listings -->
+<script src="//blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
+<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+<script src="//blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>
+<!-- The Canvas to Blob plugin is included for image resizing functionality -->
+<script src="//blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
+<!-- Bootstrap JS is not required, but included for the responsive demo navigation -->
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<!-- blueimp Gallery script -->
+<script src="//blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>*@
+
+
+
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="~/Scripts/jqfu/js/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="~/Scripts/jqfu/js/jquery.fileupload.js"></script>
+<!-- The File Upload processing plugin -->
+<script src="~/Scripts/jqfu/js/jquery.fileupload-process.js"></script>
+<!-- The File Upload image preview & resize plugin -->
+<script src="~/Scripts/jqfu/js/jquery.fileupload-image.js"></script>
+<!-- The File Upload audio preview plugin -->
+<script src="~/Scripts/jqfu/js/jquery.fileupload-audio.js"></script>
+<!-- The File Upload video preview plugin -->
+<script src="~/Scripts/jqfu/js/jquery.fileupload-video.js"></script>
+<!-- The File Upload validation plugin -->
+<script src="~/Scripts/jqfu/js/jquery.fileupload-validate.js"></script>
+<!-- The File Upload user interface plugin -->
+<script src="~/Scripts/jqfu/js/jquery.fileupload-ui.js"></script>
+<!-- The main application script -->
+<script src="~/Scripts/jqfu/js/main.js"></script>
+<!-- The XDomainRequest Transport is included for cross-domain file deletion for IE 8 and IE 9 -->
+<!--[if (gte IE 8)&(lt IE 10)]>
+<script src="js/cors/jquery.xdr-transport.js"></script>
+<![endif]-->
+
+}
+
 <script type="text/javascript">
+
+    function removeAuthor(removeAuthorLink) {
+
+    }
+
     $(function () {
+        //remove author
+        $('.removeAuthor').click(function () {
+            var c = $(this);
+            removeAuthor(c);
+        });
+
+
+        //add author
         $('#newBookModal').find('.btnAddAuthor').click(function () {
 
             var sbox = $('#newBookModal').find('.searchAuthor');
@@ -21,10 +92,18 @@
                 authName = sbox.val();
             }
             var elem = $('<li></li>');
-            container.append(elem);
-            elem.html("<span>" + authName + "</span><a href='#' class='glyphicon glyphicon-remove'></a>");
             elem.attr('data-auth-id', authId);
             elem.attr('data-auth-name', authName);
+
+            container.append(elem);
+            elem.html("<span>" + authName + "</span>");
+            
+            var removeAuthorLink = $("<a href='#' class='glyphicon glyphicon-remove removeAuthor'></a>");
+            removeAuthorLink.click(function () {
+                removeAuthorLink(removeAuthorLink);
+            });
+            elem.append(removeAuthorLink);
+            
 
             sbox.val(null);
             return false;
@@ -91,6 +170,11 @@
             maxHeight: 300
         });
 
+        //submit form
+        $('#addNewBookForm').submit(function (e) {
+            e.preventDefault();
+        });
+
     });
 
 
@@ -102,11 +186,11 @@
 
 <a class="btn btn-default margin-bottom" href="@Url.Action("Index")">Go back</a>
 
-<!-- new shelf modal -->
+<!-- new book modal -->
 <div class="modal fade" id="newBookModal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
-            @using (Html.BeginForm("NewBook", "Shelves", FormMethod.Post))
+            @using (Html.BeginForm("AddBook", "Shelves", FormMethod.Post, new { id = "addNewBookForm" }))
             {
                 <div class="modal-header">
                     <div class="modal-title">
@@ -127,14 +211,18 @@
                             <button class="btn btn-default col-sm-1 btnAddAuthor">
                                 Add
                             </button>
-                            <!-- list-->
-                            <ul class="listAuthors col-sm-4"></ul>
+                            <!-- authors: vertical line -->
+                            <div style="border-left: thick solid #ff0000;">
+                                <!-- list-->
+                                <ul class="listAuthors col-sm-4" style="list-style-type:none;"></ul>
+                            </div>
+                            
 
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Genres:</label> 
                             <select class="col-sm-4 form-control bookGenres" multiple="multiple" size="10">
-                                @foreach(var genre in Model.Genres)
+                                @foreach (var genre in Model.Genres)
                                 {
                                     <option value="@genre.Id">@genre.Name</option>
                                 }
@@ -147,7 +235,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Language:</label>
                             <select class="col-sm-9 form-control bookLanguage">
-                                @foreach(var lang in Model.Languages)
+                                @foreach (var lang in Model.Languages)
                                 {
                                     <option value="@lang.Code">@lang.Name</option>
                                 }
@@ -168,10 +256,12 @@
                 <div class="modal-footer">
                     <div class="btn-toolbar">
                         <button type="button" class="btn btn-default pull-right" onclick="$('#newBookModal').modal('hide');">Go back</button>
-                        <button type="submit" class="btn btn-primary pull-right">Save changes</button>
+                        <button type="submit" class="btn btn-primary pull-right" onclick="addNewBook();">Save changes</button>
                     </div>
                 </div>
             }
+
+            <form id="fileupload"></form>
         </div>
     </div>
 </div>

@@ -72,6 +72,9 @@ namespace SDC.web.Controllers
             profile.Avatar = avatar;
             db.SaveChanges();
 
+
+            ((UserProfile)Session["UserInfo"]).Avatar = avatar;
+
             return RedirectToAction("Index");
         }
 
@@ -315,6 +318,8 @@ namespace SDC.web.Controllers
                 }
 
                 db.SaveChanges();
+
+                ((UserProfile)Session["UserInfo"]).Avatar = profile.Avatar;
 
             }
 
