@@ -12,7 +12,6 @@ namespace SDC.web.App_Start
     {
         public static void RegisterMappings()
         {
-            int i = 1;
             AutoMapper.Mapper.CreateMap<Author, AuthorViewModel>()
                 .ForMember(vm => vm.AddedBy,
                 opts => opts.MapFrom(src => (src.AddedBy == null ? "-" : src.AddedBy.UserName)))
