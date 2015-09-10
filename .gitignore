@@ -216,3 +216,4 @@ FakesAssemblies/
 **/*.Server/GeneratedArtifacts
 **/*.Server/ModelManifest.xml
 _Pvt_Extensions
+/SDC.web/App_Start/MappingsConfig.cs

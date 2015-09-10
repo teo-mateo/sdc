@@ -1,0 +1,43 @@
+﻿@model SDC.web.ViewModels.AuthorViewModel
+
+@{
+    ViewBag.Title = Model.Name;
+    ViewBag.User = (SDC.web.Models.UserProfile)Session["UserInfo"];
+}
+
+@if (ViewBag.User.IsAdmin || ViewBag.User.IsCurator)
+{
+    <a href="@Url.Action("EditAuthor", "Authors", new { id = Model.Id})"
+       class="btn btn-primary">Edit</a>
+}
+
+<a href="#" onclick="window.history.back();"
+   class="btn btn-default">Go back</a>
+
+
+<div class="row">
+    <h4 class="col-sm-1"><strong>Born</strong></h4>
+    
+    <h4 class="col-sm-11">
+        @((!Model.Born.HasValue) ? "-" : Model.Born.Value.ToString(G.DATE))
+    </h4>
+</div>
+
+<div class="row">
+    <h4 class="col-sm-1"><strong>Died</strong></h4>
+    <h4 class="col-sm-11">
+        @((!Model.Died.HasValue) ? "-" : Model.Died.Value.ToString(G.DATE))
+    </h4>
+</div>
+
+<div class="row">
+    <h4 class="col-sm-1"><strong>Nationality</strong></h4>
+    <h4 class="col-sm-11">
+        @((Model.Nationality == null) ? "unknown" : Model.Nationality)
+    </h4>
+</div>
+
+<div class="row">
+    <h4 class="col-sm-1"><strong>About</strong></h4>
+    <h4 class="col-sm-11">@Model.Bio</h4>
+</div>

@@ -65,7 +65,8 @@
 <script type="text/javascript">
 
     function removeAuthor(removeAuthorLink) {
-
+        var li = removeAuthorLink.parent();
+        li.remove();
     }
 
     $(function () {
@@ -73,6 +74,66 @@
         $('.removeAuthor').click(function () {
             var c = $(this);
             removeAuthor(c);
+        });
+
+        $('.btnSaveNewBook').click(function (e) {
+
+            /*
+
+    [
+                  { "Id": 0, "Name": "auth" },
+                  { "Id": 0, "Name": "auth2" }
+                ]
+
+    [
+                 { "Id": 1, "Name": "genre_name" }
+                ]
+    */
+            var newBookObject =
+            {
+
+                "ShelfId": $(".shelfId").val(),
+                "Id": 0,
+                "Title": $(".bookTitle").val(),
+                "Year": $(".bookYear").val(),
+                "Authors": [],
+                "Genres": [],
+                "Language": {
+                    "Code": $('.bookLanguage').find(":selected").attr("value"),
+                    "Name": $('.bookLanguage').find(":selected").val()
+                },
+                "ISBN": $('.bookISBN').val(),
+                "Publisher": {
+                    "Id": $('.bookPublisher').attr('data-selected-id'),
+                    "Name": $('.bookPublisher').attr('data-selected-name')
+                }
+            };
+
+            var authorsLI = $('#newBookModal').find('.listAuthors').find('li').toArray();
+            var authorsobj = authorsLI.map(function (li) {
+                return {
+                    "Id": $(li).attr('data-auth-id'),
+                    "Name": $(li).attr('data-auth-name')
+                };
+            });
+
+            newBookObject.Authors = authorsobj;
+
+            $.ajax({
+                url: "@Url.Action("AddBook", "Shelves")", 
+                type: "POST",
+                data: JSON.stringify(newBookObject),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                error: function (response) {
+                    alert(response.responseText);
+                },
+                succes: function (response) {
+                    alert(response);
+                }
+            });
+
+            e.preventDefault();
         });
 
 
@@ -100,7 +161,7 @@
             
             var removeAuthorLink = $("<a href='#' class='glyphicon glyphicon-remove removeAuthor'></a>");
             removeAuthorLink.click(function () {
-                removeAuthorLink(removeAuthorLink);
+                removeAuthor(removeAuthorLink);
             });
             elem.append(removeAuthorLink);
             
@@ -140,21 +201,21 @@
         };
 
         //autocomplete for new book modal - publisher
-        $('#newBookModal').find('.searchPublisher').autocomplete({
+        $('#newBookModal').find('.bookPublisher').autocomplete({
             source: "@Url.Action("GetPublishersJson", "Helper")",
             minLength: 2,
             open: function (event, ui) {
                 $(".ui-autocomplete").css("z-index", 1100);
             },
             focus: function (event, ui) {
-                $('#newBookModal').find('searchPublisher').val(ui.item.label);
+                $('#newBookModal').find('bookPublisher').val(ui.item.label);
                 return false;
             },
             select: function (event, ui) {
                 event.preventDefault();
-                $('#newBookModal').find('.searchPublisher').val(ui.item.label);
-                $('#newBookModal').find('.searchPublisher').attr('data-selected-id', ui.item.value);
-                $('#newBookModal').find('.searchPublisher').attr('data-selected-name', ui.item.label);
+                $('#newBookModal').find('.bookPublisher').val(ui.item.label);
+                $('#newBookModal').find('.bookPublisher').attr('data-selected-id', ui.item.value);
+                $('#newBookModal').find('.bookPublisher').attr('data-selected-name', ui.item.label);
             }
         })
         .data('ui-autocomplete')._renderItem = function (ul, item) {
@@ -192,6 +253,8 @@
         <div class="modal-content">
             @using (Html.BeginForm("AddBook", "Shelves", FormMethod.Post, new { id = "addNewBookForm" }))
             {
+                <input type="hidden" value="@Model.Id" class="shelfId" />
+                
                 <div class="modal-header">
                     <div class="modal-title">
                         <h4>Add a new book</h4>
@@ -201,7 +264,7 @@
                     <div class="form-horizontal">
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Title:</label>
-                            <input type="text" class="form-control col-sm-7 bookName" /> 
+                            <input type="text" class="form-control col-sm-7 bookTitle" /> 
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Author(s):</label>
@@ -248,7 +311,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Publisher:</label>
                             <!-- publisher search box-->
-                            <input type="text" class="col-sm-9 searchPublisher form-control pull-left"/>
+                            <input type="text" class="col-sm-9 bookPublisher form-control pull-left"/>
                         </div>
                     </div>
                 </div>
@@ -256,7 +319,7 @@
                 <div class="modal-footer">
                     <div class="btn-toolbar">
                         <button type="button" class="btn btn-default pull-right" onclick="$('#newBookModal').modal('hide');">Go back</button>
-                        <button type="submit" class="btn btn-primary pull-right" onclick="addNewBook();">Save changes</button>
+                        <button type="submit" class="btn btn-primary pull-right btnSaveNewBook">Save changes</button>
                     </div>
                 </div>
             }
@@ -277,7 +340,7 @@
         <table class="table table-hover table-striped">
             <thead>
                 <tr>
-                    <td><strong>Name</strong></td>
+                    <td><strong>Title</strong></td>
                     <td><strong>Author(s)</strong></td>
                     <td><strong>Genre</strong></td>
                     <td><strong>Year</strong></td>
@@ -285,6 +348,59 @@
                     <td></td>
                 </tr>
             </thead>
+ 
+            @foreach(var book in Model.Books)
+            {
+                <tr>
+                    <td>
+                        <strong>
+                            <a href="@Url.Action("ViewBook", "Shelves", new { id = book.Id })">
+                                @book.Title
+                            </a>    
+                        </strong>
+                    </td>
+                    <td>
+                        <ul>
+                            @foreach (var author in book.Authors)
+                            {
+                                <li>
+                                    <a href="@Url.Action("ViewAuthor", "Authors", new { id = author.Id })">
+                                        @author.Name
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            @foreach(var genre in book.Genres)
+                            {
+                                <li>@genre.Name</li>
+                            }
+                        </ul>
+                    </td>
+                    <td>
+                        @book.Year
+                    </td>
+                    <td>
+                        @((book.Publisher == null) ? "-" : book.Publisher.Name)
+                    </td>
+
+                    <td>
+                        <a href="#" onclick="deleteBook(@book.Id);">
+                            <span class="glyphicon glyphicon-trash"></span>
+                            <span>Delete</span>
+                        </a>
+                        |
+                        <a href="#" onclick="editBook(@book.Id);">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                            <span>Edit</span>
+                        </a>
+                    </td>
+                </tr>
+            }
+
+
         </table>
     </div>
 </div>

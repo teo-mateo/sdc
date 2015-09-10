@@ -32,7 +32,16 @@ namespace SDC.web.Models
 
         [NotMapped]
         public string Role { get; set; }
-       
+
+        public bool IsAdmin
+        {
+            get { return Role == RolesCustom.ADMIN; }
+        }
+
+        public bool IsCurator
+        {
+            get { return Role == RolesCustom.CURATOR; }
+        }
     }
 
     public class RegisterExternalLoginModel

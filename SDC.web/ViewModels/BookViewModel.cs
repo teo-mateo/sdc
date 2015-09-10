@@ -1,4 +1,5 @@
 ﻿using SDC.web.Models.Books;
+using SDC.web.Models.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,8 @@ namespace SDC.web.ViewModels
         public List<Author> Authors { get; set; }
         public Publisher Publisher { get; set; }
         public List<Genre> Genres { get; set; }
+        public Language Language { get; set; }
+        public int ShelfId { get; set; }
 
     }
 

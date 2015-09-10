@@ -24,7 +24,7 @@ namespace SDC.web.Models.Books
         public string Language { get; set; }
         public int? Pages { get; set; }
         public string ISBN { get; set; }
-        public Publisher Publisher { get; set; }
+        public virtual Publisher Publisher { get; set; }
         public string Description { get; set; }
         public virtual ICollection<BookPicture> Pictures { get; set; }
 

@@ -1,4 +1,5 @@
-﻿using SDC.web.Filters;
+﻿using SDC.web.App_Start;
+using SDC.web.Filters;
 using SDC.web.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,11 @@ using WebMatrix.WebData;
 
 namespace SDC.web
 {
+    public class G
+    {
+        public static readonly string DATE = "MMM dd, yyyy";
+    }
+
     public class MvcApplication : System.Web.HttpApplication
     {
 
@@ -19,6 +25,8 @@ namespace SDC.web
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             GlobalFilters.Filters.Add(new MyActionFilterAttribute());
+
+            MappingsConfig.RegisterMappings();
         }
 
 

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Data.Entity;
 
 namespace SDC.web.Controllers
 {
@@ -17,6 +18,8 @@ namespace SDC.web.Controllers
         [ActionName("Index")]
         public ActionResult Index()
         {
+
+            var q = "faccsdfaasf;";
             var userProfile = (UserProfile)this.Session["UserInfo"];
 
             if(userProfile == null)
@@ -156,7 +159,12 @@ namespace SDC.web.Controllers
 
             using(var db= new SDCContext())
             {
-                var shelf = db.Shelves.Find(id);
+                var shelf = db.Shelves
+                    .Include("Books")
+                    .Include(a => a.Books.Select(b=>b.Authors))
+                    .Include(a => a.Books.Select(b => b.Genres))
+                    .Include(a => a.Books.Select(b=>b.Publisher))
+                    .FirstOrDefault(p => p.Id == id);
                 if (shelf == null)
                     return RedirectToAction("Index");
 
@@ -167,6 +175,7 @@ namespace SDC.web.Controllers
 
                 var vm = new ShelfViewModel()
                 {
+                    Id = shelf.Id,
                     Name = shelf.Name,
                     IsVisible = shelf.IsVisible,
                     BookCount = shelf.Books.Count(),
@@ -176,6 +185,26 @@ namespace SDC.web.Controllers
                 };
                 return View(vm);
             }
+        }
+
+        [HttpGet]
+        public ActionResult ViewBook(int id = 0)
+        {
+            if (id == 0) //this should not happen
+                return RedirectToAction("Index", "Home");
+
+            using(var db = new SDCContext())
+            {
+                var book = db.Books
+                    .Include(b=>b.Shelf)
+                    .Include(b => b.Authors)
+                    .Include(b => b.Genres)
+                    .Include(b => b.Publisher)
+                    .Include(b=> b.Pictures)
+                    .First(b => b.Id == id);
+                return View(book);
+            }
+            
         }
 
         [HttpPost]
@@ -188,15 +217,32 @@ namespace SDC.web.Controllers
             using (var db = new SDCContext())
             using(var t = db.Database.BeginTransaction())
             {
+                //verify that the shelf exists and it belongs to the logged in user
+                var shelf = db.Shelves.Include(o=>o.Owner).FirstOrDefault(s=>s.Id == book.ShelfId);
+                if (shelf == null || shelf.Owner.UserId != profile.UserId)
+                {
+                    //redirect to home?! 
+                    //this is not expected to happen, anyway.
+                    return RedirectToAction("Index", "Home");
+                }
+
                 profile = db.UserProfiles.Find(profile.UserId);
                 Book newBook = new Book();
+                newBook.Shelf = shelf;
+
 
                 //add existing authors
+                var authors_ids = book.Authors.Where(a=>a.Id != 0)
+                    .Select(a => a.Id);
                 var existing_authors = (from a in db.Authors
-                                        where a.Id != 0
-                                        select db.Authors.Find(a.Id));
+                                         where authors_ids.Contains(a.Id)
+                                         select a);
+
                 foreach (var a in existing_authors)
-                    newBook.Authors.Add(a);
+                {
+                    if(a != null)
+                        newBook.Authors.Add(a);
+                }
 
                 //add new authors
                 var new_authors = (from a in book.Authors
@@ -240,6 +286,8 @@ namespace SDC.web.Controllers
                 newBook.Title = book.Title;
                 newBook.Year = book.Year;
                 newBook.ISBN = book.ISBN;
+                newBook.Language = book.Language.Code;
+                newBook.AddedDate = DateTime.Now;
 
                 db.Books.Add(newBook);
                 db.SaveChanges();
