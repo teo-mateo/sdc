@@ -1,5 +1,4 @@
-﻿using SDC.web.Models;
-using SDC.web.Models.Books;
+﻿using SDC.data.Entity.Books;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
+using SDC.data;
 
 namespace SDC.web.Controllers
 {

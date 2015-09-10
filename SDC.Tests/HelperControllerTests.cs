@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SDC.web.Controllers;
-using SDC.web.Models.Books;
+using SDC.data.Entity.Books;
 
 namespace SDC.Tests
 {

@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
-namespace SDC.web.Models.Books
+namespace SDC.data.Entity.Books
 {
     public class Book
     {

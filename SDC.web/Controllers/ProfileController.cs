@@ -1,5 +1,4 @@
-﻿using SDC.web.Models;
-using SDC.web.ViewModels;
+﻿using SDC.web.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,10 +6,12 @@ using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
 using System.Web.Security;
-using SDC.web.Models.Profile;
 using System.IO;
 using WebMatrix.WebData;
 using Microsoft.AspNet.Identity;
+using SDC.data;
+using SDC.data.Entity;
+using SDC.data.Entity.Profile;
 
 namespace SDC.web.Controllers
 {
@@ -119,7 +120,7 @@ namespace SDC.web.Controllers
 
         [HttpPost]
         [ActionName("ChangePassword")]
-        public ActionResult ChangePassword_Post(Models.Profile.ChangePasswordModel model)
+        public ActionResult ChangePassword_Post(ChangePasswordModel model)
         {
             if (!User.Identity.IsAuthenticated)
                 return Redirect("/");

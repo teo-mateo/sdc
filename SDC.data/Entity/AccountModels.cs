@@ -1,13 +1,13 @@
-﻿using SDC.web.Models.Common;
+﻿using SDC.data.Entity.Location;
+using SDC.data.Entity.Profile;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Globalization;
-using System.Web.Security;
 
-namespace SDC.web.Models
+namespace SDC.data.Entity
 {
     [Table("UserProfile")]
     public class UserProfile

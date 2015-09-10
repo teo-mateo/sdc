@@ -1,5 +1,5 @@
-﻿using SDC.web.Models;
-using SDC.web.Models.Common;
+﻿using SDC.data.Entity.Location;
+using SDC.data.Entity.Profile;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

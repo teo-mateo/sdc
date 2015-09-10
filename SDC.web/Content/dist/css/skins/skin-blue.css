@@ -132,7 +132,7 @@
   border-bottom-right-radius: 2px;
   border-bottom-left-radius: 0;
 }
-.skin-blue.layout-top-nav .main-header > .logo {
+.skin-blue .layout-top-nav .main-header > .logo {
   background-color: #3c8dbc;
   color: #ffffff;
   border-bottom: 0 solid transparent;

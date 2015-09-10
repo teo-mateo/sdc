@@ -30,28 +30,6 @@ namespace SDC.web
         }
 
 
-        public static string GetConnectionString()
-        {
-            try
-            {
-                var azureKey = "SQLAZURECONNSTR_sdcContext";
-                var connectionString = Environment.GetEnvironmentVariable(azureKey);
 
-                if (connectionString == null)
-                {
-                    var cs = System.Configuration.ConfigurationManager.ConnectionStrings["SDCConnectionString"];
-                    if (cs == null)
-                        return "sdc_no_connection_string";
-                    else
-                        return cs.ConnectionString;
-                }
-
-                return connectionString;
-            }
-            catch
-            {
-                return "sdc_no_connection_string";
-            }
-        }
     }
 }

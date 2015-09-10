@@ -1093,33 +1093,21 @@
     <Compile Include="App_Start\MappingsConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdministrationController.cs" />
     <Compile Include="Controllers\AuthorsController.cs" />
+    <Compile Include="Controllers\DirectoryController.cs" />
+    <Compile Include="Controllers\ExchangeController.cs" />
     <Compile Include="Controllers\HelperController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\ShelvesController.cs" />
+    <Compile Include="Controllers\WishlistController.cs" />
     <Compile Include="Filters\MyActionFilterAttribute.cs" />
-    <Compile Include="Models\Books\Author.cs" />
-    <Compile Include="Models\Books\Book.cs" />
-    <Compile Include="Models\Books\BookPicture.cs" />
-    <Compile Include="Models\Books\Genre.cs" />
-    <Compile Include="Models\Books\Publisher.cs" />
-    <Compile Include="Models\Books\Shelf.cs" />
     <Compile Include="Modules\RequestHijacker.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\AccountModels.cs" />
-    <Compile Include="Models\Audit\LogInTrace.cs" />
-    <Compile Include="Models\Location\Country.cs" />
-    <Compile Include="Models\MyHub1.cs" />
-    <Compile Include="Models\Profile\ChangeEmailModel.cs" />
-    <Compile Include="Models\Profile\ChangePasswordModel.cs" />
-    <Compile Include="Models\Profile\DeleteAccountModel.cs" />
-    <Compile Include="Models\Roles.cs" />
-    <Compile Include="Models\SDCContext.cs" />
-    <Compile Include="Models\Avatar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AuthorListViewModel.cs" />
     <Compile Include="ViewModels\AuthorViewModel.cs" />
@@ -1154,6 +1142,11 @@
     <Content Include="Views\Shelves\ViewBook.cshtml" />
     <Content Include="Views\Authors\ViewAuthor.cshtml" />
     <Content Include="Views\Authors\Index.cshtml" />
+    <Content Include="Views\Directory\Index.cshtml" />
+    <Content Include="Views\Exchange\Index.cshtml" />
+    <Content Include="Views\Wishlist\Index.cshtml" />
+    <Content Include="Views\Administration\Index.cshtml" />
+    <Content Include="Views\Administration\Users.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1164,9 +1157,14 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\Uploads\" />
+    <Folder Include="Models\" />
     <Folder Include="Views\Helper\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SDC.data\SDC.data.csproj">
+      <Project>{51f255cd-eeee-429c-bb7e-7daaef28d5d0}</Project>
+      <Name>SDC.data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SDC.Library\SDC.Library.csproj">
       <Project>{54bb2f49-fc1a-4226-a45d-94426daaa5be}</Project>
       <Name>SDC.Library</Name>

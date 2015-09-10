@@ -1,9 +1,6 @@
 ﻿using DotNetOpenAuth.AspNet;
 using Microsoft.Web.WebPages.OAuth;
-using SDC.web.Models;
-using SDC.web.Models.Audit;
-using SDC.web.Models.Books;
-using SDC.web.Models.Profile;
+using SDC.data.Entity.Books;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +9,10 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using WebMatrix.WebData;
+using SDC.data.Entity.Profile;
+using SDC.data;
+using SDC.data.Entity.Audit;
+using SDC.data.Entity;
 
 namespace SDC.web.Controllers
 {
@@ -85,9 +86,6 @@ namespace SDC.web.Controllers
         {
             using (var db = new SDCContext())
             {
-                
-
-
                 var profile = (UserProfile)this.Session["UserInfo"];
 
                 if (profile.Avatar == null)
@@ -214,9 +212,6 @@ namespace SDC.web.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
-
-
-
 
         //
         // POST: /Account/Disassociate

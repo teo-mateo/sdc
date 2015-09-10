@@ -1,7 +1,8 @@
-﻿@model SDC.web.Models.Profile.ChangeEmailModel
+﻿@model SDC.data.Entity.Profile.ChangeEmailModel
 
-<h4>Change your E-mail</h4>
-<hr />
+@{ 
+    ViewBag.Title = "Change your E-mail";
+}
 
 <!-- Custom Tabs -->
 <div class="nav-tabs-custom">
@@ -9,6 +10,8 @@
         <li class="active"><a href="#">Change E-mail</a></li>
     </ul>
     <div class="tab-content">
+
+        <span> You need to input your password to change your E-mail.</span>
 
         @if (Model.UserMessage != null)
         {

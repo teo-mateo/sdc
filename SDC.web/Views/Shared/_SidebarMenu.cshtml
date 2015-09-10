@@ -1,4 +1,4 @@
-﻿@model SDC.web.Models.UserProfile
+﻿@model SDC.data.Entity.UserProfile
 <!-- Sidebar Menu -->
 <ul class="sidebar-menu">
     <li class="header">Areas</li>
@@ -12,21 +12,21 @@
         My Shelves
         -->
 
-    @if (Model.Role == SDC.web.Models.RolesCustom.ADMIN)
+    @if (Model.Role == SDC.data.Entity.Profile.RolesCustom.ADMIN)
     {
         <li>
             <a href="@Url.Action("Users", "Administration")">
                 <i class="fa fa-link"></i>
-                <span>Manage users</span>
+                <span><strike>Manage users</strike></span>
             </a>
         </li>
     }
-    else if (Model.Role == SDC.web.Models.RolesCustom.CURATOR)
+    else if (Model.Role == SDC.data.Entity.Profile.RolesCustom.CURATOR)
     {
         <li>
             <a href="@Url.Action("Books", "Maintenance")">
                 <i class="fa fa-link"></i>
-                <span>Manage books</span>
+                <span><strike>Manage books</strike></span>
             </a>
         </li>
     }
@@ -34,14 +34,14 @@
     <li>
         <a href="@Url.Action("Index", "Authors")">
             <i class="fa fa-link"></i>
-            <span>Authors</span>
+            <span><strike>Authors</strike></span>
         </a>
     </li>
 
     <li>
         <a href="@Url.Action("Index", "Directory")">
             <i class="fa fa-link"></i>
-            <span>Directory</span>
+            <span><strike>Directory</strike></span>
         </a>
     </li>    
 
@@ -53,16 +53,16 @@
     </li>
 
     <li>
-        <a href="@Url.Action("Index", "Exchanges")">
+        <a href="@Url.Action("Index", "Exchange")">
             <i class="fa fa-link"></i>
-            <span>My exchanges</span>
+            <span><strike>My exchanges</strike></span>
         </a>
     </li>
 
     <li>
         <a href="@Url.Action("Index", "Wishlist")">
             <i class="fa fa-link"></i>
-            <span>My wishlist</span>
+            <span><strike>My wishlist</strike></span>
         </a>
     </li>
 

@@ -11,8 +11,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDC.Tests", "SDC.Tests\SDC.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "etc", "etc", "{89BA8EB6-F6B6-4E6A-8620-8543E06225AF}"
 	ProjectSection(SolutionItems) = preProject
+		etc\clear_iis_express.ps1 = etc\clear_iis_express.ps1
 		etc\membership.sql = etc\membership.sql
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDC.data", "SDC.data\SDC.data.csproj", "{51F255CD-EEEE-429C-BB7E-7DAAEF28D5D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +35,10 @@ Global
 		{AECF442A-B756-49A5-995F-0A67C037DB0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AECF442A-B756-49A5-995F-0A67C037DB0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AECF442A-B756-49A5-995F-0A67C037DB0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51F255CD-EEEE-429C-BB7E-7DAAEF28D5D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51F255CD-EEEE-429C-BB7E-7DAAEF28D5D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51F255CD-EEEE-429C-BB7E-7DAAEF28D5D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51F255CD-EEEE-429C-BB7E-7DAAEF28D5D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

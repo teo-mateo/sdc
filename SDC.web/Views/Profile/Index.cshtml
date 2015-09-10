@@ -26,12 +26,12 @@
             <div class="row row-spaced">
                 <div class="col-sm-3"><strong>User name:</strong></div>
                 <div class="col-sm-3">@Model.UserName</div>
-                <div class="col-sm-6"><a href="/Profile/ChangePassword">change password</a></div>
+                <div class="col-sm-6"><a href="@Url.Action("ChangePassword", "Profile")">change password</a></div>
             </div>
             <div class="row row-spaced">
                 <div class="col-sm-3"><strong>E-mail:</strong></div>
                 <div class="col-sm-3">@Model.Email</div>
-                <div class="col-sm-6"><a href="/Profile/ChangeEmail">change e-mail</a></div>
+                <div class="col-sm-6"><a href="@Url.Action("ChangeEmail", "Profile")">change e-mail</a></div>
             </div>
             <div class="row row-spaced">
                 <div class="col-sm-3"><strong>Avatar:</strong></div>

@@ -1,5 +1,5 @@
-﻿using SDC.web.Models.Books;
-using SDC.web.Models.Common;
+﻿using SDC.data.Entity.Books;
+using SDC.data.Entity.Location;
 using System;
 using System.Collections.Generic;
 using System.Linq;

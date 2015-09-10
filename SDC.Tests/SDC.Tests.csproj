@@ -69,6 +69,10 @@
     <Compile Include="HelperControllerTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SDC.data\SDC.data.csproj">
+      <Project>{51f255cd-eeee-429c-bb7e-7daaef28d5d0}</Project>
+      <Name>SDC.data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SDC.Library\SDC.Library.csproj">
       <Project>{54bb2f49-fc1a-4226-a45d-94426daaa5be}</Project>
       <Name>SDC.Library</Name>

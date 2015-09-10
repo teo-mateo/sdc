@@ -1,4 +1,4 @@
-﻿using SDC.web.Models;
+﻿using SDC.data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,10 +40,6 @@ namespace SDC.web.Filters
                         }
                     }
                 }
-            }
-            else
-            {
-                
             }
         }
     }

@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = Model.Name;
-    ViewBag.User = (SDC.web.Models.UserProfile)Session["UserInfo"];
+    ViewBag.User = (SDC.data.Entity.UserProfile)Session["UserInfo"];
 }
 
 @if (ViewBag.User.IsAdmin || ViewBag.User.IsCurator)

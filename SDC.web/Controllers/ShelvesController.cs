@@ -1,6 +1,4 @@
-﻿using SDC.web.Models;
-using SDC.web.Models.Books;
-using SDC.web.Models.Common;
+﻿using SDC.data.Entity.Books;
 using SDC.web.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -8,6 +6,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
+using SDC.data.Entity;
+using SDC.data;
+using SDC.data.Entity.Location;
 
 namespace SDC.web.Controllers
 {

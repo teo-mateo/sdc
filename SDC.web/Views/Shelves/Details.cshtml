@@ -242,7 +242,7 @@
 </script>
 
 <a class="btn btn-primary margin-bottom" onclick="$('#newBookModal').modal('show');">
-    New book
+     Add a book
 </a>
 
 <a class="btn btn-default margin-bottom" href="@Url.Action("Index")">Go back</a>
@@ -334,7 +334,7 @@
 
 <div class="box">
     <div class="box-header">
-        <div class="box-title">Books in @Model.Name</div>
+        <div class="box-title">Books in @Model.Name : <strong>@Model.BookCount books.</strong></div>
     </div>
     <div class="box-body">
         <table class="table table-hover table-striped">
@@ -349,6 +349,13 @@
                 </tr>
             </thead>
  
+            @if(Model.BookCount == 0)
+            {
+                <tr>
+                    <td colspan="6">There are no books on this shelf.</td>
+                </tr>
+            }
+
             @foreach(var book in Model.Books)
             {
                 <tr>

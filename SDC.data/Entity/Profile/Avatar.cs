@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace SDC.web.Models
+namespace SDC.data.Entity.Profile
 {
     public class Avatar 
     {
