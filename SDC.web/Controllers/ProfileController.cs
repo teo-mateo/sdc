@@ -280,7 +280,7 @@ namespace SDC.web.Controllers
         [HttpPost]
         public ActionResult UploadAvatar(UserProfileViewModel model)
         {
-            if (model.ImageUpload != null && model.ImageUpload.ContentLength > 0)
+            if (model.ImageUpload != null && model.ImageUpload.ContentLength > 0 && model.ImageUpload.ContentLength < 1024*1024)
             {
                 var profile = db.UserProfiles.First(p => p.UserName == User.Identity.Name);
 
