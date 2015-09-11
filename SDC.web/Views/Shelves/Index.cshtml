@@ -173,15 +173,12 @@
                     </td>
                 </tr>
             }
-
-            @using (Html.BeginForm("DeleteShelf", "Shelves", FormMethod.Post, new { @id = "deleteShelfForm" }))
-            {
-                <input type="hidden" id="DeleteShelfId" name="DeleteShelfId" />
-
-
-            }
-
         </table>
+
+        @using (Html.BeginForm("DeleteShelf", "Shelves", FormMethod.Post, new { @id = "deleteShelfForm" }))
+        {
+            <input type="hidden" id="DeleteShelfId" name="DeleteShelfId" />
+        }
     </div>
 </div>
 

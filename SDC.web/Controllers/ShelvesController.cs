@@ -9,6 +9,7 @@ using System.Data.Entity;
 using SDC.data.Entity;
 using SDC.data;
 using SDC.data.Entity.Location;
+using SDC.data.Entity.Profile;
 
 namespace SDC.web.Controllers
 {
@@ -324,6 +325,35 @@ namespace SDC.web.Controllers
             };
 
             return Json(b, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteBook(int deleteBookId)
+        {
+            using (var db = new SDCContext())
+            {
+                var book = db.Books
+                    .Include(b=>b.Shelf)
+                    .Include(b=>b.Shelf.Owner)
+                    .FirstOrDefault(b=>b.Id == deleteBookId);
+                if(book != null)
+                {
+                    var shelfId = book.Shelf.Id;
+
+                    // only admin, curator or shelf owner can delete it.
+                    var profile = (UserProfile)Session["UserInfo"];
+                    if( profile.Role == RolesCustom.ADMIN || 
+                        profile.Role == RolesCustom.CURATOR ||
+                        book.Shelf.Owner.UserId == profile.UserId)
+                    {
+                        db.Books.Remove(book);
+                        db.SaveChanges();
+                        return RedirectToAction("Details", "Shelves", new { id = shelfId });
+                    }
+                }
+            }
+            //any other case
+            return RedirectToAction("Index", "Home");
         }
 
     }

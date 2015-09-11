@@ -64,6 +64,17 @@
 
 <script type="text/javascript">
 
+    function deleteBook(id) {
+        bootbox.confirm(
+        "Are you sure you want to delete this book?",
+        function (result) {
+            if (result) {
+                $('#deleteBookId').val(id);
+                $('#deleteBookForm').submit();
+            }
+        });
+    }
+
     function removeAuthor(removeAuthorLink) {
         var li = removeAuthorLink.parent();
         li.remove();
@@ -358,7 +369,7 @@
 
             @foreach(var book in Model.Books)
             {
-                <tr>
+                <tr id="book-@book.Id">
                     <td>
                         <strong>
                             <a href="@Url.Action("ViewBook", "Shelves", new { id = book.Id })">
@@ -394,7 +405,7 @@
                     </td>
 
                     <td>
-                        <a href="#" onclick="deleteBook(@book.Id);">
+                        <a href="#" onclick="deleteBook(@book.Id)">
                             <span class="glyphicon glyphicon-trash"></span>
                             <span>Delete</span>
                         </a>
@@ -407,7 +418,10 @@
                 </tr>
             }
 
-
         </table>
+        @using (Html.BeginForm("DeleteBook", "Shelves", FormMethod.Post, new { id = "deleteBookForm" }))
+        {
+            <input type="hidden" id="deleteBookId" name="deleteBookId" />
+        }
     </div>
 </div>
