@@ -77,7 +77,7 @@ namespace SDC.Library.S3
                     {
                         Key = key,
                         Url = HttpUtility.HtmlEncode(
-                            String.Format("https://{0}.{1}/{2}", _s3_bucket_name, _s3_bucket_region, key))
+                            String.Format("http://{0}.{1}/{2}", _s3_bucket_name, _s3_bucket_region, key))
                     };
                 }
             }
