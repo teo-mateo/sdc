@@ -65,18 +65,6 @@
     <Compile Include="Entity\Profile\Roles.cs" />
     <Compile Include="Entity\s3\S3File.cs" />
     <Compile Include="Entity\Settings.cs" />
-    <Compile Include="Migrations\201509111409361_added_settings_table.cs" />
-    <Compile Include="Migrations\201509111409361_added_settings_table.Designer.cs">
-      <DependentUpon>201509111409361_added_settings_table.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201509111427029_settings_key.cs" />
-    <Compile Include="Migrations\201509111427029_settings_key.Designer.cs">
-      <DependentUpon>201509111427029_settings_key.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201509111628461_avatars_key.cs" />
-    <Compile Include="Migrations\201509111628461_avatars_key.Designer.cs">
-      <DependentUpon>201509111628461_avatars_key.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SDCContext.cs" />
@@ -86,17 +74,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201509111409361_added_settings_table.resx">
-      <DependentUpon>201509111409361_added_settings_table.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201509111427029_settings_key.resx">
-      <DependentUpon>201509111427029_settings_key.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201509111628461_avatars_key.resx">
-      <DependentUpon>201509111628461_avatars_key.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
