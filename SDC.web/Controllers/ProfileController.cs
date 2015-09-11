@@ -13,7 +13,6 @@ using SDC.data;
 using SDC.data.Entity;
 using SDC.data.Entity.Profile;
 using SDC.Library.S3;
-using SDC.data.Entity.s3;
 
 namespace SDC.web.Controllers
 {

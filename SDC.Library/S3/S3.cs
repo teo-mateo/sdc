@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace SDC.Library.S3
 {
@@ -39,12 +40,11 @@ namespace SDC.Library.S3
 
         public static S3File UploadUserAvatar(string userid, string fileName, Stream inputStream)
         {
+            var s3Config = new AmazonS3Config() { ServiceURL = "http://" + _s3_bucket_region };
             using (var cli = new AmazonS3Client(
                 _s3_access_key, 
-                _s3_secret_access_key, new AmazonS3Config()
-            {
-                ServiceURL = "http://" + _s3_bucket_region
-            }))
+                _s3_secret_access_key, 
+                s3Config))
             {
                 //root_folder/userid/pic.jpg
                 string key = String.Format("{0}/{1}/{2}", root_profile_pics, userid, fileName);
@@ -61,20 +61,23 @@ namespace SDC.Library.S3
                 var response = cli.PutObject(req);
                 if(response.HttpStatusCode != System.Net.HttpStatusCode.OK)
                 {
-                    throw new Exception("upload failed.");
+                    throw new Exception("s3: upload failed.");
                 }
                 else
                 {
                     var psur = new GetPreSignedUrlRequest()
                     {
                         BucketName = _s3_bucket_name,
-                        Key = key
+                        Key = key, 
+                        Expires = DateTime.Now.AddDays(3000)
                     };
-                    var url = cli.GetPreSignedURL(psur);
+
+
                     return new S3File()
                     {
                         Key = key,
-                        Url = url
+                        Url = HttpUtility.HtmlEncode(
+                            String.Format("https://{0}.{1}/{2}", _s3_bucket_name, _s3_bucket_region, key))
                     };
                 }
             }
@@ -82,7 +85,27 @@ namespace SDC.Library.S3
 
         public static void DeleteUserAvatar(string key)
         {
-            throw new NotImplementedException();
+            var s3Config = new AmazonS3Config() { ServiceURL = "http://" + _s3_bucket_region };
+            using (var cli = new AmazonS3Client(
+                _s3_access_key,
+                _s3_secret_access_key,
+                s3Config))
+            {
+                DeleteObjectRequest req = new DeleteObjectRequest()
+                {
+                    BucketName = _s3_bucket_name,
+                    Key = key
+                };
+
+                //I should use async.
+                // shoud I? :))
+
+                var response = cli.DeleteObject(req);
+                if(response.HttpStatusCode != System.Net.HttpStatusCode.NoContent)
+                {
+                    throw new Exception("s3: delete file failed.");
+                }
+            }
         }
     }
 }

@@ -2,6 +2,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SDC.Library.S3;
 using System.IO;
+using System.Web;
+using System.Net;
 
 namespace SDC.Tests
 {
@@ -26,7 +28,9 @@ namespace SDC.Tests
             {
                 userid = Guid.NewGuid().ToString();
                 S3File f = S3.UploadUserAvatar(userid, "pic1.jpg", fs);
-                Assert.IsTrue(f.Url.StartsWith("https://sdc-dev.s3.amazonaws.com/profile_pics/" + userid + "/pic1.jpg"));
+                var req = WebRequest.Create(f.Url);
+                var response = req.GetResponse();
+                Assert.IsTrue(response.ContentLength > 0);
             }
         }
     }
