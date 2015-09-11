@@ -1,12 +1,11 @@
-﻿namespace SDC.web.Migrations
-{
-    using data.Entity.Profile;
-    using data;
-    using System;
-    using System.Data.Entity;
-    using System.Data.Entity.Migrations;
-    using System.Linq;
+﻿using SDC.data.Entity.Profile;
+using System;
+using System.Data.Entity;
+using System.Data.Entity.Migrations;
+using System.Linq;
 
+namespace SDC.data.Migrations
+{
     internal sealed class Configuration : DbMigrationsConfiguration<SDCContext>
     {
         public Configuration()

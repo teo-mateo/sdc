@@ -154,7 +154,7 @@ namespace SDC.web.Controllers
         /// <param name="id">id of the shelf</param>
         /// <returns>view</returns>
         [HttpGet]
-        public ActionResult Details(int id=0)
+        public ActionResult Details(int id, int page=0, int pagesize=20)
         {
             var profile = (UserProfile)this.Session["UserInfo"];
 

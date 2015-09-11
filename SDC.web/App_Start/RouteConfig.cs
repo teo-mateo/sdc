@@ -14,10 +14,22 @@ namespace SDC.web
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                name: "ShelfView",
+                url: "Shelves/Details/{id}/{page}/{pageSize}",
+                defaults: new
+                {
+                    controller = "Shelves",
+                    action = "Details",
+                    id = UrlParameter.Optional
+                });
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
+
+
         }
     }
 }

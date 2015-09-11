@@ -12,6 +12,8 @@ using Microsoft.AspNet.Identity;
 using SDC.data;
 using SDC.data.Entity;
 using SDC.data.Entity.Profile;
+using SDC.Library.S3;
+using SDC.data.Entity.s3;
 
 namespace SDC.web.Controllers
 {
@@ -281,38 +283,35 @@ namespace SDC.web.Controllers
         {
             if (model.ImageUpload != null && model.ImageUpload.ContentLength > 0)
             {
-                var uploadDir = "~/Content/Uploads";
-                var imagePath = Path.Combine(Server.MapPath(uploadDir), model.ImageUpload.FileName);
-                var imageUrl = Path.Combine(uploadDir, model.ImageUpload.FileName);
-                imageUrl = VirtualPathUtility.ToAbsolute(imageUrl);
-
-                
-
                 var profile = db.UserProfiles.First(p => p.UserName == User.Identity.Name);
 
-                //now save the avatar entity
-                //if there is already a custom avatar set up:
-                // - delete old image
-                // - use the new one.
                 var customExisting = db.Avatars.FirstOrDefault(p => p.CustomForUserId == profile.UserId);
                 if (customExisting != null)
                 {
-                    var path = Server.MapPath(customExisting.Url);
-                    System.IO.File.Delete(path);
+                    if(!String.IsNullOrEmpty(customExisting.Key))
+                    S3.DeleteUserAvatar(customExisting.Key);
 
-                    model.ImageUpload.SaveAs(imagePath);
+                    S3File f = S3.UploadUserAvatar(
+                        profile.UserId.ToString(), 
+                        model.ImageUpload.FileName, 
+                        model.ImageUpload.InputStream);
 
-                    customExisting.Url = imageUrl;
+                    customExisting.Url = f.Url;
+                    customExisting.Key = f.Key;
                     profile.Avatar = customExisting;
                 }
                 else
                 {
-                    model.ImageUpload.SaveAs(imagePath);
+                    var f = S3.UploadUserAvatar(
+                        profile.UserId.ToString(),
+                        model.ImageUpload.FileName,
+                        model.ImageUpload.InputStream);
 
                     Avatar custom = new Avatar()
                     {
                         CustomForUserId = profile.UserId,
-                        Url = imageUrl
+                        Url = f.Url,
+                        Key = f.Url
                     };
                     db.Avatars.Add(custom);
                     profile.Avatar = custom;
