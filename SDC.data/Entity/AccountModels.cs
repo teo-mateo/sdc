@@ -44,6 +44,8 @@ namespace SDC.data.Entity
         {
             get { return Role == RolesCustom.CURATOR; }
         }
+
+        public int PageSize { get; set; }
     }
 
     public class RegisterExternalLoginModel

@@ -23,7 +23,7 @@ namespace SDC.web.ViewModels
         public List<Genre> Genres { get; set; }
         public Language Language { get; set; }
         public int ShelfId { get; set; }
-
+        public string Description { get; set; }
     }
 
     //public class AuthorViewModel

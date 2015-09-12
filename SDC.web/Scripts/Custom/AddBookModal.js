@@ -12,9 +12,7 @@
 
     //click on the save button
     $('.btnSaveNewBook').click(function () {
-        /*
-             { "Id": 1, "Name": "genre_name" }
-        */
+
         //construct a json object holding all the book properties
         var bookJson =
         {
@@ -32,7 +30,8 @@
             "Publisher": {
                 "Id": _m.find('.bookPublisher').attr('data-selected-id'),
                 "Name": _m.find('.bookPublisher').attr('data-selected-name')
-            }
+            }, 
+            "Description": _m.find('.bookDescription').val()
         };
 
         //gather all authors
@@ -52,22 +51,48 @@
             };
         });
 
-        //todo: set genres
+        //validate the object
+        var valid = true;
+        if (bookJson["Title"].length == 0 || bookJson["Title"].length > 100) {
+            _m.find('.bookTitle').parent().addClass("has-error");
+            valid = false;
+        } else{
+            _m.find('.bookTitle').parent().removeClass("has-error");
+        }
 
-        //send json 
-        $.ajax({
-            url: _addBookModal.addBookUrl, 
-            type: "POST",
-            data: JSON.stringify(bookJson),
-            contentType: "application/json; charset=utf-8",
-            error: function (response) {
-                toastr.error('error saving book', 'error');
-            },
-            success: function (response) {
-                _m.modal('hide');
-                location.reload();
-            }
-        });
+        if (bookJson["Authors"].length == 0) {
+            _m.find('.searchAuthor').parent().addClass("has-error");
+            valid = false;
+        } else {
+            _m.find('.searchAuthor').parent().removeClass("has-error");
+        }
+
+
+        var yearAsInt = parseInt(bookJson["Year"]);
+        if (isNaN(yearAsInt) || (yearAsInt < 1000 || yearAsInt > 2016)) {
+            _m.find('.bookYear').parent().addClass("has-error");
+            valid = false;
+        } else {
+            _m.find('.bookYear').parent().removeClass("has-error");
+        }
+
+        if (valid) {
+            //send json 
+            $.ajax({
+                url: _addBookModal.addBookUrl,
+                type: "POST",
+                data: JSON.stringify(bookJson),
+                contentType: "application/json; charset=utf-8",
+                error: function (response) {
+                    toastr.error('error saving book', 'error');
+                },
+                success: function (response) {
+                    _m.modal('hide');
+                    location.reload();
+                }
+            });
+        }
+
     });
 
     //add author

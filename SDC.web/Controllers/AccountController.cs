@@ -30,13 +30,16 @@ namespace SDC.web.Controllers
         
         private void SaveLoginTrace(string userName, SDCContext db)
         {
+            DateTime now = DateTime.Now;
+
             var profile = db.UserProfiles.First(p => p.UserName == userName);
+            profile.LastSeen = now;
 
             string ip = this.Request.ServerVariables["REMOTE_ADDR"];
             var trace = new LogInTrace()
             {
                 User = profile,
-                Timestamp = DateTime.Now,
+                Timestamp = now,
                 IPAddress = ip
             };
 
@@ -182,6 +185,10 @@ namespace SDC.web.Controllers
                                 .Include(p => p.Avatar)
                                 .Include(p => p.Country.Language)
                                 .First(p => p.UserName == model.UserName);
+
+                            //default page size:10
+                            profile.PageSize = 10;
+                            profile.Created = DateTime.Now;
 
                             //create default shelf
                             Shelf defaultShelf = new Shelf()

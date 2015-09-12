@@ -20,5 +20,8 @@ namespace SDC.web.ViewModels
         public List<Book> Books { get; set; }
         public Language[] Languages { get; set; }
         public Genre[] Genres { get; set; }
+        public int Page { get; internal set; }
+        public int PageSize { get; internal set; }
+        public int TotalPages { get; internal set; }
     }
 }

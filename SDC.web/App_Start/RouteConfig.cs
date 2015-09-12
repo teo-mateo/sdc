@@ -15,12 +15,13 @@ namespace SDC.web
 
             routes.MapRoute(
                 name: "ShelfView",
-                url: "Shelves/Details/{id}/{page}/{pageSize}",
+                url: "Shelves/Details/{id}/{page}/{pagesize}",
                 defaults: new
                 {
                     controller = "Shelves",
                     action = "Details",
-                    id = UrlParameter.Optional
+                    id = UrlParameter.Optional, 
+                    pagesize=UrlParameter.Optional
                 });
 
             routes.MapRoute(

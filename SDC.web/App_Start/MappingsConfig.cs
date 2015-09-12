@@ -23,6 +23,8 @@ namespace SDC.web.App_Start
             AutoMapper.Mapper.CreateMap<Book, BookViewModel>()
                 .ForMember(vm => vm.Language,
                 opts => opts.MapFrom(src => new Language { Code = src.Language, Name = src.Language }));
+
+            AutoMapper.Mapper.CreateMap<BookViewModel, Book>();
         }
     }
 }

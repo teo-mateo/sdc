@@ -16,12 +16,12 @@
 <!-- toastr -->
 <script src="~/Scripts/toastr.js"></script>
 <link rel="stylesheet" href="~/Content/toastr.min.css" />
+<script src="~/Scripts/jquery.validate.js"></script>
 
 <!-- new book modal -->
 <div class="modal fade" id="newBookModal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
-
             <input type="hidden" value="@Model.Id" class="shelfId" />
 
             <div class="modal-header">
@@ -32,13 +32,16 @@
             <div class="modal-body">
                 <div class="form-horizontal">
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">Title:</label>
-                        <input type="text" class="form-control col-sm-7 bookTitle" />
+                        <label class="control-label col-sm-3">Title:</label>
+                        <input type="text" class="form-control col-sm-7 bookTitle"
+                               placeholder="required" />
                     </div>
+
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Author(s):</label>
                         <!-- search box-->
-                        <input type="text" class="col-sm-4 searchAuthor form-control pull-left" />
+                        <input type="text" class="col-sm-4 searchAuthor form-control pull-left"
+                               placeholder="at least one author is required" />
                         <!-- add-->
                         <button class="btn btn-default col-sm-1 btnAddAuthor">
                             Add
@@ -62,7 +65,7 @@
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Year:</label>
-                        <input type="number" class="col-sm-9 form-control bookYear" min="1" max="2016" />
+                        <input type="number" class="col-sm-9 form-control bookYear" min="1" max="2016" value="2015"/>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Language:</label>
@@ -70,7 +73,7 @@
 
                             @foreach (var lang in Model.Languages)
                             {
-                                <option value="@lang.Code" @((Model.DefaultLanguage != null && lang.Code == Model.DefaultLanguage.Code)? "selected" : "")>@lang.Name</option>
+                                <option value="@lang.Code" @((Model.DefaultLanguage != null && lang.Code == Model.DefaultLanguage.Code) ? "selected" : "")>@lang.Name</option>
                             }
                         </select>
                     </div>
@@ -81,14 +84,19 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Publisher:</label>
                         <!-- publisher search box-->
-                        <input type="text" class="col-sm-9 bookPublisher form-control pull-left" />
+                        <input type="text" class="col-sm-9 bookPublisher form-control pull-left"
+                               placeholder="start typing the publisher's name" />
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Your description:</label>
+                        <textarea class="col-sm-9 bookDescription form-control" rows="10"></textarea>
                     </div>
                 </div>
             </div>
 
             <div class="modal-footer">
                 <div class="btn-toolbar">
-                    <button type="button" class="btn btn-default pull-right" onclick="$('#newBookModal').modal('hide');">Go back</button>
+                    <button type="button" class="btn btn-default pull-right" onclick="$('#newBookModal').modal('hide');">Cancel</button>
                     <button type="submit" class="btn btn-primary pull-right btnSaveNewBook">Save changes</button>
                 </div>
             </div>

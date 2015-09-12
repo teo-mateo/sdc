@@ -155,12 +155,25 @@ namespace SDC.web.Controllers
         /// <param name="id">id of the shelf</param>
         /// <returns>view</returns>
         [HttpGet]
-        public ActionResult Details(int id, int page=0, int pagesize=20)
+        public ActionResult Details(int id, int page=1, int pagesize = 0)
         {
             var profile = (UserProfile)this.Session["UserInfo"];
 
-            using(var db= new SDCContext())
+            if (pagesize < 1 || pagesize > 100)
+                pagesize = profile.PageSize;
+
+            using (var db= new SDCContext())
             {
+                //update profile page size
+                if (pagesize != profile.PageSize)
+                {
+                    profile = db.UserProfiles
+                        .Include(p=>p.Country)
+                        .FirstOrDefault(p=>p.UserId == profile.UserId);
+                    profile.PageSize = pagesize;
+                    db.SaveChanges();
+                }
+
                 var shelf = db.Shelves
                     .Include("Books")
                     .Include(a => a.Books.Select(b=>b.Authors))
@@ -175,16 +188,27 @@ namespace SDC.web.Controllers
                     return RedirectToAction("Index", "Home");
                 }
 
+                int totalPages = ((int)Math.Ceiling((double)shelf.Books.Count / pagesize));
+                if (page > totalPages)
+                    page = totalPages;
+
                 var vm = new ShelfViewModel()
                 {
                     Id = shelf.Id,
                     Name = shelf.Name,
                     IsVisible = shelf.IsVisible,
                     BookCount = shelf.Books.Count(),
-                    Books = shelf.Books.ToList(),
+                    Books = shelf.Books
+                        .OrderBy(b=>b.AddedDate)
+                        .Skip((page-1) * pagesize)
+                        .Take(pagesize)
+                        .ToList(),
                     Languages = Language.GetAll(db),
                     Genres = Genre.GetAll(db),
-                    DefaultLanguage = profile.Country.Language
+                    DefaultLanguage = profile.Country.Language, 
+                    Page=page,
+                    PageSize=pagesize, 
+                    TotalPages=totalPages
                 };
                 return View(vm);
             }
@@ -230,67 +254,104 @@ namespace SDC.web.Controllers
                 }
 
                 profile = db.UserProfiles.Find(profile.UserId);
-                Book newBook = new Book();
+                Book newBook = AutoMapper.Mapper.Map<Book>(book);
                 newBook.Shelf = shelf;
-
-
-                //add existing authors
-                var authors_ids = book.Authors.Where(a=>a.Id != 0)
-                    .Select(a => a.Id);
-                var existing_authors = (from a in db.Authors
-                                         where authors_ids.Contains(a.Id)
-                                         select a);
-
-                foreach (var a in existing_authors)
-                {
-                    if(a != null)
-                        newBook.Authors.Add(a);
-                }
-
-                //add new authors
-                var new_authors = (from a in book.Authors
-                                   where a.Id == 0
-                                   select a);
-                foreach (var a in new_authors)
-                {
-                    a.AddedBy = profile;
-                    newBook.Authors.Add(a);
-                }
-
-
-                //genre
-                if (book.Genres != null)
-                {
-                    foreach(var g in book.Genres)
-                    {
-                        newBook.Genres.Add(db.Genres.Find(g.Id));
-                    }
-                }
-
-                //publisher
-                if(book.Publisher != null)
-                {
-                    if(book.Publisher.Id == 0)
-                    {
-                        book.Publisher.AddedBy = profile;
-                        db.Publishers.Add(book.Publisher);
-                        db.SaveChanges();
-                        newBook.Publisher = book.Publisher;
-                    }
-                    else
-                    {
-                        newBook.Publisher = db.Publishers.Find(book.Publisher.Id);
-                    }
-
-                    
-                }
-
-                //simple properties
-                newBook.Title = book.Title;
-                newBook.Year = book.Year;
-                newBook.ISBN = book.ISBN;
-                newBook.Language = book.Language.Code;
                 newBook.AddedDate = DateTime.Now;
+
+                //add genres to the db context
+                if (newBook.Genres != null)
+                    foreach (var g in newBook.Genres)
+                    {
+                        //right way
+                        db.Genres.Attach(g);
+                        db.Entry<Genre>(g).State = EntityState.Unchanged;
+                    }
+
+                //add authors to the db context
+                if(newBook.Authors != null)
+                {
+                    foreach(var a in newBook.Authors)
+                    {
+                        //I am only attaching the existing authors.
+                        //for the new ones, they should be added.
+                        if (a.Id != 0)
+                        {
+                            db.Authors.Attach(a);
+                            db.Entry<Author>(a).State = EntityState.Unchanged;
+                        }
+                        else
+                        {
+                            a.IsVerified = false;
+                            a.AddedBy = profile;
+                        }
+                            
+                    }
+                }
+
+                //add publisher to the db context
+                if(newBook.Publisher != null)
+                {
+                    db.Publishers.Attach(newBook.Publisher);
+                    db.Entry<Publisher>(newBook.Publisher).State = EntityState.Unchanged;
+                }
+                ////add existing authors
+                //var authors_ids = book.Authors.Where(a=>a.Id != 0)
+                //    .Select(a => a.Id);
+                //var existing_authors = (from a in db.Authors
+                //                         where authors_ids.Contains(a.Id)
+                //                         select a);
+
+                //foreach (var a in existing_authors)
+                //{
+                //    if(a != null)
+                //        newBook.Authors.Add(a);
+                //}
+
+                ////add new authors
+                //var new_authors = (from a in book.Authors
+                //                   where a.Id == 0
+                //                   select a);
+                //foreach (var a in new_authors)
+                //{
+                //    a.AddedBy = profile;
+                //    newBook.Authors.Add(a);
+                //}
+
+
+                ////genre
+                //if (book.Genres != null)
+                //{
+                //    foreach(var g in book.Genres)
+                //    {
+                //        newBook.Genres.Add(db.Genres.Find(g.Id));
+                //    }
+                //}
+
+                ////publisher
+                //if(book.Publisher != null)
+                //{
+                //    if(book.Publisher.Id == 0)
+                //    {
+                //        book.Publisher.AddedBy = profile;
+                //        db.Publishers.Add(book.Publisher);
+                //        db.SaveChanges();
+                //        newBook.Publisher = book.Publisher;
+                //    }
+                //    else
+                //    {
+                //        newBook.Publisher = db.Publishers.Find(book.Publisher.Id);
+                //    }
+
+
+                //}
+
+                ////simple properties
+                //newBook.Title = book.Title;
+                //newBook.Year = book.Year;
+                //newBook.ISBN = book.ISBN;
+                //newBook.Language = book.Language.Code;
+                //newBook.AddedDate = DateTime.Now;
+                //newBook.Description = book.Description;
 
                 db.Books.Add(newBook);
                 db.SaveChanges();

@@ -106,11 +106,11 @@ namespace SDC.data.Migrations
             context.Languages.AddOrUpdate(new data.Entity.Location.Language() { Name = "Czech", Code = "CS"});
             context.Languages.AddOrUpdate(new data.Entity.Location.Language() { Name = "Danish", Code = "DA"});
             context.Languages.AddOrUpdate(new data.Entity.Location.Language() { Name = "Dutch", Code = "NL"});
-            context.Languages.AddOrUpdate(new data.Entity.Location.Language() { Name = "English", Code = "EN"});
+            context.Languages.AddOrUpdate(new data.Entity.Location.Language() { Name = "English", Code = "EN", IsVisible=true});
             context.Languages.AddOrUpdate(new data.Entity.Location.Language() { Name = "Estonian", Code = "ET"});
             context.Languages.AddOrUpdate(new data.Entity.Location.Language() { Name = "Fiji", Code = "FJ"});
             context.Languages.AddOrUpdate(new data.Entity.Location.Language() { Name = "Finnish", Code = "FI"});
-            context.Languages.AddOrUpdate(new data.Entity.Location.Language() { Name = "French", Code = "FR"});
+            context.Languages.AddOrUpdate(new data.Entity.Location.Language() { Name = "French", Code = "FR", IsVisible=true});
             context.Languages.AddOrUpdate(new data.Entity.Location.Language() { Name = "Georgian", Code = "KA"});
             context.Languages.AddOrUpdate(new data.Entity.Location.Language() { Name = "German", Code = "DE"});
             context.Languages.AddOrUpdate(new data.Entity.Location.Language() { Name = "Greek", Code = "EL"});
@@ -142,7 +142,7 @@ namespace SDC.data.Migrations
             context.Languages.AddOrUpdate(new data.Entity.Location.Language() { Name = "Portuguese", Code = "PT"});
             context.Languages.AddOrUpdate(new data.Entity.Location.Language() { Name = "Punjabi", Code = "PA"});
             context.Languages.AddOrUpdate(new data.Entity.Location.Language() { Name = "Quechua", Code = "QU"});
-            context.Languages.AddOrUpdate(new data.Entity.Location.Language() { Name = "Romanian", Code = "RO"});
+            context.Languages.AddOrUpdate(new data.Entity.Location.Language() { Name = "Romanian", Code = "RO", IsVisible=true});
             context.Languages.AddOrUpdate(new data.Entity.Location.Language() { Name = "Russian", Code = "RU"});
             context.Languages.AddOrUpdate(new data.Entity.Location.Language() { Name = "Samoan", Code = "SM"});
             context.Languages.AddOrUpdate(new data.Entity.Location.Language() { Name = "Serbian", Code = "SR"});
