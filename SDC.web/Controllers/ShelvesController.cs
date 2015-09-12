@@ -296,7 +296,7 @@ namespace SDC.web.Controllers
                 t.Commit();
             }
 
-            return RedirectToAction("Index");
+            return null;
         }
 
         [HttpPost]

@@ -1,0 +1,96 @@
+﻿@model SDC.web.ViewModels.ShelfViewModel
+
+<script type="text/javascript">
+
+    //global object to hold razor-generated urls
+    var _addBookModal = {
+        addBookUrl: '@Url.Action("AddBook", "Shelves")',
+        searchAuthorUrl: '@Url.Action("GetAuthorsJson", "Helper")',
+        searchPublisherUrl: '@Url.Action("GetPublishersJson", "Helper")'
+    }
+
+</script>
+
+<script src="~/Scripts/Custom/AddBookModal.js"></script>
+
+<!-- toastr -->
+<script src="~/Scripts/toastr.js"></script>
+<link rel="stylesheet" href="~/Content/toastr.min.css" />
+
+<!-- new book modal -->
+<div class="modal fade" id="newBookModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <input type="hidden" value="@Model.Id" class="shelfId" />
+
+            <div class="modal-header">
+                <div class="modal-title">
+                    <h4>Add a new book</h4>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Title:</label>
+                        <input type="text" class="form-control col-sm-7 bookTitle" />
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Author(s):</label>
+                        <!-- search box-->
+                        <input type="text" class="col-sm-4 searchAuthor form-control pull-left" />
+                        <!-- add-->
+                        <button class="btn btn-default col-sm-1 btnAddAuthor">
+                            Add
+                        </button>
+                        <!-- authors: vertical line -->
+                        <div style="border-left: thick solid #ff0000;">
+                            <!-- list-->
+                            <ul class="listAuthors col-sm-4" style="list-style-type:none;"></ul>
+                        </div>
+
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Genres:</label>
+                        <select class="col-sm-4 form-control bookGenres" multiple="multiple" size="10">
+                            @foreach (var genre in Model.Genres)
+                            {
+                                <option value="@genre.Id">@genre.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Year:</label>
+                        <input type="number" class="col-sm-9 form-control bookYear" min="1" max="2016" />
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Language:</label>
+                        <select class="col-sm-9 form-control bookLanguage">
+                            @foreach (var lang in Model.Languages)
+                            {
+                                <option value="@lang.Code">@lang.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">ISBN:</label>
+                        <input class="col-sm-9 bookISBN form-control" type="text" />
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Publisher:</label>
+                        <!-- publisher search box-->
+                        <input type="text" class="col-sm-9 bookPublisher form-control pull-left" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="btn-toolbar">
+                    <button type="button" class="btn btn-default pull-right" onclick="$('#newBookModal').modal('hide');">Go back</button>
+                    <button type="submit" class="btn btn-primary pull-right btnSaveNewBook">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
