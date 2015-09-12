@@ -15,6 +15,8 @@ namespace SDC.web.ViewModels
         public int BookCount { get; set; }
         public bool IsVisible { get; set; }
 
+        public Language DefaultLanguage { get; set; }
+
         public List<Book> Books { get; set; }
         public Language[] Languages { get; set; }
         public Genre[] Genres { get; set; }

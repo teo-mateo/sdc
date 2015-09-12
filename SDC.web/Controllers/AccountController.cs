@@ -13,6 +13,7 @@ using SDC.data.Entity.Profile;
 using SDC.data;
 using SDC.data.Entity.Audit;
 using SDC.data.Entity;
+using System.Data.Entity;
 
 namespace SDC.web.Controllers
 {
@@ -108,7 +109,8 @@ namespace SDC.web.Controllers
                 using(var db = new SDCContext())
                 {
                     var profile = db.UserProfiles
-                        .Include("Avatar")
+                        .Include(p => p.Avatar)
+                        .Include(p => p.Country.Language)
                         .First(p => p.UserName == model.UserName);
                     profile.Role = Roles.GetRolesForUser(model.UserName)[0];
                     Session["UserInfo"] = profile;
@@ -177,7 +179,8 @@ namespace SDC.web.Controllers
                         if (WebSecurity.Login(model.UserName, model.Password))
                         {
                             var profile = db.UserProfiles
-                                .Include("Avatar")
+                                .Include(p => p.Avatar)
+                                .Include(p => p.Country.Language)
                                 .First(p => p.UserName == model.UserName);
 
                             //create default shelf

@@ -83,6 +83,37 @@
             </div>
 
             <div class="row row-spaced">
+                <div class="col-sm-3"><strong>Country:</strong></div>
+                <div class="dropdown col-sm-2">
+                    <button class="btn flat dropdown-toggle"
+                            type="button" id="dropdownCountries"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="true">
+                        @if (Model.Country.Code == null)
+                        {
+                            <span>Choose</span>
+                            <span class="caret"></span>
+                        }
+                        else
+                        {
+                            <span>@Model.Country.Name</span>
+                            <span class="caret"></span>
+                        }
+                    </button> 
+                    <ul class="dropdown-menu"
+                        aria-labelledby="dropdownCities">
+                        @foreach (var country in Model.AllCountries)
+                        {
+                            <li>
+                                <a href="@Url.Action("ChangeCountry", "Profile", new { countryCode = country.Code })">@country.Name</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row row-spaced">
                 <div class="col-sm-3"><strong>City:</strong></div>
                 <div class="dropdown col-sm-2">
                     <button class="btn flat dropdown-toggle"
@@ -106,14 +137,14 @@
                         @foreach(var city in Model.AllCities)
                         {
                             <li>
-                                <a href="@Url.Action("ChangeCity", "Profile", new { cityId = city.Id })">
-                                @city.Name
-                                </a>
+                                <a href="@Url.Action("ChangeCity", "Profile", new { cityId = city.Id })">@city.Name</a>
                             </li>
                         }
                     </ul>
                 </div>
             </div>
+
+
 
             <div class="row row-spaced">
                 <div class="col-sm-3"><strong>Member since:</strong></div>

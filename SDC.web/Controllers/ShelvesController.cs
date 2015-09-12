@@ -182,8 +182,9 @@ namespace SDC.web.Controllers
                     IsVisible = shelf.IsVisible,
                     BookCount = shelf.Books.Count(),
                     Books = shelf.Books.ToList(),
-                    Languages = Language.GetAll(db), 
-                    Genres = Genre.GetAll(db)
+                    Languages = Language.GetAll(db),
+                    Genres = Genre.GetAll(db),
+                    DefaultLanguage = profile.Country.Language
                 };
                 return View(vm);
             }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using System.Data.Entity;
 
 namespace SDC.web.Filters
 {
@@ -25,7 +26,8 @@ namespace SDC.web.Filters
                     using (var db = new SDCContext())
                     {
                         var userProfile = db.UserProfiles
-                            .Include("Avatar")
+                            .Include(p=>p.Avatar)
+                            .Include(p=>p.Country.Language)
                             .FirstOrDefault(p => p.UserName == filterContext.RequestContext.HttpContext.User.Identity.Name);
 
                         if(userProfile != null)

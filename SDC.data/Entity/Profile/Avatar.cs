@@ -12,5 +12,10 @@ namespace SDC.data.Entity.Profile
         public string Url { get; set; }
         public string Key { get; set; }
         public int CustomForUserId { get; set; }
+
+        public static Avatar[] GetDefaultAvatars(SDCContext db)
+        {
+            return db.Avatars.Where(p => p.CustomForUserId == 0).ToArray();
+        }
     }
 }

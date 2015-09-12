@@ -44,6 +44,14 @@
             };
         });
 
+        var genres = $('.bookGenres option:selected').toArray();
+        bookJson.Genres = genres.map(function (g) {
+            return {
+                "Id": g.value,
+                "Name": g.innerText
+            };
+        });
+
         //todo: set genres
 
         //send json 

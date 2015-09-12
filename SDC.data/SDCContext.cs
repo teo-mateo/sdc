@@ -46,7 +46,7 @@ namespace SDC.data
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<LogInTrace> LogInTraces { get; set; }
         public DbSet<Avatar> Avatars { get; set; }
-
+        public DbSet<Country> Countries { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Language> Languages { get; set; }
         

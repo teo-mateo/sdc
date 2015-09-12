@@ -67,9 +67,10 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Language:</label>
                         <select class="col-sm-9 form-control bookLanguage">
+
                             @foreach (var lang in Model.Languages)
                             {
-                                <option value="@lang.Code">@lang.Name</option>
+                                <option value="@lang.Code" @((Model.DefaultLanguage != null && lang.Code == Model.DefaultLanguage.Code)? "selected" : "")>@lang.Name</option>
                             }
                         </select>
                     </div>

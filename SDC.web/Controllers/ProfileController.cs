@@ -8,11 +8,12 @@ using System.Data.Entity;
 using System.Web.Security;
 using System.IO;
 using WebMatrix.WebData;
-using Microsoft.AspNet.Identity;
+using System.Data.Entity;
 using SDC.data;
 using SDC.data.Entity;
 using SDC.data.Entity.Profile;
 using SDC.Library.S3;
+using SDC.data.Entity.Location;
 
 namespace SDC.web.Controllers
 {
@@ -38,13 +39,16 @@ namespace SDC.web.Controllers
             else
             {
                 var profile = db.UserProfiles
-                    .Include("Avatar")
-                    .Include("City")
+                    .Include(p => p.Avatar)
+                    .Include(p => p.City)
+                    .Include(p=>p.Country)
                     .First(p => p.UserName == User.Identity.Name);
 
                 UserProfileViewModel profilevm = new UserProfileViewModel();
                 SDC.Library.Tools.CopySimpleProperties.Copy(profile, profilevm);
                 SDC.Library.Tools.CopySimpleProperties.Copy(profile.Avatar, profilevm.Avatar);
+                if (profile.Country != null)
+                    SDC.Library.Tools.CopySimpleProperties.Copy(profile.Country, profilevm.Country);
                 if(profile.City != null)
                     SDC.Library.Tools.CopySimpleProperties.Copy(profile.City, profilevm.City);
                 profilevm.ComputedProperty = "some value";
@@ -57,8 +61,11 @@ namespace SDC.web.Controllers
                 if (customAvatar != null)
                     profilevm.CustomAvatar = customAvatar;
 
-                profilevm.DefaultAvatars = db.Avatars.Where(p => p.CustomForUserId == 0).ToList();
-                profilevm.AllCities = db.Cities.OrderBy(p => p.Name).ToList();
+                profilevm.DefaultAvatars = Avatar.GetDefaultAvatars(db);
+                profilevm.AllCountries = Country.GetAll(db);
+                if(profilevm.Country != null)
+                    profilevm.AllCities = City.GetAll(db, profilevm.Country.Code);
+                
                 return View(profilevm);
             }
             
@@ -88,6 +95,22 @@ namespace SDC.web.Controllers
             var profile = db.UserProfiles.First(p => p.UserName == User.Identity.Name);
             var city = db.Cities.Find(cityId);
             profile.City = city;
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult ChangeCountry(string countryCode)
+        {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Home");
+
+            var profile = db.UserProfiles
+                .Include(p=>p.Country)
+                .Include(p=>p.City)
+                .First(p => p.UserName == User.Identity.Name);
+            var country = db.Countries.Find(countryCode);
+            profile.Country = country;
+            profile.City = db.Cities.FirstOrDefault(p => p.Country.Code == country.Code);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

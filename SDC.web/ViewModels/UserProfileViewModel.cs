@@ -17,6 +17,7 @@ namespace SDC.web.ViewModels
         public bool IsLocked { get; set; }
         public Avatar Avatar { get; set; }
         public string ComputedProperty { get; set; }
+        public Country Country { get; set; }
         public City City { get; set; }
         public Avatar CustomAvatar { get; set; }
 
@@ -34,11 +35,13 @@ namespace SDC.web.ViewModels
         public UserProfileViewModel()
         {
             this.Avatar = new Avatar();
+            this.Country = new Country();
             this.City = new City();
-            this.DefaultAvatars = new List<Avatar>();
+
         }
 
-        public List<Avatar> DefaultAvatars { get; set; }
-        public List<City> AllCities { get; set; }
+        public Avatar[] DefaultAvatars { get; set; }
+        public City[] AllCities { get; set; }
+        public Country[] AllCountries { get; set; }
     }
 }

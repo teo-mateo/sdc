@@ -26,6 +26,8 @@ namespace SDC.data.Entity
 
         public bool IsLocked { get; set; }
         public Avatar Avatar { get; set; }
+
+        public Country Country { get; set; }
         public City City { get; set; }
 
         public bool ShowEmail { get; set; }
