@@ -157,6 +157,9 @@ namespace SDC.web.Controllers
         [HttpGet]
         public ActionResult Details(int id, int page=1, int pagesize = 0)
         {
+            if (id == 0)
+                return RedirectToAction("Index", "Home");
+
             var profile = (UserProfile)this.Session["UserInfo"];
 
             if (pagesize < 1 || pagesize > 100)
@@ -214,158 +217,6 @@ namespace SDC.web.Controllers
             }
         }
 
-        [HttpGet]
-        public ActionResult ViewBook(int id = 0)
-        {
-            if (id == 0) //this should not happen
-                return RedirectToAction("Index", "Home");
-
-            using(var db = new SDCContext())
-            {
-                var book = db.Books
-                    .Include(b=>b.Shelf)
-                    .Include(b => b.Authors)
-                    .Include(b => b.Genres)
-                    .Include(b => b.Publisher)
-                    .Include(b=> b.Pictures)
-                    .First(b => b.Id == id);
-                return View(book);
-            }
-            
-        }
-
-        [HttpPost]
-        public ActionResult AddBook(BookViewModel book)
-        {
-            var profile = (UserProfile)Session["UserInfo"];
-            if (profile == null)
-                return RedirectToAction("Index", "Home");
-
-            using (var db = new SDCContext())
-            using(var t = db.Database.BeginTransaction())
-            {
-                //verify that the shelf exists and it belongs to the logged in user
-                var shelf = db.Shelves.Include(o=>o.Owner).FirstOrDefault(s=>s.Id == book.ShelfId);
-                if (shelf == null || shelf.Owner.UserId != profile.UserId)
-                {
-                    //redirect to home?! 
-                    //this is not expected to happen, anyway.
-                    return RedirectToAction("Index", "Home");
-                }
-
-                profile = db.UserProfiles.Find(profile.UserId);
-                Book newBook = AutoMapper.Mapper.Map<Book>(book);
-                newBook.Shelf = shelf;
-                newBook.AddedDate = DateTime.Now;
-
-                //add genres to the db context
-                if (newBook.Genres != null)
-                    foreach (var g in newBook.Genres)
-                    {
-                        //right way
-                        db.Genres.Attach(g);
-                        db.Entry<Genre>(g).State = EntityState.Unchanged;
-                    }
-
-                //add authors to the db context
-                if(newBook.Authors != null)
-                {
-                    foreach(var a in newBook.Authors)
-                    {
-                        //I am only attaching the existing authors.
-                        //for the new ones, they should be added.
-                        if (a.Id != 0)
-                        {
-                            db.Authors.Attach(a);
-                            db.Entry<Author>(a).State = EntityState.Unchanged;
-                        }
-                        else
-                        {
-                            a.IsVerified = false;
-                            a.AddedBy = profile;
-                        }
-                            
-                    }
-                }
-
-                //add publisher to the db context
-                if(newBook.Publisher != null)
-                {
-                    db.Publishers.Attach(newBook.Publisher);
-                    db.Entry<Publisher>(newBook.Publisher).State = EntityState.Unchanged;
-                }
-                ////add existing authors
-                //var authors_ids = book.Authors.Where(a=>a.Id != 0)
-                //    .Select(a => a.Id);
-                //var existing_authors = (from a in db.Authors
-                //                         where authors_ids.Contains(a.Id)
-                //                         select a);
-
-                //foreach (var a in existing_authors)
-                //{
-                //    if(a != null)
-                //        newBook.Authors.Add(a);
-                //}
-
-                ////add new authors
-                //var new_authors = (from a in book.Authors
-                //                   where a.Id == 0
-                //                   select a);
-                //foreach (var a in new_authors)
-                //{
-                //    a.AddedBy = profile;
-                //    newBook.Authors.Add(a);
-                //}
-
-
-                ////genre
-                //if (book.Genres != null)
-                //{
-                //    foreach(var g in book.Genres)
-                //    {
-                //        newBook.Genres.Add(db.Genres.Find(g.Id));
-                //    }
-                //}
-
-                ////publisher
-                //if(book.Publisher != null)
-                //{
-                //    if(book.Publisher.Id == 0)
-                //    {
-                //        book.Publisher.AddedBy = profile;
-                //        db.Publishers.Add(book.Publisher);
-                //        db.SaveChanges();
-                //        newBook.Publisher = book.Publisher;
-                //    }
-                //    else
-                //    {
-                //        newBook.Publisher = db.Publishers.Find(book.Publisher.Id);
-                //    }
-
-
-                //}
-
-                ////simple properties
-                //newBook.Title = book.Title;
-                //newBook.Year = book.Year;
-                //newBook.ISBN = book.ISBN;
-                //newBook.Language = book.Language.Code;
-                //newBook.AddedDate = DateTime.Now;
-                //newBook.Description = book.Description;
-
-                db.Books.Add(newBook);
-                db.SaveChanges();
-                t.Commit();
-            }
-
-            return null;
-        }
-
-        [HttpPost]
-        public ActionResult ChangeBook(BookViewModel book)
-        {
-            throw new NotImplementedException();
-        }
 
         [HttpGet]
         public JsonResult GetNewBook()

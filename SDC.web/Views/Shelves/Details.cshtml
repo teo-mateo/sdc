@@ -1,7 +1,7 @@
 ﻿@model SDC.web.ViewModels.ShelfViewModel
 
 @{
-    ViewBag.Title = "Details - " + Model.Name;
+    ViewBag.Title = Model.Name;
 }
 
 @section Page_Styles{
@@ -128,7 +128,7 @@
                 <tr id="book-@book.Id">
                     <td>
                         <strong>
-                            <a href="@Url.Action("ViewBook", "Shelves", new { id = book.Id })">
+                            <a href="@Url.Action("ViewBook", "Book", new { id = book.Id })">
                                 @book.Title
                             </a>    
                         </strong>
@@ -170,7 +170,7 @@
             }
 
         </table>
-        @using (Html.BeginForm("DeleteBook", "Shelves", FormMethod.Post, new { id = "deleteBookForm" }))
+        @using (Html.BeginForm("DeleteBook", "Book", FormMethod.Post, new { id = "deleteBookForm" }))
         {
             <input type="hidden" id="deleteBookId" name="deleteBookId" />
         }

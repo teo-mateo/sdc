@@ -4,7 +4,7 @@
 
     //global object to hold razor-generated urls
     var _addBookModal = {
-        addBookUrl: '@Url.Action("AddBook", "Shelves")',
+        addBookUrl: '@Url.Action("AddBook", "Book")',
         searchAuthorUrl: '@Url.Action("GetAuthorsJson", "Helper")',
         searchPublisherUrl: '@Url.Action("GetPublishersJson", "Helper")'
     }
@@ -97,7 +97,8 @@
             <div class="modal-footer">
                 <div class="btn-toolbar">
                     <button type="button" class="btn btn-default pull-right" onclick="$('#newBookModal').modal('hide');">Cancel</button>
-                    <button type="submit" class="btn btn-primary pull-right btnSaveNewBook">Save changes</button>
+                    <button type="button" class="btn btn-default pull-right btnAddPictures">Add pictures...</button> 
+                    <button type="button" class="btn btn-primary pull-right btnSaveNewBook">Save and close</button>
                 </div>
             </div>
         </div>

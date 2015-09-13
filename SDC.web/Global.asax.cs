@@ -1,4 +1,4 @@
-﻿using SDC.web.App_Start;
+﻿using SDC.web.AutoMapperConfig;
 using SDC.web.Filters;
 using SDC.web.ViewModels;
 using System;

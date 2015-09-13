@@ -12,6 +12,7 @@ namespace SDC.web.ViewModels
         public BookViewModel()
         {
             Authors = new List<Author>();
+            Genres = new List<Genre>();
         }
 
         public int Id { get; set; }
@@ -24,6 +25,9 @@ namespace SDC.web.ViewModels
         public Language Language { get; set; }
         public int ShelfId { get; set; }
         public string Description { get; set; }
+        public int OwnerId { get; set; }
+        public string OwnerName { get; set; }
+        
     }
 
     //public class AuthorViewModel

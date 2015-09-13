@@ -1025,8 +1025,10 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\toastr.scss" />
     <Content Include="Content\toastr.less" />
+    <Content Include="Areas\API\Views\web.config" />
     <None Include="Properties\PublishProfiles\schimbdecarte.pubxml" />
     <Content Include="Scripts\Custom\AddBookModal.js" />
+    <Content Include="Scripts\Custom\EditBookModal.js" />
     <Content Include="Scripts\jqfu\server\gae-go\app.yaml" />
     <Content Include="Scripts\jqfu\server\gae-go\app\main.go" />
     <Content Include="Scripts\jqfu\server\gae-python\app.yaml" />
@@ -1094,11 +1096,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\MappingsConfig.cs" />
+    <Compile Include="Areas\API\APIAreaRegistration.cs" />
+    <Compile Include="AutoMapper\MappingsConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdministrationController.cs" />
     <Compile Include="Controllers\AuthorsController.cs" />
+    <Compile Include="Controllers\BookController.cs" />
     <Compile Include="Controllers\DirectoryController.cs" />
     <Compile Include="Controllers\ExchangeController.cs" />
     <Compile Include="Controllers\HelperController.cs" />
@@ -1142,7 +1146,7 @@
     <Content Include="Views\Shared\_SidebarMenu.cshtml" />
     <Content Include="Views\Shelves\Index.cshtml" />
     <Content Include="Views\Shelves\Details.cshtml" />
-    <Content Include="Views\Shelves\ViewBook.cshtml" />
+    <Content Include="Views\Book\ViewBook.cshtml" />
     <Content Include="Views\Authors\ViewAuthor.cshtml" />
     <Content Include="Views\Authors\Index.cshtml" />
     <Content Include="Views\Directory\Index.cshtml" />
@@ -1151,6 +1155,7 @@
     <Content Include="Views\Administration\Index.cshtml" />
     <Content Include="Views\Administration\Users.cshtml" />
     <Content Include="Views\Shared\Shelves\_AddBookModal.cshtml" />
+    <Content Include="Views\Shared\Shelves\_EditBookModal.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1160,6 +1165,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\API\Controllers\" />
+    <Folder Include="Areas\API\Models\" />
+    <Folder Include="Areas\API\Views\Shared\" />
     <Folder Include="Content\Uploads\" />
     <Folder Include="Migrations\" />
     <Folder Include="Models\" />
