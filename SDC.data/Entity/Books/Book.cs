@@ -14,9 +14,9 @@ namespace SDC.data.Entity.Books
         }
 
         public int Id { get; set; }
-        public virtual ICollection<Author> Authors { get; set; }
+        public ICollection<Author> Authors { get; set; }
         public string Title { get; set; }
-        public virtual ICollection<Genre> Genres { get; set; }
+        public ICollection<Genre> Genres { get; set; }
 
         public int Year { get; set; }
         public Language Language { get; set; }

@@ -11,6 +11,7 @@ using SDC.data.Entity;
 using SDC.data.Entity.Profile;
 using AutoMapper.QueryableExtensions;
 using SDC.data.Entity.Location;
+using System.Net;
 
 namespace SDC.web.Controllers
 {
@@ -125,9 +126,104 @@ namespace SDC.web.Controllers
         }
 
         [HttpPost]
-        public ActionResult UpdateBook(BookViewModel book)
+        public ActionResult UpdateBook(BookViewModel bookViewModel)
         {
-            throw new NotImplementedException();
+            var profile = ((UserProfile)Session["UserInfo"]);
+            if (!User.Identity.IsAuthenticated || profile == null)
+                return RedirectToAction("Index", "Home");
+
+            try
+            {
+                using (var db = new SDCContext())
+                {
+                    var book = db.Books.AsNoTracking()
+                        .Include(b=>b.Authors)
+                        .Include(b=>b.Genres)
+                        .Include(b=>b.Publisher)
+                        .First(b => b.Id == bookViewModel.Id);
+
+                    AutoMapper.Mapper.Map<BookViewModel, Book>(bookViewModel, book);
+
+                    db.Books.Attach(book);
+                    db.Entry<Book>(book).State = EntityState.Modified;
+
+                    #region Authors entities
+                    var auth_to_remove = book.Authors.Where(a => !bookViewModel.Authors.Any(a2 => a2.Id == a.Id)).ToList();
+                    var auth_to_add = bookViewModel.Authors.Where(a => !book.Authors.Any(a2 => a2.Id == a.Id)).ToList();
+                    auth_to_remove.ForEach(a=>book.Authors.Remove(a));
+                    auth_to_add.ForEach(a => book.Authors.Add(a));
+
+                    foreach (Author a in book.Authors)
+                    {
+                        if (a.Id == 0)
+                        {
+                            db.Entry<Author>(a).State = EntityState.Added;
+                        }
+                        else
+                        {
+                            if (db.Set<Author>().Local.Any(local => a == local))
+                            {
+                                db.Entry<Author>(a).State = EntityState.Unchanged;
+                            }
+                            else
+                            {
+                                db.Set<Author>().Attach(a);
+                                db.Entry<Author>(a).State = EntityState.Unchanged;
+                            }
+                        }
+                    }
+                    #endregion
+
+                    #region Genres entities
+                    var genres_to_remove = book.Genres.Where(g => !bookViewModel.Genres.Any(g2 => g2.Id == g.Id)).ToList();
+                    var genres_to_add = bookViewModel.Genres.Where(g => !book.Genres.Any(g2 => g2.Id == g.Id)).ToList();
+                    genres_to_remove.ForEach(g => book.Genres.Remove(g));
+                    genres_to_add.ForEach(g => book.Genres.Add(g));
+
+                    foreach (var g in book.Genres)
+                    {
+                        if (db.Set<Genre>().Local.Any(local => g == local))
+                        {
+                            db.Entry<Genre>(g).State = EntityState.Unchanged;
+                        }
+                        else
+                        {
+                            db.Set<Genre>().Attach(g);
+                            db.Entry<Genre>(g).State = EntityState.Unchanged;
+                        }
+
+                    }
+                    #endregion
+
+                    #region Publisher entity
+
+                    book.Publisher = bookViewModel.Publisher;
+                    
+                    if (book.Publisher != null)
+                    {
+                        if (db.Set<Publisher>().Local.Any(local => book.Publisher == local))
+                        {
+                            db.Entry<Publisher>(book.Publisher).State = EntityState.Unchanged;
+                        }
+                        else
+                        {
+                            db.Set<Publisher>().Attach(book.Publisher);
+                            db.Entry<Publisher>(book.Publisher).State = EntityState.Unchanged;
+                        }
+
+                        db.Publishers.Attach(book.Publisher);
+                        db.Entry<Publisher>(book.Publisher).State = EntityState.Unchanged;
+                    } 
+                    #endregion
+
+                    db.SaveChanges();
+                    return new HttpStatusCodeResult(HttpStatusCode.OK);
+                }
+            }
+            catch(Exception ex)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError);
+            }
         }
 
         [HttpPost]

@@ -51,6 +51,8 @@ namespace SDC.web.AutoMapperConfig
 
             AutoMapper.Mapper.CreateMap<AuthorViewModel, Author>();
 
+            AutoMapper.Mapper.CreateMap<Book, Book>();
+
             //Author <-> Author, to remove books.
             AutoMapper.Mapper.CreateMap<Author, Author>()
                 .ForMember(dest => dest.Books, opts => opts.Ignore());
@@ -66,7 +68,10 @@ namespace SDC.web.AutoMapperConfig
                 opts => opts.MapFrom(src => src.Shelf.Owner.UserName));
 
 
-            AutoMapper.Mapper.CreateMap<BookViewModel, Book>();
+            AutoMapper.Mapper.CreateMap<BookViewModel, Book>()
+                .ForMember(vm => vm.Authors, opt => opt.Ignore())
+                .ForMember(vm => vm.Genres, opt => opt.Ignore())
+                .ForMember(vm => vm.Publisher, opt => opt.Ignore());
         }
     }
 }

@@ -27,6 +27,8 @@ namespace SDC.web.ViewModels
         public string Description { get; set; }
         public int OwnerId { get; set; }
         public string OwnerName { get; set; }
+
+        public DateTime AddedDate { get; set; }
         
     }
 

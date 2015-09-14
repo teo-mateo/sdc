@@ -61,6 +61,7 @@
 
     //click on the save button
     $('.btnUpdateBook').click(function () {
+        _editBookModal.bookJson.AddedDate = changeDateFormat(_editBookModal.bookJson.AddedDate);
         _editBookModal.bookJson.Title = _m.find(".bookTitle").val();
         _editBookModal.bookJson.Year = _m.find(".bookYear").val();
         _editBookModal.bookJson.ISBN = _m.find('.bookISBN').val();
@@ -99,7 +100,7 @@
             $.ajax({
                 url: _editBookModal.updateBookUrl,
                 type: "POST",
-                data: JSON.stringify(bookJson),
+                data: JSON.stringify(_editBookModal.bookJson),
                 contentType: "application/json; charset=utf-8",
                 error: function (response) {
                     toastr.error('error saving book', 'error');

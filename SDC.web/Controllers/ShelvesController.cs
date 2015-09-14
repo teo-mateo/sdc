@@ -161,6 +161,8 @@ namespace SDC.web.Controllers
                 return RedirectToAction("Index", "Home");
 
             var profile = (UserProfile)this.Session["UserInfo"];
+            if(profile == null)
+                return RedirectToAction("Index", "Home");
 
             if (pagesize < 1 || pagesize > 100)
                 pagesize = profile.PageSize;
