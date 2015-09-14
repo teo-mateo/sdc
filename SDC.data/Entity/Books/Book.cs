@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SDC.data.Entity.Location;
+using System;
 using System.Collections.Generic;
 
 namespace SDC.data.Entity.Books
@@ -18,10 +19,10 @@ namespace SDC.data.Entity.Books
         public virtual ICollection<Genre> Genres { get; set; }
 
         public int Year { get; set; }
-        public string Language { get; set; }
+        public Language Language { get; set; }
         public int? Pages { get; set; }
         public string ISBN { get; set; }
-        public virtual Publisher Publisher { get; set; }
+        public Publisher Publisher { get; set; }
         public string Description { get; set; }
         public virtual ICollection<BookPicture> Pictures { get; set; }
 

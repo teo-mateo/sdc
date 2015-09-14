@@ -24,6 +24,21 @@ namespace SDC.web.AutoMapperConfig
         }
     }
 
+    public class StripGenreBooksResolver:ValueResolver<Book, List<Genre>>
+    {
+        protected override List<Genre> ResolveCore(Book source)
+        {
+            return source.Genres.AsEnumerable()
+                .Select(g =>
+                {
+                    var genre_dest = Mapper.Map<Genre>(g);
+                    genre_dest.Books.Clear();
+                    return genre_dest;
+                })
+                .ToList();
+        }
+    }
+
     public class MappingsConfig
     {
         public static void RegisterMappings()
@@ -36,13 +51,15 @@ namespace SDC.web.AutoMapperConfig
 
             AutoMapper.Mapper.CreateMap<AuthorViewModel, Author>();
 
-            AutoMapper.Mapper.CreateMap<Author, Author>();
+            //Author <-> Author, to remove books.
+            AutoMapper.Mapper.CreateMap<Author, Author>()
+                .ForMember(dest => dest.Books, opts => opts.Ignore());
+
+            //Genre <-> Genre, to remove books.
+            AutoMapper.Mapper.CreateMap<Genre, Genre>()
+                .ForMember(dest => dest.Books, opts => opts.Ignore());
 
             AutoMapper.Mapper.CreateMap<Book, BookViewModel>()
-                .ForMember(vm => vm.Language,
-                opts => opts.MapFrom(src => new Language { Code = src.Language, Name = src.Language }))
-                .ForMember(vm => vm.Authors,
-                opts => opts.ResolveUsing<StripAuthorBooksResolver>())
                 .ForMember(vm=>vm.OwnerId,
                 opts => opts.MapFrom(src => src.Shelf.Owner.UserId))
                 .ForMember(vm => vm.OwnerName, 

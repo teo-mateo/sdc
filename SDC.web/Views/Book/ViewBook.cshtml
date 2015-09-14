@@ -1,0 +1,76 @@
+﻿
+@model SDC.web.ViewModels.BookViewModel
+
+@using SDC.data.Entity;
+
+@{
+    ViewBag.Title = Model.Title;
+}
+
+<a class="btn btn-default margin-bottom" href="@Url.Action("Details", "Shelves", new { id = Model.ShelfId})">Go back</a>
+@{
+    var profile = ((UserProfile)Session["UserInfo"]);
+    var canEditBook = profile.IsAdmin || profile.IsCurator || Model.OwnerId == profile.UserId;
+}
+
+@if (canEditBook)
+{
+    <a class="btn btn-primary margin-bottom" href="javascript:void(0);" onclick="$('#editBookModal').modal('show');">Change</a>
+}
+
+@Html.Partial("Shelves/_EditBookModal")
+
+<div class="box">
+    <div class="box-body">
+        <div class="row">
+            <div class="col-sm-6">
+                <h4>@Model.Title</h4>
+                <input type="hidden" value="@Model.Id" id="bookId" />
+                <span>
+                    by
+                    @{
+
+                        List<string> links = Model.Authors.Select(p =>
+                        {
+                            return String.Format("<a href='{0}'>{1}</a>",
+                                                Url.Action("ViewAuthor", "Authors", new { id = p.Id }),
+                                                p.Name);
+                        }).ToList();
+
+                        WriteLiteral(links.Aggregate((f, s) => f + ", " + s));
+                    }
+                </span>
+                <p>
+                    @Model.Description
+                </p>
+                <hr />
+                @if(Model.Year != 0 || Model.Publisher != null)
+                {
+                    <text>
+                        <span>Published</span>
+
+                        @if(Model.Year != 0)
+                        {
+                            <span> in @Model.Year</span>
+                        }
+                        @if(Model.Publisher != null)
+                        {
+                            <span> by @Model.Publisher.Name</span>
+                        }
+                    </text>
+                }
+                <div>
+                    Owned by <a href="@Url.Action("Profile", "Users", new { id=Model.OwnerId})">
+                        @Model.OwnerName
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-6">
+
+            </div>
+        </div>
+
+
+
+    </div>
+</div>

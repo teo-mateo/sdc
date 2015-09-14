@@ -9,6 +9,8 @@ using System.Web.Mvc;
 using System.Data.Entity;
 using SDC.data.Entity;
 using SDC.data.Entity.Profile;
+using AutoMapper.QueryableExtensions;
+using SDC.data.Entity.Location;
 
 namespace SDC.web.Controllers
 {
@@ -29,8 +31,13 @@ namespace SDC.web.Controllers
             if (id == 0) //this should not happen
                 return RedirectToAction("Index", "Home");
 
+            
+
             using (var db = new SDCContext())
             {
+                ViewBag.Languages = db.Languages.Where(p=>p.IsVisible).OrderBy(p=>p.Code).ToList();
+                ViewBag.Genres = db.Genres.OrderBy(p=>p.Name).ToList();
+
                 var book = db.Books
                     .Include(b => b.Shelf)
                     .Include(b => b.Shelf.Owner)
@@ -96,6 +103,12 @@ namespace SDC.web.Controllers
                     }
                 }
 
+                if(newBook.Language != null)
+                {
+                    db.Languages.Attach(newBook.Language);
+                    db.Entry<Language>(newBook.Language).State = EntityState.Unchanged;
+                }
+
                 //add publisher to the db context
                 if (newBook.Publisher != null)
                 {
@@ -117,7 +130,7 @@ namespace SDC.web.Controllers
             throw new NotImplementedException();
         }
 
-                [HttpPost]
+        [HttpPost]
         public ActionResult DeleteBook(int deleteBookId)
         {
             using (var db = new SDCContext())
@@ -149,16 +162,23 @@ namespace SDC.web.Controllers
         [HttpGet]
         public JsonResult GetBookJson(int id)
         {
-            using (var db = new SDCContext())
-            {
-                Book book = db.Books
-                    .Include(p => p.Authors)
-                    .Include(p => p.Genres)
-                    .Include(p => p.Publisher)
-                    .First(p => p.Id == id);
+            try {
+                using (var db = new SDCContext())
+                {
+                    //feel like doing some projections? :D
+                    //this will be more useful in the future
+                    //when a book will have other entities attached to it
+                    // such as transactions.
+                    BookViewModel bookViewModel = db.Books.AsQueryable().Project()
+                        .To<BookViewModel>()
+                        .First(b => b.Id == id);
 
-                var bookViewModel = AutoMapper.Mapper.Map<BookViewModel>(book);
-                return Json(bookViewModel, JsonRequestBehavior.AllowGet);
+                    return Json(bookViewModel, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch(Exception ex)
+            {
+                throw ex;
             }
         }
 

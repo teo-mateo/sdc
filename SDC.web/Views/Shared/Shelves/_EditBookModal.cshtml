@@ -1,1 +1,99 @@
 ﻿
+<script type="text/javascript">
+    var _editBookModal = {
+        fetchBookUrl:'@Url.Action("GetBookJson", "Book")',
+        updateBookUrl:'@Url.Action("UpdateBook", "Book")',
+        searchAuthorUrl: '@Url.Action("GetAuthorsJson", "Helper")',
+        searchPublisherUrl: '@Url.Action("GetPublishersJson", "Helper")'
+    }
+</script>
+
+<script src="~/Scripts/Custom/BookModalCommon.js"></script>
+<script src="~/Scripts/Custom/BookValidator.js"></script>
+<script src="~/Scripts/Custom/EditBookModal.js"></script>
+
+<!-- edit book modal -->
+<div class="modal fade" id="editBookModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <input type="hidden" value="" class="shelfId" />
+            <input type="hidden" value="" class="bookId" />
+            <div class="modal-header">
+                <div class="modal-title">
+                    <h4>Change book</h4>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Title:</label>
+                        <input type="text" class="form-control col-sm-7 bookTitle"
+                               placeholder="required" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Author(s):</label>
+                        <!-- search box-->
+                        <input type="text" class="col-sm-4 searchAuthor form-control pull-left"
+                               placeholder="at least one author is required" />
+                        <!-- add-->
+                        <button class="btn btn-default col-sm-1 btnAddAuthor">
+                            Add
+                        </button>
+                        <!-- authors: vertical line -->
+                        <div style="border-left: thick solid #ff0000;">
+                            <!-- list-->
+                            <ul class="listAuthors col-sm-4" style="list-style-type:none;"></ul>
+                        </div>
+
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Genres:</label>
+                        <select class="col-sm-4 form-control bookGenres" multiple="multiple" size="10">
+                            @foreach (var genre in ViewBag.Genres)
+                            {
+                                <option value="@genre.Id">@genre.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Year:</label>
+                        <input type="number" class="col-sm-9 form-control bookYear" min="1" max="2016" value="2015" />
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Language:</label>
+                        <select class="col-sm-9 form-control bookLanguage">
+
+                            @foreach (var lang in ViewBag.Languages)
+                            {
+                                <option value="@lang.Code">@lang.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">ISBN:</label>
+                        <input class="col-sm-9 bookISBN form-control" type="text" />
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Publisher:</label>
+                        <!-- publisher search box-->
+                        <input type="text" class="col-sm-9 bookPublisher form-control pull-left"
+                               placeholder="start typing the publisher's name" />
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Your description:</label>
+                        <textarea class="col-sm-9 bookDescription form-control" rows="10"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="btn-toolbar">
+                    <button type="button" class="btn btn-default pull-right" onclick="$('#editBookModal').modal('hide');">Cancel</button>
+                    <button type="button" class="btn btn-primary pull-right btnUpdateBook">Save and close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
