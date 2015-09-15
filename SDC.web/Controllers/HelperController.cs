@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
 using SDC.data;
+using System.Collections;
 
 namespace SDC.web.Controllers
 {
@@ -161,5 +162,39 @@ namespace SDC.web.Controllers
                 }
             }
         }
+
+        [HttpGet]
+        public JsonResult TestAuthorsJson(string term = "")
+        {
+            using (var db = new SDCContext())
+            {
+                int recordsTotal = db.Authors.Count();
+
+                var authors = db.Authors
+                    .Where(p => String.IsNullOrEmpty(term) || p.Name.Contains(term))
+                    .OrderBy(p=>p.Name)
+                    .Select(a => new
+                {
+                    id = a.Id.ToString(),
+                    name = a.Name, 
+                    isverified=a.IsVerified.ToString(),
+                    bookcount = a.Books.Count.ToString(),
+                    addedby = (a.AddedBy != null)?a.AddedBy.UserName:"-",
+                    addeddate = a.AddedDate.Value
+                }).ToArray();
+
+                var o = new
+                {
+                    draw = 2,
+                    recordsTotal = recordsTotal,
+                    recordsFiltered = authors.Length,
+                    data = authors.Select(a=>new string[] { a.id, a.name, a.isverified, a.bookcount, a.addedby, a.addeddate.ToString(G.DATE)}).ToArray()
+                };
+
+                return Json(o, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
     }
 }

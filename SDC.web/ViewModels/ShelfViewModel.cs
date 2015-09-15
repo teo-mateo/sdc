@@ -7,7 +7,9 @@ using System.Web;
 
 namespace SDC.web.ViewModels
 {
-    public class ShelfViewModel
+
+
+    public class ShelfViewModel : IPaginationViewModel
     {
         public int Id { get; set; }
         public DateTime CreationDate { get; set; }
@@ -20,8 +22,7 @@ namespace SDC.web.ViewModels
         public List<Book> Books { get; set; }
         public Language[] Languages { get; set; }
         public Genre[] Genres { get; set; }
-        public int Page { get; internal set; }
-        public int PageSize { get; internal set; }
-        public int TotalPages { get; internal set; }
+
+        public PaginationViewModel Pagination { get; set; }
     }
 }

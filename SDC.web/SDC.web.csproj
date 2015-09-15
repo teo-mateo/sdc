@@ -164,6 +164,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-switch\bootstrap2\bootstrap-switch.css" />
+    <Content Include="Content\bootstrap-switch\bootstrap2\bootstrap-switch.min.css" />
+    <Content Include="Content\bootstrap-switch\bootstrap3\bootstrap-switch.css" />
+    <Content Include="Content\bootstrap-switch\bootstrap3\bootstrap-switch.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -1029,6 +1033,8 @@
     <Content Include="Content\toastr.less" />
     <Content Include="Areas\API\Views\web.config" />
     <None Include="Properties\PublishProfiles\schimbdecarte.pubxml" />
+    <Content Include="Scripts\bootstrap-switch.js" />
+    <Content Include="Scripts\bootstrap-switch.min.js" />
     <Content Include="Scripts\Custom\AddBookModal.js" />
     <Content Include="Scripts\Custom\BookModalCommon.js" />
     <Content Include="Scripts\Custom\BookValidator.js" />
@@ -1123,6 +1129,7 @@
     <Compile Include="ViewModels\AuthorListViewModel.cs" />
     <Compile Include="ViewModels\AuthorViewModel.cs" />
     <Compile Include="ViewModels\BookViewModel.cs" />
+    <Compile Include="ViewModels\PaginationViewModel.cs" />
     <Compile Include="ViewModels\ShelfViewModel.cs" />
     <Compile Include="ViewModels\ShelvesViewModel.cs" />
     <Compile Include="ViewModels\UserProfileViewModel.cs" />
@@ -1160,6 +1167,8 @@
     <Content Include="Views\Administration\Users.cshtml" />
     <Content Include="Views\Shared\Shelves\_AddBookModal.cshtml" />
     <Content Include="Views\Shared\Shelves\_EditBookModal.cshtml" />
+    <Content Include="Views\Shared\Authors\_AuthorModal.cshtml" />
+    <Content Include="Views\Shared\_Pagination.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

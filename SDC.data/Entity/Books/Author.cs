@@ -17,6 +17,7 @@ namespace SDC.data.Entity.Books
         public string PictureUrl { get; set; }
         public UserProfile AddedBy { get; set; }
         public UserProfile LastModifiedBy { get; set; }
+        public DateTime? AddedDate { get; set; }
         public ICollection<Book> Books { get; set; }
         //link to wikipedia url
         public string ExternalUrl { get; set; }

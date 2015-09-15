@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using System.Data.Entity;
 using SDC.web.ViewModels;
 using SDC.data;
+using SDC.data.Entity;
+using SDC.data.Entity.Profile;
 
 namespace SDC.web.Controllers
 {
@@ -18,6 +20,16 @@ namespace SDC.web.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
+            UserProfile profile = ((UserProfile)Session["ProfileInfo"]);
+            if (profile == null || profile.Role == RolesCustom.USER)
+            {
+                ViewBag.CanEdit = false;
+            }
+            else
+            {
+                ViewBag.CanEdit = true;
+            }
+
             return View();
         }
 

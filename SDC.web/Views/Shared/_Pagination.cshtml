@@ -1,0 +1,75 @@
+﻿@model dynamic
+
+
+@* Model.Controller, Model.Action, Model.Id, Model.Page, Model.PageSize, Model.TotalPages 
+    Model.EntityName, Model.EntityCount*@
+<nav>
+    <span>Pages:</span>
+    <ul class="pagination" style="vertical-align:middle;">
+        <li class='@((Model.Page==1)?"disabled":"")'>
+            @if (Model.Page > 1)
+            {
+                <a href="@Url.Action(Model.Action, Model.Controller, new {
+                            id=Model.Id,
+                            page=Model.Page-1,
+                            pagesize=Model.PageSize
+                        })" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            }
+            else
+            {
+                <span>&laquo;</span>
+            }
+        </li>
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class='@((Model.Page== i)?"active":"")'>
+                <a href="@Url.Action(Model.Action, Model.Controller, new {
+                                id = Model.Id,
+                                page = i,
+                                pagesize = Model.PageSize })">@i</a>
+                            </li>
+        }
+        <li class='@((Model.TotalPages == Model.Page) ? "disabled" : "")'>
+            @if (Model.Page < Model.TotalPages)
+            {
+                <a href="@Url.Action(Model.Action, Model.Controller, new {
+                            id=Model.Id,
+                            page=Model.Page+1,
+                            pagesize=Model.PageSize
+                        }) " aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            }
+            else
+            {
+                <span>&raquo;</span>
+            }
+        </li>
+    </ul>
+    <span>
+        showing @Model.EntityName <strong>
+            @((Model.PageSize * (Model.Page - 1)) + 1)
+            -
+            @((Model.PageSize * (Model.Page - 1)) + Model.EntityCount)
+        </strong>
+    </span>
+    <div class="pull-right">
+        <span>@Model.EntityName per page:</span>
+        <span class="dropdown">
+            <button class="btn flat dropdown-toggle"
+                    type="button" data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="true">
+                @Model.PageSize
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="@Url.Action(Model.Action, Model.Controller, new { id=Model.Id, page=1, pagesize=5})">5 </a></li>
+                <li><a href="@Url.Action(Model.Action, Model.Controller, new { id=Model.Id, page=1, pagesize=10})">10 </a></li>
+                <li><a href="@Url.Action(Model.Action, Model.Controller, new { id=Model.Id, page=1, pagesize=50})">50 </a></li>
+            </ul>
+        </span>
+    </div>
+
+</nav>

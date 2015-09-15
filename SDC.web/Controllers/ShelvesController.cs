@@ -197,23 +197,34 @@ namespace SDC.web.Controllers
                 if (page > totalPages)
                     page = totalPages;
 
+                //actual pagination takes place here
+                var show_books = shelf.Books
+                        .OrderBy(b => b.AddedDate)
+                        .Skip((page - 1) * pagesize)
+                        .Take(pagesize)
+                        .ToList();
+
                 var vm = new ShelfViewModel()
                 {
                     Id = shelf.Id,
                     Name = shelf.Name,
                     IsVisible = shelf.IsVisible,
                     BookCount = shelf.Books.Count(),
-                    Books = shelf.Books
-                        .OrderBy(b=>b.AddedDate)
-                        .Skip((page-1) * pagesize)
-                        .Take(pagesize)
-                        .ToList(),
+                    Books = show_books,
                     Languages = Language.GetAll(db),
                     Genres = Genre.GetAll(db),
                     DefaultLanguage = profile.Country.Language, 
-                    Page=page,
-                    PageSize=pagesize, 
-                    TotalPages=totalPages
+                    Pagination = new PaginationViewModel()
+                    {
+                        Id = shelf.Id,
+                        Action = "Details", 
+                        Controller = "Shelves",
+                        Page = page, 
+                        PageSize=pagesize,
+                        TotalPages = totalPages,
+                        EntityCount = show_books.Count(),
+                        EntityName = "Books"
+                    }
                 };
                 return View(vm);
             }

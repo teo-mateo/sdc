@@ -7,10 +7,6 @@ using System.Web;
 
 namespace SDC.web.ViewModels
 {
-    //now I shall get my feet wet with .... AUTOMAPPER!
-    //other properties will come at a later time. 
-    // for now I can't think of any.
-
     public class AuthorViewModel
     {
         public int Id { get; set; }
@@ -25,7 +21,7 @@ namespace SDC.web.ViewModels
         public string PictureUrl { get; set; }
         public string AddedBy { get; set; }
         public string LastModifiedBy { get; set; }
-        public ICollection<BookViewModel> Books { get; set; }
+        public int BookCount { get; set; }
         //link to wikipedia url
         public string ExternalUrl { get; set; }
     }

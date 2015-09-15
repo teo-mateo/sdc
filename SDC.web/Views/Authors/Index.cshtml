@@ -4,4 +4,94 @@
     ViewBag.Title = "Authors";
 }
 
-<h3>not yet implemented</h3>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/bs/dt-1.10.9/datatables.min.css" />
+<script type="text/javascript" src="https://cdn.datatables.net/r/bs/dt-1.10.9/datatables.min.js"></script>
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.9/css/jquery.dataTables.css">
+<!-- DataTables -->
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.9/js/jquery.dataTables.js"></script>
+
+<!-- bootstrap switch-->
+<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-switch/bootstrap3/bootstrap-switch.min.css" />
+<script type="text/javascript" src="~/Scripts/bootstrap-switch.min.js"></script>
+
+<script>
+    var _links = {
+        viewAuthor: '@Url.Action("ViewAuthor")'
+    };
+
+    $(function () {
+
+        $('#chkBooksFilter').bootstrapSwitch({
+            'handleWidth': 75
+        });
+        $('#chkBooksFilter').click(function (event) {
+            $('#authorsTable').DataTable().ajax.reload();
+        });
+
+        $('#authorsTable').DataTable({
+            'paging': true,
+            'ajax': '@Url.Action("TestAuthorsJson", "Helper")', 
+            'columnDefs': [
+                {
+                    "render": function (data, type, row) {
+                        var viewAuthorUrl = _links.viewAuthor + '/' + row[0];
+                        return "<a href='"+viewAuthorUrl+"'>" + data + "</a>";
+                    },
+                    "targets": 1
+                }
+            ]
+        });
+    });
+</script>
+
+<div class="pull-left">
+    @if (ViewBag.CanEdit)
+    {
+        <a class="btn btn-primary margin-bottom" onclick="$('#authorModal').modal('show');">New author</a>
+    }
+</div>
+
+@Html.Partial("Authors/_AuthorModal")
+
+<div class="box">
+    <div class="box-header">
+        <div class="box-title">Search authors</div>
+    </div>
+    <div class="box-body">
+        <div style="text-align:center;">
+            <h4>Show authors:</h4>
+            <input id="chkBooksFilter" type="checkbox" data-off-text="All authors" data-on-text="With books" checked="false"/>
+        </div>
+        <div>
+            <table id="authorsTable" class="display compact" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Is verified</th>
+                        <th>Book count</th>
+                        <th>Added by</th>
+                        <th>Added date</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Is verified</th>
+                        <th>Book count</th>
+                        <th>Added by</th>
+                        <th>Added date</th>
+                    </tr>
+                </tfoot>
+
+            </table>
+        </div>
+    </div>
+    <div class="box-footer">
+
+    </div>
+</div>
+
