@@ -72,8 +72,16 @@
 
     });
 
-
-
-
-
+    _addBookModal.cancelModal = function () {
+        _m.find(".bookTitle").val('');
+        _m.find(".bookYear").val(2015);
+        _m.find('.bookISBN').val('');
+        _m.find('.bookDescription').val('')
+        _m.find('.bookPublisher').attr('data-selected-id', '');
+        _m.find('.bookPublisher').attr('data-selected-name', '');
+        _m.find('.listAuthors').empty();
+        _m.find('.bookGenres option:selected').removeAttr("selected");
+        _m.find('.bookGenres').multiselect('refresh');
+        _m.modal('hide');
+    };
 });
