@@ -7,7 +7,7 @@ using System.Web;
 
 namespace SDC.data.Entity.Books
 {
-    public class Shelf
+    public class Shelf : IEntity
     {
         public int Id { get; set; }
         public virtual UserProfile Owner { get; set; }

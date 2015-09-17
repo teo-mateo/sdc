@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace SDC.data.Entity.Books
 {
-    public class Book
+    public class Book : IEntity
     {
         public Book()
         {
@@ -34,7 +34,7 @@ namespace SDC.data.Entity.Books
         public DateTime AddedDate { get; set; }
         public Shelf Shelf { get; set; }
 
-        public static void MapComplexProperties(SDCContext db, Book book, BookViewModel bookViewModel)
+        public static void MapComplexProperties(SDCContext db, Book book, BookViewModel bookViewModel, UserProfile profile)
         {
             #region Authors entities
             var auth_to_remove = book.Authors.Where(a => !bookViewModel.Authors.Any(a2 => a2.Id == a.Id)).ToList();
@@ -46,19 +46,13 @@ namespace SDC.data.Entity.Books
             {
                 if (a.Id == 0)
                 {
+                    a.AddedDate = DateTime.Now;
+                    a.AddedBy = profile;
                     db.Entry<Author>(a).State = EntityState.Added;
                 }
                 else
                 {
-                    if (db.Set<Author>().Local.Any(local => a == local))
-                    {
-                        db.Entry<Author>(a).State = EntityState.Unchanged;
-                    }
-                    else
-                    {
-                        db.Set<Author>().Attach(a);
-                        db.Entry<Author>(a).State = EntityState.Unchanged;
-                    }
+                    db.Attach(a);
                 }
             }
             #endregion
@@ -71,38 +65,29 @@ namespace SDC.data.Entity.Books
 
             foreach (var g in book.Genres)
             {
-                if (db.Set<Genre>().Local.Any(local => g == local))
-                {
-                    db.Entry<Genre>(g).State = EntityState.Unchanged;
-                }
-                else
-                {
-                    db.Set<Genre>().Attach(g);
-                    db.Entry<Genre>(g).State = EntityState.Unchanged;
-                }
-
+                db.Attach(g);
             }
             #endregion
 
             #region Publisher entity
 
-            book.Publisher = bookViewModel.Publisher;
-
-            if (book.Publisher != null)
+            if (bookViewModel.Publisher != null)
             {
-                if (db.Set<Publisher>().Local.Any(local => book.Publisher == local))
-                {
-                    db.Entry<Publisher>(book.Publisher).State = EntityState.Unchanged;
-                }
-                else
-                {
-                    db.Set<Publisher>().Attach(book.Publisher);
-                    db.Entry<Publisher>(book.Publisher).State = EntityState.Unchanged;
-                }
-
-                db.Publishers.Attach(book.Publisher);
-                db.Entry<Publisher>(book.Publisher).State = EntityState.Unchanged;
+                db.Attach(bookViewModel.Publisher);
+                book.Publisher = bookViewModel.Publisher;
             }
+            else
+                book.Publisher = null;
+
+
+
+            #endregion
+
+            #region Language
+            var lang = bookViewModel.Language;
+            db.AttachCodeEntity(ref lang);
+            book.Language = lang;
+
             #endregion
         }
     }

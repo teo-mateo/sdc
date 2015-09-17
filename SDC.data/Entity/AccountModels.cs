@@ -6,11 +6,13 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Globalization;
+using System.Data;
+using System.Linq;
 
 namespace SDC.data.Entity
 {
     [Table("UserProfile")]
-    public class UserProfile
+    public class UserProfile 
     {
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
@@ -46,6 +48,19 @@ namespace SDC.data.Entity
         }
 
         public int PageSize { get; set; }
+
+        public static void AttachToContext(UserProfile profile, SDCContext db)
+        {
+            if (db.Set<UserProfile>().Local.Any(local => profile == local))
+            {
+                db.Entry<UserProfile>(profile).State = EntityState.Unchanged;
+            }
+            else
+            {
+                db.Set<UserProfile>().Attach(profile);
+                db.Entry<UserProfile>(profile).State = EntityState.Unchanged;
+            }
+        }
     }
 
     public class RegisterExternalLoginModel

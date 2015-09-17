@@ -5,7 +5,7 @@ using System.Web;
 
 namespace SDC.data.Entity.Books
 {
-    public class BookPicture
+    public class BookPicture : IEntity
     {
         public int Id { get; set; }
         public string Url { get; set; }

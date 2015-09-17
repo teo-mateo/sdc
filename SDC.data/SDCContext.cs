@@ -14,6 +14,48 @@ namespace SDC.data
 {
     public class SDCContext : DbContext
     {
+        public void AttachProfile(UserProfile o)
+        {
+            if (Set<UserProfile>().Local.Any(local => o == local))
+            {
+                Entry<UserProfile>(o).State = EntityState.Unchanged;
+            }
+            else
+            {
+                Set<UserProfile>().Attach(o);
+                Entry<UserProfile>(o).State = EntityState.Unchanged;
+            }
+        }
+
+        public void Attach<T>(T o) where T : class, IEntity
+        {
+            if (Set<T>().Local.Any(local => o == local))
+            {
+                Entry<T>(o).State = EntityState.Unchanged;
+            }
+            else
+            {
+                Set<T>().Attach(o);
+                Entry<T>(o).State = EntityState.Unchanged;
+            }
+        }
+
+        public void AttachCodeEntity<T>(ref T o) where T :class, ICodeEntity
+        {
+            string code = o.Code;
+            T local = Set<T>().Local.FirstOrDefault(l => l.Code.Equals(code));
+
+            if (local != null)
+            {
+                o = local;
+            }
+            else
+            {
+                Set<T>().Attach(o);
+                Entry<T>(o).State = EntityState.Unchanged;
+            }
+        }
+
         public static string GetConnectionString()
         {
             try

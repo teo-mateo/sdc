@@ -71,7 +71,8 @@ namespace SDC.web.AutoMapperConfig
             AutoMapper.Mapper.CreateMap<BookViewModel, Book>()
                 .ForMember(vm => vm.Authors, opt => opt.Ignore())
                 .ForMember(vm => vm.Genres, opt => opt.Ignore())
-                .ForMember(vm => vm.Publisher, opt => opt.Ignore());
+                .ForMember(vm => vm.Publisher, opt => opt.Ignore())
+                .ForMember(vm => vm.Language, opt => opt.Ignore());
         }
     }
 }

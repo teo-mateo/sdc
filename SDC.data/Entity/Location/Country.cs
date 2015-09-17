@@ -7,7 +7,7 @@ using System.Web;
 
 namespace SDC.data.Entity.Location
 {
-    public class Country
+    public class Country : ICodeEntity
     {
         [Key]
         public string Code { get; set; }
@@ -24,7 +24,7 @@ namespace SDC.data.Entity.Location
         }
     }
 
-    public class City
+    public class City : IEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -39,7 +39,7 @@ namespace SDC.data.Entity.Location
         }
     }
 
-    public class Language
+    public class Language : ICodeEntity
     {
         [Key]
         public string Code { get; set; }

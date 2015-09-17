@@ -122,7 +122,7 @@ namespace SDC.web.Controllers
             if (!User.Identity.IsAuthenticated)
                 return Redirect("/");
 
-            var profile = db.UserProfiles.Find(upvm.UserId);
+            var profile = db.UserProfiles.Find(upvm.Id);
             profile.ShowEmail = upvm.ShowEmail;
             db.SaveChanges();
 

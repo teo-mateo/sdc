@@ -21,7 +21,7 @@
         <div class="tab-pane active" id="Profile">
             <div class="row row-spaced">
                 <div class="col-sm-3"><strong>Id:</strong></div>
-                <div class="col-sm-9">@Model.UserId</div>
+                <div class="col-sm-9">@Model.Id</div>
             </div>
             <div class="row row-spaced">
                 <div class="col-sm-3"><strong>User name:</strong></div>
@@ -176,7 +176,7 @@
                 <div class="row row-spaced">
                     <div class="col-sm-12">
                         @Html.CheckBoxFor(m => m.ShowEmail)
-                        @Html.HiddenFor(m => m.UserId)
+                        @Html.HiddenFor(m => m.Id)
                         <span>Show Email to other users</span>
                     </div>
                 </div>

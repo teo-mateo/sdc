@@ -190,6 +190,8 @@ namespace SDC.web.Controllers
                             //default page size:10
                             profile.PageSize = 10;
                             profile.Created = DateTime.Now;
+                            profile.City = db.Cities.Include(c=>c.Country).First();
+                            profile.Country = profile.City.Country;
 
                             //create default shelf
                             Shelf defaultShelf = new Shelf()

@@ -55,12 +55,15 @@ namespace SDC.web.Controllers
         public ActionResult AddBook(BookViewModel bookViewModel)
         {
             var profile = (UserProfile)Session["UserInfo"];
-            if (profile == null)
+            if (!User.Identity.IsAuthenticated || profile == null)
                 return RedirectToAction("Index", "Home");
+
 
             using (var db = new SDCContext())
             using (var t = db.Database.BeginTransaction())
             {
+                db.AttachProfile(profile);
+
                 //verify that the shelf exists and it belongs to the logged in user
                 var shelf = db.Shelves.Include(o => o.Owner).FirstOrDefault(s => s.Id == bookViewModel.ShelfId);
                 if (shelf == null || shelf.Owner.UserId != profile.UserId)
@@ -70,18 +73,13 @@ namespace SDC.web.Controllers
                     return RedirectToAction("Index", "Home");
                 }
 
-                profile = db.UserProfiles.Find(profile.UserId);
                 Book book = AutoMapper.Mapper.Map<Book>(bookViewModel);
                 book.Shelf = shelf;
                 book.AddedDate = DateTime.Now;
 
-                if(book.Language != null)
-                {
-                    db.Languages.Attach(book.Language);
-                    db.Entry<Language>(book.Language).State = EntityState.Unchanged;
-                }
 
-                Book.MapComplexProperties(db, book, bookViewModel);
+
+                Book.MapComplexProperties(db, book, bookViewModel, profile);
 
                 db.Books.Add(book);
                 db.SaveChanges();
@@ -102,18 +100,18 @@ namespace SDC.web.Controllers
             {
                 using (var db = new SDCContext())
                 {
-                    var book = db.Books.AsNoTracking()
+                    db.AttachProfile(profile);
+
+                    var book = db.Books
                         .Include(b=>b.Authors)
                         .Include(b=>b.Genres)
                         .Include(b=>b.Publisher)
+                        .Include(b=>b.Language)
                         .First(b => b.Id == bookViewModel.Id);
 
                     AutoMapper.Mapper.Map<BookViewModel, Book>(bookViewModel, book);
 
-                    db.Books.Attach(book);
-                    db.Entry<Book>(book).State = EntityState.Modified;
-
-                    Book.MapComplexProperties(db, book, bookViewModel);
+                    Book.MapComplexProperties(db, book, bookViewModel, profile);
 
                     db.SaveChanges();
                     return new HttpStatusCodeResult(HttpStatusCode.OK);

@@ -59,6 +59,7 @@
     <Compile Include="Entity\Books\Publisher.cs" />
     <Compile Include="Entity\Books\Shelf.cs" />
     <Compile Include="Entity\Audit\LogInTrace.cs" />
+    <Compile Include="Entity\IEntity.cs" />
     <Compile Include="Entity\Location\Country.cs" />
     <Compile Include="Entity\Profile\Avatar.cs" />
     <Compile Include="Entity\Profile\ChangeEmailModel.cs" />

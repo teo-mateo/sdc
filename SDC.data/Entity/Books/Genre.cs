@@ -6,7 +6,7 @@ using System.Web;
 
 namespace SDC.data.Entity.Books
 {
-    public class Genre
+    public class Genre : IEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }

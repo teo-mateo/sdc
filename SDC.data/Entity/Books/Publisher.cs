@@ -8,7 +8,7 @@ namespace SDC.data.Entity.Books
     /// <summary>
     /// 
     /// </summary>
-    public class Publisher
+    public class Publisher : IEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }
