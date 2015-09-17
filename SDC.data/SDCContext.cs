@@ -41,6 +41,7 @@ namespace SDC.data
         public SDCContext()
             : base(GetConnectionString())
         {
+            this.Database.Log = Console.WriteLine;
         }
 
         public DbSet<UserProfile> UserProfiles { get; set; }

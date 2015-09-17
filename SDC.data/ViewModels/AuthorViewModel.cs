@@ -1,11 +1,10 @@
-﻿using Amazon.OpsWorks.Model;
-using SDC.data.Entity.Books;
+﻿using SDC.data.Entity.Books;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace SDC.web.ViewModels
+namespace SDC.data.ViewModels
 {
     public class AuthorViewModel
     {

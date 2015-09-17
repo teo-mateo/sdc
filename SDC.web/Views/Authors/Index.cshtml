@@ -1,4 +1,4 @@
-﻿@model SDC.web.ViewModels.AuthorListViewModel
+﻿@model SDC.data.ViewModels.AuthorListViewModel
 
 @{
     ViewBag.Title = "Authors";
@@ -18,33 +18,12 @@
 
 <script>
     var _links = {
-        viewAuthor: '@Url.Action("ViewAuthor")'
+        viewAuthor: '@Url.Action("ViewAuthor")',
+        fetchAuthorsJson: '@Url.Action("GetAllAuthorsJson")'
     };
-
-    $(function () {
-
-        $('#chkBooksFilter').bootstrapSwitch({
-            'handleWidth': 75
-        });
-        $('#chkBooksFilter').click(function (event) {
-            $('#authorsTable').DataTable().ajax.reload();
-        });
-
-        $('#authorsTable').DataTable({
-            'paging': true,
-            'ajax': '@Url.Action("TestAuthorsJson", "Helper")', 
-            'columnDefs': [
-                {
-                    "render": function (data, type, row) {
-                        var viewAuthorUrl = _links.viewAuthor + '/' + row[0];
-                        return "<a href='"+viewAuthorUrl+"'>" + data + "</a>";
-                    },
-                    "targets": 1
-                }
-            ]
-        });
-    });
 </script>
+
+<script src="~/Scripts/Custom/Authors/Index.js"></script>
 
 <div class="pull-left">
     @if (ViewBag.CanEdit)
@@ -56,13 +35,14 @@
 @Html.Partial("Authors/_AuthorModal")
 
 <div class="box">
-    <div class="box-header">
-        <div class="box-title">Search authors</div>
-    </div>
+    
     <div class="box-body">
-        <div style="text-align:center;">
+        <div class="row margin-bottom" style="margin-left:10px; ">
             <h4>Show authors:</h4>
-            <input id="chkBooksFilter" type="checkbox" data-off-text="All authors" data-on-text="With books" checked="false"/>
+            <span>
+                <input id="chkBooksFilter" type="checkbox" data-off-text="All authors" data-on-text="With books" checked="true" />
+            </span>
+            <button class="btn btn-primary ">New author</button>
         </div>
         <div>
             <table id="authorsTable" class="display compact" cellspacing="0" width="100%">

@@ -1,6 +1,5 @@
 ﻿using SDC.data;
 using SDC.data.Entity.Books;
-using SDC.web.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +11,7 @@ using SDC.data.Entity.Profile;
 using AutoMapper.QueryableExtensions;
 using SDC.data.Entity.Location;
 using System.Net;
+using SDC.data.ViewModels;
 
 namespace SDC.web.Controllers
 {
@@ -52,7 +52,7 @@ namespace SDC.web.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddBook(BookViewModel book)
+        public ActionResult AddBook(BookViewModel bookViewModel)
         {
             var profile = (UserProfile)Session["UserInfo"];
             if (profile == null)
@@ -62,7 +62,7 @@ namespace SDC.web.Controllers
             using (var t = db.Database.BeginTransaction())
             {
                 //verify that the shelf exists and it belongs to the logged in user
-                var shelf = db.Shelves.Include(o => o.Owner).FirstOrDefault(s => s.Id == book.ShelfId);
+                var shelf = db.Shelves.Include(o => o.Owner).FirstOrDefault(s => s.Id == bookViewModel.ShelfId);
                 if (shelf == null || shelf.Owner.UserId != profile.UserId)
                 {
                     //redirect to home?! 
@@ -71,53 +71,19 @@ namespace SDC.web.Controllers
                 }
 
                 profile = db.UserProfiles.Find(profile.UserId);
-                Book newBook = AutoMapper.Mapper.Map<Book>(book);
-                newBook.Shelf = shelf;
-                newBook.AddedDate = DateTime.Now;
+                Book book = AutoMapper.Mapper.Map<Book>(bookViewModel);
+                book.Shelf = shelf;
+                book.AddedDate = DateTime.Now;
 
-                //add genres to the db context
-                if (newBook.Genres != null)
-                    foreach (var g in newBook.Genres)
-                    {
-                        //right way
-                        db.Genres.Attach(g);
-                        db.Entry<Genre>(g).State = EntityState.Unchanged;
-                    }
-
-                //add authors to the db context
-                if (newBook.Authors != null)
+                if(book.Language != null)
                 {
-                    foreach (var a in newBook.Authors)
-                    {
-                        //I am only attaching the existing authors.
-                        //for the new ones, they should be added.
-                        if (a.Id != 0)
-                        {
-                            db.Authors.Attach(a);
-                            db.Entry<Author>(a).State = EntityState.Unchanged;
-                        }
-                        else
-                        {
-                            a.IsVerified = false;
-                            a.AddedBy = profile;
-                        }
-                    }
+                    db.Languages.Attach(book.Language);
+                    db.Entry<Language>(book.Language).State = EntityState.Unchanged;
                 }
 
-                if(newBook.Language != null)
-                {
-                    db.Languages.Attach(newBook.Language);
-                    db.Entry<Language>(newBook.Language).State = EntityState.Unchanged;
-                }
+                Book.MapComplexProperties(db, book, bookViewModel);
 
-                //add publisher to the db context
-                if (newBook.Publisher != null)
-                {
-                    db.Publishers.Attach(newBook.Publisher);
-                    db.Entry<Publisher>(newBook.Publisher).State = EntityState.Unchanged;
-                }
-
-                db.Books.Add(newBook);
+                db.Books.Add(book);
                 db.SaveChanges();
                 t.Commit();
             }
@@ -147,74 +113,7 @@ namespace SDC.web.Controllers
                     db.Books.Attach(book);
                     db.Entry<Book>(book).State = EntityState.Modified;
 
-                    #region Authors entities
-                    var auth_to_remove = book.Authors.Where(a => !bookViewModel.Authors.Any(a2 => a2.Id == a.Id)).ToList();
-                    var auth_to_add = bookViewModel.Authors.Where(a => !book.Authors.Any(a2 => a2.Id == a.Id)).ToList();
-                    auth_to_remove.ForEach(a=>book.Authors.Remove(a));
-                    auth_to_add.ForEach(a => book.Authors.Add(a));
-
-                    foreach (Author a in book.Authors)
-                    {
-                        if (a.Id == 0)
-                        {
-                            db.Entry<Author>(a).State = EntityState.Added;
-                        }
-                        else
-                        {
-                            if (db.Set<Author>().Local.Any(local => a == local))
-                            {
-                                db.Entry<Author>(a).State = EntityState.Unchanged;
-                            }
-                            else
-                            {
-                                db.Set<Author>().Attach(a);
-                                db.Entry<Author>(a).State = EntityState.Unchanged;
-                            }
-                        }
-                    }
-                    #endregion
-
-                    #region Genres entities
-                    var genres_to_remove = book.Genres.Where(g => !bookViewModel.Genres.Any(g2 => g2.Id == g.Id)).ToList();
-                    var genres_to_add = bookViewModel.Genres.Where(g => !book.Genres.Any(g2 => g2.Id == g.Id)).ToList();
-                    genres_to_remove.ForEach(g => book.Genres.Remove(g));
-                    genres_to_add.ForEach(g => book.Genres.Add(g));
-
-                    foreach (var g in book.Genres)
-                    {
-                        if (db.Set<Genre>().Local.Any(local => g == local))
-                        {
-                            db.Entry<Genre>(g).State = EntityState.Unchanged;
-                        }
-                        else
-                        {
-                            db.Set<Genre>().Attach(g);
-                            db.Entry<Genre>(g).State = EntityState.Unchanged;
-                        }
-
-                    }
-                    #endregion
-
-                    #region Publisher entity
-
-                    book.Publisher = bookViewModel.Publisher;
-                    
-                    if (book.Publisher != null)
-                    {
-                        if (db.Set<Publisher>().Local.Any(local => book.Publisher == local))
-                        {
-                            db.Entry<Publisher>(book.Publisher).State = EntityState.Unchanged;
-                        }
-                        else
-                        {
-                            db.Set<Publisher>().Attach(book.Publisher);
-                            db.Entry<Publisher>(book.Publisher).State = EntityState.Unchanged;
-                        }
-
-                        db.Publishers.Attach(book.Publisher);
-                        db.Entry<Publisher>(book.Publisher).State = EntityState.Unchanged;
-                    } 
-                    #endregion
+                    Book.MapComplexProperties(db, book, bookViewModel);
 
                     db.SaveChanges();
                     return new HttpStatusCodeResult(HttpStatusCode.OK);

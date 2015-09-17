@@ -11,6 +11,7 @@ namespace SDC.data.Entity.Books
 
         public DateTime? Born { get; set; }
         public DateTime? Died { get; set; }
+        public string Birthplace { get; set; }
 
         public string Bio { get; set; }
         public bool IsVerified { get; set; }

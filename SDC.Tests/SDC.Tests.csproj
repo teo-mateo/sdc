@@ -70,7 +70,6 @@
     <Compile Include="HelperControllerTests.cs" />
     <Compile Include="S3Tests.cs" />
     <Compile Include="MiscTests.cs" />
-    <Compile Include="UnitTest1.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SDC.data\SDC.data.csproj">

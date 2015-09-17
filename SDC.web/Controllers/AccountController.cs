@@ -25,6 +25,7 @@ namespace SDC.web.Controllers
             using (var db = new SDCContext())
             {
                 SaveLoginTrace(userName, db);
+                
             }
         }
         

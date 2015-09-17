@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using SDC.data.Entity.Books;
 using SDC.data.Entity.Location;
-using SDC.web.ViewModels;
+using SDC.data.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

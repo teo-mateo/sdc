@@ -1,6 +1,5 @@
 ﻿using SDC.web.AutoMapperConfig;
 using SDC.web.Filters;
-using SDC.web.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

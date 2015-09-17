@@ -77,17 +77,17 @@ namespace SDC.data.Migrations
             #endregion
 
             #region some authors
-            context.Authors.AddOrUpdate(new data.Entity.Books.Author() { Id = 1, Name = "Douglas Adams", IsVerified=true});
-            context.Authors.AddOrUpdate(new data.Entity.Books.Author() { Id = 2, Name = "Isaac Asimov", IsVerified = true });
-            context.Authors.AddOrUpdate(new data.Entity.Books.Author() { Id = 3, Name = "Tom Clancy", IsVerified = true });
-            context.Authors.AddOrUpdate(new data.Entity.Books.Author() { Id = 4, Name = "Bill Bryson", IsVerified = true });
-            context.Authors.AddOrUpdate(new data.Entity.Books.Author() { Id = 5, Name = "Mikhail Bulgakov", IsVerified = true });
-            context.Authors.AddOrUpdate(new data.Entity.Books.Author() { Id = 6, Name = "Agatha Christie", IsVerified = true });
-            context.Authors.AddOrUpdate(new data.Entity.Books.Author() { Id = 7, Name = "Albert Camus", IsVerified = true });
-            context.Authors.AddOrUpdate(new data.Entity.Books.Author() { Id = 8, Name = "Aldous Huxley", IsVerified = true });
-            context.Authors.AddOrUpdate(new data.Entity.Books.Author() { Id = 9, Name = "Alexander Pushkin", IsVerified = true });
-            context.Authors.AddOrUpdate(new data.Entity.Books.Author() { Id = 10, Name = "Alexandre Dumas", IsVerified = true });
-            context.Authors.AddOrUpdate(new data.Entity.Books.Author() { Id = 11, Name = "Anne Frank", IsVerified = true });
+            context.Authors.AddOrUpdate(new data.Entity.Books.Author() { Id = 1, Name = "Douglas Adams", IsVerified=true, AddedDate = new DateTime(1999, 1, 1)});
+            context.Authors.AddOrUpdate(new data.Entity.Books.Author() { Id = 2, Name = "Isaac Asimov", IsVerified = true, AddedDate = new DateTime(1999, 1, 1) });
+            context.Authors.AddOrUpdate(new data.Entity.Books.Author() { Id = 3, Name = "Tom Clancy", IsVerified = true, AddedDate = new DateTime(1999, 1, 1) });
+            context.Authors.AddOrUpdate(new data.Entity.Books.Author() { Id = 4, Name = "Bill Bryson", IsVerified = true, AddedDate = new DateTime(1999, 1, 1) });
+            context.Authors.AddOrUpdate(new data.Entity.Books.Author() { Id = 5, Name = "Mikhail Bulgakov", IsVerified = true, AddedDate = new DateTime(1999, 1, 1) });
+            context.Authors.AddOrUpdate(new data.Entity.Books.Author() { Id = 6, Name = "Agatha Christie", IsVerified = true, AddedDate = new DateTime(1999, 1, 1) });
+            context.Authors.AddOrUpdate(new data.Entity.Books.Author() { Id = 7, Name = "Albert Camus", IsVerified = true, AddedDate = new DateTime(1999, 1, 1) });
+            context.Authors.AddOrUpdate(new data.Entity.Books.Author() { Id = 8, Name = "Aldous Huxley", IsVerified = true, AddedDate = new DateTime(1999, 1, 1) });
+            context.Authors.AddOrUpdate(new data.Entity.Books.Author() { Id = 9, Name = "Alexander Pushkin", IsVerified = true, AddedDate = new DateTime(1999, 1, 1) });
+            context.Authors.AddOrUpdate(new data.Entity.Books.Author() { Id = 10, Name = "Alexandre Dumas", IsVerified = true, AddedDate = new DateTime(1999, 1, 1) });
+            context.Authors.AddOrUpdate(new data.Entity.Books.Author() { Id = 11, Name = "Anne Frank", IsVerified = true, AddedDate = new DateTime(1999, 1, 1) });
 
             #endregion
 

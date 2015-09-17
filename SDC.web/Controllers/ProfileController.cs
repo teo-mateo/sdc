@@ -1,4 +1,4 @@
-﻿using SDC.web.ViewModels;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +14,7 @@ using SDC.data.Entity;
 using SDC.data.Entity.Profile;
 using SDC.Library.S3;
 using SDC.data.Entity.Location;
+using SDC.data.ViewModels;
 
 namespace SDC.web.Controllers
 {
