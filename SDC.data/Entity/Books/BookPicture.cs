@@ -12,5 +12,6 @@ namespace SDC.data.Entity.Books
         public string Key { get; set; }
         public string Title { get; set; }
         public bool IsMain { get; set; }
+        public Book Book { get; set; }
     }
 }

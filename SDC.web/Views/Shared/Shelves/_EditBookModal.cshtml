@@ -4,9 +4,16 @@
         fetchBookUrl:'@Url.Action("GetBookJson", "Book")',
         updateBookUrl:'@Url.Action("UpdateBook", "Book")',
         searchAuthorUrl: '@Url.Action("GetAuthorsJson", "Helper")',
-        searchPublisherUrl: '@Url.Action("GetPublishersJson", "Helper")'
+        searchPublisherUrl: '@Url.Action("GetPublishersJson", "Helper")',
+        deleteImageUrl: '@Url.Action("DeleteBookPicture", "Book")',
+        viewBookUrl: '@Url.Action("ViewBook", "Book")'
     }
 </script>
+
+
+
+
+
 
 <script src="~/Scripts/Custom/BookModalCommon.js"></script>
 <script src="~/Scripts/Custom/BookValidator.js"></script>
@@ -15,80 +22,105 @@
 <!-- edit book modal -->
 <div class="modal fade" id="editBookModal" role="dialog">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content container col-md-12">
             <input type="hidden" value="" class="shelfId" />
             <input type="hidden" value="" class="bookId" />
-            <div class="modal-header">
+            <div class="modal-header row">
                 <div class="modal-title">
                     <h4>Change book</h4>
                 </div>
             </div>
-            <div class="modal-body">
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <label class="control-label col-sm-3">Title:</label>
-                        <input type="text" class="form-control col-sm-7 bookTitle"
-                               placeholder="required" />
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">Author(s):</label>
-                        <!-- search box-->
-                        <input type="text" class="col-sm-4 searchAuthor form-control pull-left"
-                               placeholder="at least one author is required" />
-                        <!-- add-->
-                        <button class="btn btn-default col-sm-1 btnAddAuthor">
-                            Add
-                        </button>
-                        <!-- authors: vertical line -->
-                        <div style="border-left: thick solid #ff0000;">
-                            <!-- list-->
-                            <ul class="listAuthors col-sm-4" style="list-style-type:none;"></ul>
+            <div class="modal-body row">
+                <div class="col-md-6">
+                    <div class="form-horizontal ">
+                        <div class="form-group" >
+                            <label class="control-label col-md-3">Title:</label>
+                            <input type="text" class="form-control bookTitle col-md-12"
+                                   placeholder="required" />
                         </div>
+                        <div class="form-group" >
+                            <label class="control-label col-md-3">Author(s):</label>
+                            <!-- search box-->
+                            <input type="text" class="searchAuthor form-control "
+                                   placeholder="at least one author is required" />
+                        </div>
+                        <div class="form-group">
+                            <!-- add-->
+                            <button class="btn btn-default col-sm-offset-3 col-sm-2 btnAddAuthor">
+                                Add
+                            </button>
+                            <!-- authors: vertical line -->
+                            <div class="col-sm-6">
+                                <!-- list-->
+                                <ul class="listAuthors list-unstyled"></ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Genres:</label>
+                            <select class="form-control bookGenres" multiple="multiple" size="10">
+                                @foreach (var genre in ViewBag.Genres)
+                                {
+                                    <option value="@genre.Id">@genre.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Year:</label>
+                            <input type="number" class="form-control bookYear" min="1" max="2016" value="2015" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Language:</label>
+                            <select class="form-control bookLanguage">
 
-
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">Genres:</label>
-                        <select class="col-sm-4 form-control bookGenres" multiple="multiple" size="10">
-                            @foreach (var genre in ViewBag.Genres)
-                            {
-                                <option value="@genre.Id">@genre.Name</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">Year:</label>
-                        <input type="number" class="col-sm-9 form-control bookYear" min="1" max="2016" value="2015" />
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">Language:</label>
-                        <select class="col-sm-9 form-control bookLanguage">
-
-                            @foreach (var lang in ViewBag.Languages)
-                            {
-                                <option value="@lang.Code">@lang.Name</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">ISBN:</label>
-                        <input class="col-sm-9 bookISBN form-control" type="text" />
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">Publisher:</label>
-                        <!-- publisher search box-->
-                        <input type="text" class="col-sm-9 bookPublisher form-control pull-left"
-                               placeholder="start typing the publisher's name" />
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">Your description:</label>
-                        <textarea class="col-sm-9 bookDescription form-control" rows="10"></textarea>
+                                @foreach (var lang in ViewBag.Languages)
+                                {
+                                    <option value="@lang.Code">@lang.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">ISBN:</label>
+                            <input class="bookISBN form-control" type="text" />
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Publisher:</label>
+                            <!-- publisher search box-->
+                            <input type="text" class="bookPublisher form-control pull-left"
+                                   placeholder="start typing the publisher's name" />
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Your description:</label>
+                            <textarea class="bookDescription form-control" rows="10"></textarea>
+                        </div>
                     </div>
                 </div>
+                <div class="col-md-6">
+                    <div class="margin">
+                        <div class="row">
+                            <div class="pull-right">
+                                <form id="fileUpload" name="fileUpload" action='@Url.Action("UploadBookPicture", "Book")'>
+                                    <input type="hidden" id="UploadForBookId" name="UploadForBookId" />
+                                    <span class="btn btn-success fileinput-button">
+                                        <i class="glyphicon glyphicon-plus"></i>
+                                        <span>Add files...</span>
+                                        <input type="file" name="ImageUpload" id="ImageUpload" multiple />
+                                    </span>
+                                    <ul id="fileList" name="fileList"></ul>
+                                </form>
+                            </div>
+
+                        </div>
+                        <!-- pictures area-->
+                        <div id="picturesArea">
+
+                        </div>
+                    </div>
+                </div>
+
+                
             </div>
 
-            <div class="modal-footer">
+            <div class="modal-footer row">
                 <div class="btn-toolbar">
                     <button type="button" class="btn btn-default pull-right" onclick="$('#editBookModal').modal('hide');">Cancel</button>
                     <button type="button" class="btn btn-primary pull-right btnUpdateBook">Save and close</button>
@@ -97,3 +129,19 @@
         </div>
     </div>
 </div>
+
+<!--knob-->
+<script src="~/Content/plugins/knob/jquery.knob.js"></script>
+<!-- blueimp upload jquery plugin-->
+<link rel="stylesheet" href="~/Content/plugins/jqfu/css/jquery.fileupload.css" />
+<link rel="stylesheet" href="~/Content/plugins/jqfu/css/jquery.fileupload-ui.css" />
+<!-- blueimp Gallery script -->
+<script src="//blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
+<script src="~/Content/plugins/jqfu/js/jquery.iframe-transport.js"></script>
+<script src="~/Content/plugins/jqfu/js/jquery.fileupload.js"></script>
+<script src="~/Content/plugins/jqfu/js/jquery.iframe-transport.js"></script>
+<script src="~/Content/plugins/jqfu/js/jquery.fileupload-image.js"></script>
+<script src="~/Content/plugins/jqfu/js/jquery.fileupload-validate.js"></script>
+<script src="~/Content/plugins/jqfu/js/jquery.fileupload-ui.js"></script>
+<!-- The Templates plugin is included to render the upload/download listings -->
+<script src="~/Scripts/tmpl.min.js"></script>

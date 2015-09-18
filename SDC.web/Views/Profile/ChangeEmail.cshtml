@@ -23,21 +23,21 @@
 
         @using (Html.BeginForm("ChangeEmail", "Profile"))
         {
-            <div class="row row-spaced">
+            <div class="row sdc-row-spaced">
                 <div class="col-sm-3"><strong>Password:</strong></div>
                 <div class="col-sm-9">
                     @Html.PasswordFor(m => m.Password)
                 </div>
             </div>
 
-            <div class="row row-spaced">
+            <div class="row sdc-row-spaced">
                 <div class="col-sm-3"><strong>E-mail:</strong></div>
                 <div class="col-sm-9">
                     @Html.EditorFor(m => m.Email)
                 </div>
             </div>
 
-            <div class="row row-spaced">
+            <div class="row sdc-row-spaced">
                 <div class="col-sm-12">
                     <div class="pull-right">
 

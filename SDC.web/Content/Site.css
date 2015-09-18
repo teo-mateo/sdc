@@ -16,14 +16,16 @@ textarea {
     max-width: 280px;
 }
 
-.row-spaced{
+.sdc-row-spaced{
     margin-top: 5px;
 }
 
+.sdc-border-left{
+    border-left: 1px dashed #333;
+}
 
 @media screen and (min-width: 768px) {
 	
 	#newBookModal .modal-dialog  {width:900px;}
     #editBookModal .modal-dialog  {width:900px;}
-
 }

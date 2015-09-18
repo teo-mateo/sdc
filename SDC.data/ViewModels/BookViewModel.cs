@@ -22,6 +22,7 @@ namespace SDC.data.ViewModels
         public List<Author> Authors { get; set; }
         public Publisher Publisher { get; set; }
         public List<Genre> Genres { get; set; }
+        public List<BookPicture> Pictures { get; set; }
         public Language Language { get; set; }
         public int ShelfId { get; set; }
         public string Description { get; set; }

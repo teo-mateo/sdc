@@ -19,26 +19,26 @@
     </ul>
     <div class="tab-content">
         <div class="tab-pane active" id="Profile">
-            <div class="row row-spaced">
+            <div class="row sdc-row-spaced">
                 <div class="col-sm-3"><strong>Id:</strong></div>
                 <div class="col-sm-9">@Model.Id</div>
             </div>
-            <div class="row row-spaced">
+            <div class="row sdc-row-spaced">
                 <div class="col-sm-3"><strong>User name:</strong></div>
                 <div class="col-sm-3">@Model.UserName</div>
                 <div class="col-sm-6"><a href="@Url.Action("ChangePassword", "Profile")">change password</a></div>
             </div>
-            <div class="row row-spaced">
+            <div class="row sdc-row-spaced">
                 <div class="col-sm-3"><strong>E-mail:</strong></div>
                 <div class="col-sm-3">@Model.Email</div>
                 <div class="col-sm-6"><a href="@Url.Action("ChangeEmail", "Profile")">change e-mail</a></div>
             </div>
-            <div class="row row-spaced">
+            <div class="row sdc-row-spaced">
                 <div class="col-sm-3"><strong>Avatar:</strong></div>
                 <img src="@Url.Content(Model.Avatar.Url)" class="col-sm-2" />
                 <div class="col-sm-7"></div>
             </div>
-            <div class="row row-spaced">
+            <div class="row sdc-row-spaced">
                 <div class="col-sm-3"></div>
                 <div class="dropdown col-sm-3">
                     <button class="btn flat dropdown-toggle"
@@ -82,7 +82,7 @@
                 </div>
             </div>
 
-            <div class="row row-spaced">
+            <div class="row sdc-row-spaced">
                 <div class="col-sm-3"><strong>Country:</strong></div>
                 <div class="dropdown col-sm-2">
                     <button class="btn flat dropdown-toggle"
@@ -113,7 +113,7 @@
                 </div>
             </div>
 
-            <div class="row row-spaced">
+            <div class="row sdc-row-spaced">
                 <div class="col-sm-3"><strong>City:</strong></div>
                 <div class="dropdown col-sm-2">
                     <button class="btn flat dropdown-toggle"
@@ -146,12 +146,12 @@
 
 
 
-            <div class="row row-spaced">
+            <div class="row sdc-row-spaced">
                 <div class="col-sm-3"><strong>Member since:</strong></div>
                 <div class="col-sm-9">12-12-2012</div>
             </div>
 
-            <div class="row row-spaced">
+            <div class="row sdc-row-spaced">
                 <div class="col-sm-3"><strong>Bookshelves:</strong></div>
                 <div class="col-sm-3">3</div>
                 <div class="col-sm-6">
@@ -159,12 +159,12 @@
                 </div>
             </div>
 
-            <div class="row row-spaced">
+            <div class="row sdc-row-spaced">
                 <div class="col-sm-3"><strong>Books:</strong></div>
                 <div class="col-sm-9">25</div>
             </div>
 
-            <div class="row row-spaced">
+            <div class="row sdc-row-spaced">
                 <div class="col-sm-3"><strong>Rating:</strong></div>
                 <div class="col-sm-9">4.5</div>
             </div>
@@ -173,7 +173,7 @@
         <div class="tab-pane" id="Privacy">
             @using (Html.BeginForm("SavePrivacyChanges", "Profile"))
             { 
-                <div class="row row-spaced">
+                <div class="row sdc-row-spaced">
                     <div class="col-sm-12">
                         @Html.CheckBoxFor(m => m.ShowEmail)
                         @Html.HiddenFor(m => m.Id)
@@ -181,7 +181,7 @@
                     </div>
                 </div>
 
-                <div class="row row-spaced">
+                <div class="row sdc-row-spaced">
                     <div class="col-sm-12">
                         <button type="submit" class="btn btn-primary pull-right">Save changes</button>
                     </div>
@@ -197,14 +197,14 @@
             
                 @using (Html.BeginForm("DeleteAccount", "Profile"))
                 {
-                    <div class="row row-spaced">
+                    <div class="row sdc-row-spaced">
                         <div class="col-sm-3"><strong>Password:</strong></div>
                         <div class="col-sm-9">
                             <input type="password" id="Password" name="Password" />
                         </div>
                     </div>
 
-                    <div class="row row-spaced">
+                    <div class="row sdc-row-spaced">
                         <div class="col-sm-12">
                             <button type="submit" class="btn btn-danger pull-right">Delete profile</button>
                         </div>

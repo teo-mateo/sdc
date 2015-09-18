@@ -27,7 +27,7 @@ namespace SDC.data.Entity.Books
         public string ISBN { get; set; }
         public Publisher Publisher { get; set; }
         public string Description { get; set; }
-        public virtual ICollection<BookPicture> Pictures { get; set; }
+        public ICollection<BookPicture> Pictures { get; set; }
 
         //todo: currencies; link to user profile?
         public decimal? Price { get; set; }

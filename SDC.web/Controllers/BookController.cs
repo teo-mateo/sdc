@@ -12,6 +12,7 @@ using AutoMapper.QueryableExtensions;
 using SDC.data.Entity.Location;
 using System.Net;
 using SDC.data.ViewModels;
+using SDC.Library.S3;
 
 namespace SDC.web.Controllers
 {
@@ -47,20 +48,28 @@ namespace SDC.web.Controllers
                     .Include(b => b.Publisher)
                     .Include(b => b.Pictures)
                     .First(b => b.Id == id);
+
+                bool showEditor = false;
+                Boolean.TryParse(Request.QueryString["showEditor"], out showEditor);
+                ViewBag.ShowEditor = showEditor;
+
                 return View(AutoMapper.Mapper.Map<BookViewModel>(book));
             }
         }
 
         [HttpPost]
-        public ActionResult AddBook(BookViewModel bookViewModel)
+        public JsonResult AddBook(BookViewModel bookViewModel)
         {
             var profile = (UserProfile)Session["UserInfo"];
             if (!User.Identity.IsAuthenticated || profile == null)
-                return RedirectToAction("Index", "Home");
+            {
+                //STUPID
+                return Json(new { id = -1 });
+            }
 
+            int id = 0;
 
             using (var db = new SDCContext())
-            using (var t = db.Database.BeginTransaction())
             {
                 db.AttachProfile(profile);
 
@@ -68,25 +77,21 @@ namespace SDC.web.Controllers
                 var shelf = db.Shelves.Include(o => o.Owner).FirstOrDefault(s => s.Id == bookViewModel.ShelfId);
                 if (shelf == null || shelf.Owner.UserId != profile.UserId)
                 {
-                    //redirect to home?! 
-                    //this is not expected to happen, anyway.
-                    return RedirectToAction("Index", "Home");
+                    //STUPID
+                    return Json(new { id = -1 });
                 }
 
                 Book book = AutoMapper.Mapper.Map<Book>(bookViewModel);
                 book.Shelf = shelf;
                 book.AddedDate = DateTime.Now;
-
-
-
                 Book.MapComplexProperties(db, book, bookViewModel, profile);
 
                 db.Books.Add(book);
                 db.SaveChanges();
-                t.Commit();
+                id = book.Id;
             }
 
-            return null;
+            return Json(new { id = id });
         }
 
         [HttpPost]
@@ -120,6 +125,47 @@ namespace SDC.web.Controllers
             catch(Exception ex)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.InternalServerError);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult UploadBookPicture(BookImageUploadViewModel model)
+        {
+            try
+            {
+                if (model.ImageUpload != null && 
+                    model.ImageUpload.ContentLength > 0 && 
+                    model.ImageUpload.ContentLength < 1024 * 1024 &&
+                    model.UploadForBookId != 0)
+                {
+                    S3File f = S3.UploadBookImage(
+                        model.UploadForBookId.ToString(), 
+                        model.ImageUpload.FileName, 
+                        model.ImageUpload.InputStream);
+
+                    using(var db = new SDCContext())
+                    {
+                        var book = db.Books.Include(b => b.Pictures).First(b => b.Id == model.UploadForBookId);
+                        book.Pictures.Add(new BookPicture()
+                        {
+                            Url = f.Url,
+                            Key = f.Key,
+                            Title = "",
+                            IsMain = false
+                        });
+
+                        db.SaveChanges();
+                        return new HttpStatusCodeResult(HttpStatusCode.OK);
+                    }
+                }
+                else
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 
@@ -171,6 +217,46 @@ namespace SDC.web.Controllers
             }
             catch(Exception ex)
             {
+                //todo: log
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult DeleteBookPicture (int id)
+        {
+            try
+            {
+                var profile = (UserProfile)this.Session["UserInfo"];
+                using (var db = new SDCContext())
+                {
+                    var picture = db.BookPictures
+                        .Include(p => p.Book)
+                        .Include(p => p.Book.Shelf)
+                        .Include(p=>p.Book.Shelf.Owner)
+                        .FirstOrDefault(p => p.Id == id);
+
+                    if(picture != null)
+                    {
+                        if (picture.Book.Shelf.Owner.UserId == profile.UserId ||
+                            profile.IsAdmin || profile.IsCurator)
+                        {
+                            db.BookPictures.Remove(picture);
+                            db.SaveChanges();
+                            S3.DeleteFile(picture.Key);
+                        }
+                        else
+                        {
+                            throw new Exception("Unauthorized");
+                        }
+                    }
+                }
+
+                return new HttpStatusCodeResult(HttpStatusCode.OK);
+            }
+            catch(Exception ex)
+            {
+                //todo: log.
                 throw ex;
             }
         }

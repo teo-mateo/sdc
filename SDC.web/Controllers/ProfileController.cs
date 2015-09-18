@@ -312,7 +312,7 @@ namespace SDC.web.Controllers
                 if (customExisting != null)
                 {
                     if(!String.IsNullOrEmpty(customExisting.Key))
-                    S3.DeleteUserAvatar(customExisting.Key);
+                    S3.DeleteFile(customExisting.Key);
 
                     S3File f = S3.UploadUserAvatar(
                         profile.UserId.ToString(), 

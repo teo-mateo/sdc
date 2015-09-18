@@ -7,11 +7,19 @@
         _m.find('.bookTitle').focus();
     });
 
+    _m.on('hidden.bs.modal', function () {
+        _m.find(".bookTitle").val('');
+        _m.find(".bookYear").val(2015);
+        _m.find('.bookISBN').val('');
+        _m.find('.bookDescription').val('')
+        _m.find('.bookPublisher').attr('data-selected-id', '');
+        _m.find('.bookPublisher').attr('data-selected-name', '');
+        _m.find('.listAuthors').empty();
+        _m.find('.bookGenres option:selected').removeAttr("selected");
+        _m.find('.bookGenres').multiselect('refresh');
+    });
 
-
-    //click on the save button
-    $('.btnSaveNewBook').click(function () {
-
+    _addBookModal.save = function (continueToEdit) {
         //construct a json object holding all the book properties
         var bookJson =
         {
@@ -29,7 +37,7 @@
             "Publisher": {
                 "Id": _m.find('.bookPublisher').attr('data-selected-id'),
                 "Name": _m.find('.bookPublisher').attr('data-selected-name')
-            }, 
+            },
             "Description": _m.find('.bookDescription').val()
         };
 
@@ -65,23 +73,26 @@
                 },
                 success: function (response) {
                     _m.modal('hide');
-                    location.reload();
+                    var id = response.id;
+                    if (id > 0) {
+                        if (continueToEdit) {
+                            $('#newBookModal').modal('hide');
+                            location = _addBookModal.viewBookUrl + '/'+id+'?showEditor=true';
+                        } else {
+                            location.reload();
+                        }
+                    }
                 }
             });
         }
+    };
 
+    //click on the save button
+    $('.btnSaveNewBook').click(function () {
+        _addBookModal.save(false);
     });
 
-    _addBookModal.cancelModal = function () {
-        _m.find(".bookTitle").val('');
-        _m.find(".bookYear").val(2015);
-        _m.find('.bookISBN').val('');
-        _m.find('.bookDescription').val('')
-        _m.find('.bookPublisher').attr('data-selected-id', '');
-        _m.find('.bookPublisher').attr('data-selected-name', '');
-        _m.find('.listAuthors').empty();
-        _m.find('.bookGenres option:selected').removeAttr("selected");
-        _m.find('.bookGenres').multiselect('refresh');
-        _m.modal('hide');
-    };
+    $('.btnAddPictures').click(function () {
+        _addBookModal.save(true);
+    });
 });

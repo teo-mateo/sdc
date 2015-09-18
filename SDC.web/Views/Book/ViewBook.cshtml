@@ -16,6 +16,14 @@
 @if (canEditBook)
 {
     <a class="btn btn-primary margin-bottom" href="javascript:void(0);" onclick="$('#editBookModal').modal('show');">Change</a>
+    if (ViewBag.ShowEditor)
+    {
+        <script>
+            $(function () {
+                $('#editBookModal').modal('show');
+            });
+        </script>
+    }
 }
 
 @Html.Partial("Shelves/_EditBookModal")

@@ -6,7 +6,8 @@
     var _addBookModal = {
         addBookUrl: '@Url.Action("AddBook", "Book")',
         searchAuthorUrl: '@Url.Action("GetAuthorsJson", "Helper")',
-        searchPublisherUrl: '@Url.Action("GetPublishersJson", "Helper")'
+        searchPublisherUrl: '@Url.Action("GetPublishersJson", "Helper")',
+        viewBookUrl: '@Url.Action("ViewBook", "Book")'
     }
 
 </script>
@@ -93,7 +94,7 @@
 
             <div class="modal-footer">
                 <div class="btn-toolbar">
-                    <button type="button" class="btn btn-default pull-right" onclick="_addBookModal.cancelModal();">Cancel</button>
+                    <button type="button" class="btn btn-default pull-right" onclick="$('#newBookModal').modal('hide');">Cancel</button>
                     <button type="button" class="btn btn-default pull-right btnAddPictures">Add pictures...</button> 
                     <button type="button" class="btn btn-primary pull-right btnSaveNewBook">Save and close</button>
                 </div>
