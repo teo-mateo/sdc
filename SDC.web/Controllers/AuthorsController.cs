@@ -54,6 +54,17 @@ namespace SDC.web.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult AddAuthor(AuthorViewModel authorViewModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ActionResult UpdateAuthor(AuthorViewModel authorViewModel)
+        {
+            throw new NotImplementedException();
+        }
+
         [HttpGet]
         public JsonResult GetAllAuthorsJson(string term = "")
         {

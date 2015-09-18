@@ -1036,6 +1036,7 @@
     <Content Include="Scripts\bootstrap-switch.js" />
     <Content Include="Scripts\bootstrap-switch.min.js" />
     <Content Include="Scripts\Custom\AddBookModal.js" />
+    <Content Include="Scripts\Custom\Authors\EditAuthor.js" />
     <Content Include="Scripts\Custom\Authors\Index.js" />
     <Content Include="Scripts\Custom\BookModalCommon.js" />
     <Content Include="Scripts\Custom\BookValidator.js" />
@@ -1161,7 +1162,7 @@
     <Content Include="Views\Administration\Users.cshtml" />
     <Content Include="Views\Shared\Shelves\_AddBookModal.cshtml" />
     <Content Include="Views\Shared\Shelves\_EditBookModal.cshtml" />
-    <Content Include="Views\Shared\Authors\_AuthorModal.cshtml" />
+    <Content Include="Views\Shared\Authors\_EditAuthorModal.cshtml" />
     <Content Include="Views\Shared\_Pagination.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
