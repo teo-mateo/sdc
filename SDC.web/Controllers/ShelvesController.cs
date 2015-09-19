@@ -21,8 +21,9 @@ namespace SDC.web.Controllers
         [ActionName("Index")]
         public ActionResult Index()
         {
+            ViewBag.Breadcrumbs = Breadcrumb.Generate(
+                "My shelves", "");
 
-            var q = "faccsdfaasf;";
             var userProfile = (UserProfile)this.Session["UserInfo"];
 
             if(userProfile == null)
@@ -48,16 +49,11 @@ namespace SDC.web.Controllers
                         BookCount = db.Entry(s).Collection(p=>p.Books).Query().Count()
                     };
                 }).ToArray();
-
-                
-
                 return View(new ShelvesViewModel()
                 {
                     Shelves = shelvesVMs
                 });
             }
-
-                
         }
 
         [HttpPost]
@@ -227,6 +223,11 @@ namespace SDC.web.Controllers
                         EntityName = "Books"
                     }
                 };
+
+                ViewBag.Breadcrumbs = Breadcrumb.Generate(
+                    "My shelves", Url.Action("Index", "Shelves"),
+                    vm.Name, "");
+
                 return View(vm);
             }
         }

@@ -19,7 +19,9 @@
 <script>
     var _links = {
         viewAuthor: '@Url.Action("ViewAuthor")',
-        fetchAuthorsJson: '@Url.Action("GetAllAuthorsJson")'
+        fetchAuthorsJson: '@Url.Action("GetAllAuthorsJson")',
+        deleteAuthor: '@Url.Action("DeleteAuthor")',
+        approveAuthor: '@Url.Action("ApproveAuthor")'
     };
 </script>
 
@@ -33,6 +35,19 @@
 </div>
 
 @Html.Partial("Authors/_EditAuthorModal")
+
+<div class="hidden">
+    <!-- Single button -->
+    <div class="btn-group singleButton">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a href="javascript:void(0);" class="lnkApprove"><span class="glyphicon glyphicon-ok"></span>Approve</a></li>
+            <li><a href="javascript:void(0);" class="lnkDelete"><span class="glyphicon glyphicon-trash"></span>Delete</a></li>
+        </ul>
+    </div>
+</div>
 
 <div class="box">
     

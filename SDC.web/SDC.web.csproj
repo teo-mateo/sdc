@@ -1165,6 +1165,7 @@
     <Content Include="Views\Shared\Shelves\_EditBookModal.cshtml" />
     <Content Include="Views\Shared\Authors\_EditAuthorModal.cshtml" />
     <Content Include="Views\Shared\_Pagination.cshtml" />
+    <Content Include="Views\Shared\_Breadcrumbs.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -80,7 +80,7 @@ namespace SDC.web.Controllers
 
         public ActionResult SidebarMenu()
         {
-            return PartialView("_SidebarMenu", Session["UserInfo"]);
+            return PartialView("_SidebarMenu", Session["UserInfo"] );
         }
 
         /// <summary>
@@ -117,7 +117,10 @@ namespace SDC.web.Controllers
                         .Include(p => p.Country.Language)
                         .First(p => p.UserName == model.UserName);
                     profile.Role = Roles.GetRolesForUser(model.UserName)[0];
+
+                    profile.Shelves = db.Shelves.Where(p => p.Owner.UserId == profile.UserId).ToList();
                     Session["UserInfo"] = profile;
+                    Session["UserInfoEx"] = profile.GetExtendedInfo(db);
                 }
 
                 SaveLoginTrace(model.UserName);
@@ -208,7 +211,10 @@ namespace SDC.web.Controllers
 
 
                             profile.Role = Roles.GetRolesForUser(model.UserName)[0];
+                            profile.Shelves = db.Shelves.Where(p => p.Owner.UserId == profile.UserId).ToList();
+
                             Session["UserInfo"] = profile;
+                            Session["UserInfoEx"] = profile.GetExtendedInfo(db);
                         }
 
                         return RedirectToAction("Index", "Home");

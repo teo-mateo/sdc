@@ -45,11 +45,27 @@
         </a>
     </li>    
 
-    <li>
+    <li class="active">
         <a href="@Url.Action("Index", "Shelves")">
             <i class="fa fa-link"></i>
             <span>My shelves</span>
+            <i class="fa fa-angle-down pull-right"></i>
         </a>
+        <ul class="treeview treeview-menu menu-open">
+            @{ 
+                
+                dynamic userInfoEx = (dynamic)Session["UserInfoEx"];
+                foreach (dynamic shelf in userInfoEx.Shelves)
+                {
+                    <li>
+                        <a href='@Url.Action("Details", "Shelves", new { id = shelf.Id })'>
+                            <i class="fa fa-circle-o"></i>
+                            <strong>@shelf.Name</strong>(@shelf.Books)
+                        </a>
+                    </li>
+                }
+                }
+        </ul>
     </li>
 
     <li>

@@ -8,9 +8,12 @@ using System.Data.Entity;
 using System.Globalization;
 using System.Data;
 using System.Linq;
+using SDC.data.Entity.Books;
+using System.Dynamic;
 
 namespace SDC.data.Entity
 {
+
     [Table("UserProfile")]
     public class UserProfile 
     {
@@ -34,14 +37,11 @@ namespace SDC.data.Entity
 
         public bool ShowEmail { get; set; }
 
-        [NotMapped]
-        public string Role { get; set; }
-
+        
         public bool IsAdmin
         {
             get { return Role == RolesCustom.ADMIN; }
         }
-
         public bool IsCurator
         {
             get { return Role == RolesCustom.CURATOR; }
@@ -60,6 +60,37 @@ namespace SDC.data.Entity
                 db.Set<UserProfile>().Attach(profile);
                 db.Entry<UserProfile>(profile).State = EntityState.Unchanged;
             }
+        }
+        [NotMapped]
+        public List<Shelf> Shelves { get; set; }
+        [NotMapped]
+        public string Role { get; set; }
+
+        public dynamic GetExtendedInfo(SDCContext db)
+        {
+            var shelves = (from s in db.Shelves
+                           join b in db.Books on s.Id equals b.Shelf.Id into sb
+                           where s.Owner.UserId == UserId
+                           select new
+                           {
+                               Id = s.Id,
+                               Name = s.Name,
+                               Books = sb.Count()
+                           }).ToArray();
+
+            dynamic info = new ExpandoObject();
+            info.Shelves = shelves.Select(s =>
+            {
+                dynamic shelf = new ExpandoObject();
+                shelf.Id = s.Id;
+                shelf.Name = s.Name;
+                shelf.Books = s.Books;
+                return shelf;
+            });
+            return info;
+
+            //dynamic o = new ExpandoObject();
+            //o.Prop = "a property";
         }
     }
 

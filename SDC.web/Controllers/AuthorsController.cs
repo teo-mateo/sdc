@@ -8,6 +8,8 @@ using SDC.data;
 using SDC.data.Entity;
 using SDC.data.Entity.Profile;
 using SDC.data.ViewModels;
+using System.Net;
+using SDC.Library.S3;
 
 namespace SDC.web.Controllers
 {
@@ -18,6 +20,7 @@ namespace SDC.web.Controllers
         /// will display a list with all authors.
         /// </summary>
         /// <returns></returns>
+        [Authorize]
         public ActionResult Index()
         {
             UserProfile profile = ((UserProfile)Session["ProfileInfo"]);
@@ -29,6 +32,7 @@ namespace SDC.web.Controllers
             {
                 ViewBag.CanEdit = true;
             }
+            ViewBag.Breadcrumbs = Breadcrumb.Generate("Authors", "");
 
             return View();
         }
@@ -41,6 +45,7 @@ namespace SDC.web.Controllers
         [HttpGet]
         public ActionResult ViewAuthor(int id)
         {
+
             using (var db = new SDCContext())
             {
                 var author = db.Authors
@@ -50,19 +55,97 @@ namespace SDC.web.Controllers
                     .First(a => a.Id == id);
 
                 var model = AutoMapper.Mapper.Map<AuthorViewModel>(author);
+
+                ViewBag.Breadcrumbs = Breadcrumb.Generate(
+                    "Authors", Url.Action("Index", "Authors"),
+                    author.Name, "");
+
                 return View(model);
             }
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult AddAuthor(AuthorViewModel authorViewModel)
         {
             throw new NotImplementedException();
         }
 
+        [HttpPost]
+        [Authorize]
         public ActionResult UpdateAuthor(AuthorViewModel authorViewModel)
         {
             throw new NotImplementedException();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult DeleteAuthor(int id)
+        {
+            try
+            {
+                var profile = (UserProfile)Session["UserInfo"];
+                if (profile == null || profile.Role == RolesCustom.USER)
+                    return RedirectToAction("Index", "Home");
+
+                using(var db = new SDCContext())
+                {
+                    //delete books
+                    //delete book images
+                    //delete author
+
+                    var author = db.Authors
+                        .Include(a => a.Books)
+                        .Include(a => a.Books.Select(b => b.Pictures))
+                        .First(a => a.Id == id);
+
+                    foreach(var b in author.Books)
+                    {
+                        foreach(var p in b.Pictures)
+                        {
+                            S3.DeleteFile(p.Key);
+                            db.BookPictures.Remove(p);
+                        }
+                        b.Pictures.Clear();
+                        db.Books.Remove(b);
+                    }
+                    db.Authors.Remove(author);
+                    db.SaveChanges();
+                }
+
+                return new HttpStatusCodeResult(HttpStatusCode.OK);
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult ApproveAuthor(int id)
+        {
+            try
+            {
+                var profile = (UserProfile)Session["UserInfo"];
+                if (profile == null || profile.Role == RolesCustom.USER)
+                    return RedirectToAction("Index", "Home");
+
+                using (var db = new SDCContext())
+                {
+                    var author = db.Authors.Find(id);
+                    author.IsVerified = true;
+                    db.SaveChanges();
+                }
+
+                return new HttpStatusCodeResult(HttpStatusCode.OK);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
 
         [HttpGet]

@@ -25,20 +25,22 @@ namespace SDC.web.Filters
                 {
                     using (var db = new SDCContext())
                     {
-                        var userProfile = db.UserProfiles
+                        var profile = db.UserProfiles
                             .Include(p=>p.Avatar)
                             .Include(p=>p.Country.Language)
                             .FirstOrDefault(p => p.UserName == filterContext.RequestContext.HttpContext.User.Identity.Name);
 
-                        if(userProfile != null)
+                        if(profile != null)
                         {
-                            var role = Roles.GetRolesForUser(userProfile.UserName)[0];
-                            userProfile.Role = role;
-                            filterContext.RequestContext.HttpContext.Session["UserInfo"] = userProfile;
+                            profile.Role = Roles.GetRolesForUser(profile.UserName)[0];
+                            profile.Shelves = db.Shelves.Where(p => p.Owner.UserId == profile.UserId).ToList();
+                            filterContext.RequestContext.HttpContext.Session["UserInfo"] = profile;
+                            filterContext.RequestContext.HttpContext.Session["UserInfoEx"] = profile.GetExtendedInfo(db);
                         }
                         else
                         {
                             filterContext.RequestContext.HttpContext.Session["UserInfo"] = null;
+                            filterContext.RequestContext.HttpContext.Session["UserInfoEx"] = null;
                         }
                     }
                 }

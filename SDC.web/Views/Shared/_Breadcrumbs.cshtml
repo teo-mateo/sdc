@@ -1,0 +1,19 @@
+﻿@using SDC.data.ViewModels;
+
+@if (ViewBag.Breadcrumbs != null)
+{
+    <ol class="breadcrumb">
+        @for (int i = 0; i < ViewBag.Breadcrumbs.Length; i++)
+        {
+            Breadcrumb b = (Breadcrumb)ViewBag.Breadcrumbs[i];
+            if (i == ViewBag.Breadcrumbs.Length - 1)
+            {
+                <li class="active"><a href="javascript:void(0);">@b.Name</a></li>
+            }
+            else
+            {
+                <li><a href="@b.Url">@b.Name</a></li>
+            }
+        }
+    </ol>
+}

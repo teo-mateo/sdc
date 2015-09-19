@@ -1,7 +1,7 @@
 ﻿@model SDC.data.ViewModels.AuthorViewModel
 
 @{
-    ViewBag.Title = Model.Name;
+    ViewBag.Title = "Books by " + String.Format("<em>{0}</em>", Model.Name);
     ViewBag.User = (SDC.data.Entity.UserProfile)Session["UserInfo"];
 }
 
@@ -14,34 +14,3 @@
 <a href="javascript:void(0);" onclick="window.history.back();"
    class="btn btn-default">Go back</a>
 
-
-<div class="row">
-    <h4 class="col-sm-2"><strong>Born</strong></h4>
-    
-    <h4 class="col-sm-10">
-        @((!Model.Born.HasValue) ? "-" : Model.Born.Value.ToString(G.DATE))
-    </h4>
-</div>
-
-<div class="row">
-    <h4 class="col-sm-2"><strong>Died</strong></h4>
-    <h4 class="col-sm-10">
-        @((!Model.Died.HasValue) ? "-" : Model.Died.Value.ToString(G.DATE))
-    </h4>
-</div>
-
-<div class="row">
-    <h4 class="col-sm-2"><strong>Nationality</strong></h4>
-    <h4 class="col-sm-10">
-        @((Model.Nationality == null) ? "unknown" : Model.Nationality)
-    </h4>
-</div>
-
-<div class="row">
-    <h4 class="col-sm-2"><strong>More info</strong></h4>
-</div>
-
-<div class="row">
-    <h4 class="col-sm-1"><strong>About</strong></h4>
-    <h4 class="col-sm-11">@Model.Bio</h4>
-</div>

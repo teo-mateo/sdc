@@ -33,7 +33,7 @@ namespace SDC.web.Controllers
             if (id == 0) //this should not happen
                 return RedirectToAction("Index", "Home");
 
-            
+            var profile = (UserProfile)Session["UserInfo"];
 
             using (var db = new SDCContext())
             {
@@ -52,6 +52,20 @@ namespace SDC.web.Controllers
                 bool showEditor = false;
                 Boolean.TryParse(Request.QueryString["showEditor"], out showEditor);
                 ViewBag.ShowEditor = showEditor;
+
+                if(profile != null)
+                {
+                    ViewBag.Breadcrumbs = Breadcrumb.Generate(
+                        "My shelves", Url.Action("Index", "Shelves"),
+                        book.Shelf.Name, Url.Action("Details", "Shelves", new { id = book.Shelf.Id }),
+                        book.Title, "");
+                }
+                else
+                {
+                    ViewBag.Breadcrumbs = Breadcrumb.Generate(
+                        book.Shelf.Name, Url.Action("Details", "Shelves", new { id = book.Shelf.Id }),
+                        book.Title, "");
+                }
 
                 return View(AutoMapper.Mapper.Map<BookViewModel>(book));
             }
