@@ -10,6 +10,9 @@ namespace SDC.Library.Redis
 {
     public class ActivityTracker
     {
+        /// <summary>
+        /// pushes the username to Redis
+        /// </summary>
         public static void TrackActive(string userName)
         {
             ServiceStack.Redis.RedisClient cli = new ServiceStack.Redis.RedisClient();
@@ -20,13 +23,15 @@ namespace SDC.Library.Redis
             set.Add(userName);
         }
 
+        /// <summary>
+        /// fetches the active users from Redis
+        /// </summary>
         public static string[] GetActiveUsers()
         {
             ServiceStack.Redis.RedisClient cli = new ServiceStack.Redis.RedisClient();
             var masterList = cli.Sets["activity-master"];
             var masterKeys = masterList.GetAll();
 
-            
             var lastSetKeys = GetActivitySets();
             string[] lastSetIds = lastSetKeys
                 .Where(k => masterKeys.Contains(k))
@@ -35,6 +40,9 @@ namespace SDC.Library.Redis
             return cli.GetUnionFromSets(lastSetIds).ToArray();
         }
 
+        /// <summary>
+        /// Returns the names of the last 5 activity sets
+        /// </summary>
         private static string[] GetActivitySets()
         {
             return (from i in Enumerable.Range(0, 5)
