@@ -21,6 +21,8 @@ namespace SDC.web.Filters
         {
             if (filterContext.RequestContext.HttpContext.User.Identity.IsAuthenticated)
             {
+                Library.Redis.ActivityTracker.TrackActive(filterContext.RequestContext.HttpContext.User.Identity.Name);
+
                 if(filterContext.RequestContext.HttpContext.Session["UserInfo"] == null)
                 {
                     using (var db = new SDCContext())

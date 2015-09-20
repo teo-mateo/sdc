@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SDC.Library.Redis;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -12,7 +13,10 @@ namespace SDC.web.Controllers
         public ActionResult Index()
         {
             if (User.Identity.IsAuthenticated)
-                return View();
+            {
+                var activeUsers = ActivityTracker.GetActiveUsers();
+                return View(activeUsers);
+            }
             else
                 return RedirectToAction("Login", "Account");
         }

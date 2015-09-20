@@ -1032,6 +1032,7 @@
     <Content Include="Content\toastr.scss" />
     <Content Include="Content\toastr.less" />
     <Content Include="Areas\API\Views\web.config" />
+    <None Include="Properties\PublishProfiles\deploy on aws.pubxml" />
     <None Include="Properties\PublishProfiles\schimbdecarte.pubxml" />
     <Content Include="Scripts\bootstrap-switch.js" />
     <Content Include="Scripts\bootstrap-switch.min.js" />

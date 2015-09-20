@@ -51,6 +51,17 @@
       <HintPath>..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="ServiceStack.Client">
+      <HintPath>..\..\ServiceStack.Redis\lib\ServiceStack.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Common, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ServiceStack.Redis\lib\ServiceStack.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Interfaces, Version=4.0.0.0, Culture=neutral, PublicKeyToken=e06fbc6124f57c43, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ServiceStack.Redis\lib\ServiceStack.Interfaces.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Web" />
@@ -78,11 +89,16 @@
     <Compile Include="ControllerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HelperControllerTests.cs" />
+    <Compile Include="Redis\UnitTest1.cs" />
     <Compile Include="S3Tests.cs" />
     <Compile Include="MiscTests.cs" />
     <Compile Include="TestSession.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ServiceStack.Redis\src\ServiceStack.Redis\ServiceStack.Redis.csproj">
+      <Project>{af99f19b-4c04-4f58-81ef-b092f1fcc540}</Project>
+      <Name>ServiceStack.Redis</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SDC.data\SDC.data.csproj">
       <Project>{51f255cd-eeee-429c-bb7e-7daaef28d5d0}</Project>
       <Name>SDC.data</Name>

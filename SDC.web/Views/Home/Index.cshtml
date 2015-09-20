@@ -1,4 +1,10 @@
-﻿
+﻿@model string[]
 @{
     ViewBag.Title = "Index";
+}
+
+<h1>Active users: @Model.Length</h1>
+@foreach(var user in Model)
+{
+    <p>@user</p>
 }
