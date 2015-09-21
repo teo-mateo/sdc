@@ -14,12 +14,34 @@
 
     @if (Model.Role == SDC.data.Entity.Profile.RolesCustom.ADMIN)
     {
-        <li>
-            <a href="@Url.Action("Users", "Administration")">
+        <li class="active">
+            <a href="javascript:void(0);">
                 <i class="fa fa-link"></i>
-                <span><strike>Manage users</strike></span>
+                <span>Administration</span>
+                <i class="fa fa-angle-down pull-right"></i>
             </a>
+            <ul class="treeview treeview-menu menu-open">
+                <li>
+                    <a href="@Url.Action("Users", "Administration")">
+                        <i class="fa fa-link"></i>
+                        <span><strike>Manage users</strike></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("AppMonitor", "Administration")">
+                        <i class="fa fa-link"></i>
+                        <span><strike>App monitor</strike></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "Authors")">
+                        <i class="fa fa-link"></i>
+                        <span>Authors</span>
+                    </a>
+                </li>
+            </ul>
         </li>
+
     }
     else if (Model.Role == SDC.data.Entity.Profile.RolesCustom.CURATOR)
     {
@@ -30,13 +52,6 @@
             </a>
         </li>
     }
-
-    <li>
-        <a href="@Url.Action("Index", "Authors")">
-            <i class="fa fa-link"></i>
-            <span>Authors</span>
-        </a>
-    </li>
 
     <li>
         <a href="@Url.Action("Index", "Directory")">

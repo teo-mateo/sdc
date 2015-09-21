@@ -1,5 +1,6 @@
 ﻿using log4net;
 using Ninject;
+using SDC.Library;
 using SDC.Library.NinjectModules;
 using SDC.web.AutoMapperConfig;
 using SDC.web.Filters;
@@ -18,7 +19,7 @@ namespace SDC.web
         public static readonly string DATE = "MMM dd, yyyy";
     }
 
-    public class SDCApp : System.Web.HttpApplication
+    public class SDCWebApp : SDCApp
     {
 
         protected void Application_Start()
@@ -29,12 +30,7 @@ namespace SDC.web
             GlobalFilters.Filters.Add(new SDCAuthorizationFilterAttribute());
 
             MappingsConfig.RegisterMappings();
-            SDCApp.Kernel = new StandardKernel(new SDCModule());
-        }
-
-        public static IKernel Kernel
-        {
-            get; private set;
+            SDCWebApp.Kernel = new StandardKernel(new SDCModule());
         }
     }
 }

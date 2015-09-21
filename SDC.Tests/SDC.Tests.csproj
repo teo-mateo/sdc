@@ -106,6 +106,8 @@
     <Compile Include="S3Tests.cs" />
     <Compile Include="MiscTests.cs" />
     <Compile Include="TestSession.cs" />
+    <Compile Include="ControllerActionLoggerTests.cs" />
+    <Compile Include="Utility\U.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SDC.data\SDC.data.csproj">
@@ -125,6 +127,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

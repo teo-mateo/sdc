@@ -24,6 +24,11 @@ textarea {
     border-left: 1px dashed #333;
 }
 
+.sdc-scroll-container{
+    height:400px;
+    overflow:auto;
+}
+
 @media screen and (min-width: 768px) {
 	
 	#newBookModal .modal-dialog  {width:900px;}

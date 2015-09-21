@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using SDC.Library.Redis;
 using ServiceStack.Redis;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace SDC.Tests.Redis
 {
@@ -65,7 +67,35 @@ namespace SDC.Tests.Redis
             foreach(var set in sets)
             {
                 cli.Remove(set);
+                master.Remove(set);
             }
+        }
+
+        [TestMethod]
+        public void Performance_SADD()
+        {
+            string[] s = Enumerable.Range(1, 1000*1000).Select(i => Guid.NewGuid().ToString()).ToArray();
+            Debug.WriteLine("Source array size: " + Utility.U.ObjectSize(s));
+
+            PooledRedisClientManager prcm = new PooledRedisClientManager();
+            
+            IRedisClient cli = prcm.GetClient();
+            cli.ConnectTimeout = 1000;
+
+            cli.Delete("tests-sadd");
+            var set = cli.Sets["tests-sadd"];
+
+            int adds = 0;
+
+            using (var c = new Utility.U.Chrono("SADD " + s.Length))
+            {
+                foreach (var i in s)
+                {
+                    set.Add(i);
+                    adds++;
+                }
+            }
+            
         }
     }
 

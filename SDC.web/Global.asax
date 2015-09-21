@@ -1,1 +1,1 @@
-﻿<%@ Application Codebehind="Global.asax.cs" Inherits="SDC.web.SDCApp" Language="C#" %>
+﻿<%@ Application Codebehind="Global.asax.cs" Inherits="SDC.web.SDCWebApp" Language="C#" %>

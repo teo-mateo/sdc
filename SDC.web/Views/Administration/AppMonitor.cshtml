@@ -1,0 +1,57 @@
+﻿
+@model IEnumerable<SDC.web.Controllers.LogItem>
+@using SDC.web.Controllers;
+
+@{ 
+    // default values
+    string controllerActionOrderBy = ControllersOrderBy.ControllerActionAsc,
+        countOrderBy = ControllersOrderBy.HitCountAsc,
+        averageOrderBy = ControllersOrderBy.AvgResponseAsc;
+
+    string orderBy = (string)ViewBag.OrderBy;
+    switch (orderBy)
+    {
+        case ControllersOrderBy.ControllerActionDesc:
+            controllerActionOrderBy = ControllersOrderBy.ControllerActionAsc;
+            break;
+        case ControllersOrderBy.ControllerActionAsc:
+            controllerActionOrderBy = ControllersOrderBy.ControllerActionDesc;
+            break;
+        case ControllersOrderBy.HitCountDesc:
+            countOrderBy = ControllersOrderBy.HitCountAsc;
+            break;
+        case ControllersOrderBy.HitCountAsc:
+            countOrderBy = ControllersOrderBy.HitCountDesc;
+            break;
+        case ControllersOrderBy.AvgResponseDesc:
+            averageOrderBy = ControllersOrderBy.AvgResponseAsc;
+            break;
+        case ControllersOrderBy.AvgResponseAsc:
+            averageOrderBy = ControllersOrderBy.AvgResponseDesc;
+            break;
+    }
+
+}
+
+<h3>Controllers &amp; actions</h3>
+<div class="sdc-scroll-container">
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <td><strong><a href='@Url.Action("AppMonitor", "Administration", new { orderby = controllerActionOrderBy })'>Controller/Action</a></strong></td>
+                <td><strong><a href='@Url.Action("AppMonitor", "Administration", new { orderby = countOrderBy })'>Count</a></strong></td>
+                <td><strong><a href='@Url.Action("AppMonitor", "Administration", new { orderby = averageOrderBy })'>Average response time (ms)</a></strong></td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var logItem in Model)
+    {
+                <tr>
+                    <td>@logItem.ControllerAction</td>
+                    <td>@logItem.Count</td>
+                    <td>@logItem.Average</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

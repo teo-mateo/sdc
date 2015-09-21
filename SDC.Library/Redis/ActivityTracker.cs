@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ninject;
 
 namespace SDC.Library.Redis
 {
@@ -17,7 +18,7 @@ namespace SDC.Library.Redis
         {
             try
             {
-                ServiceStack.Redis.RedisClient cli = new ServiceStack.Redis.RedisClient();
+                IRedisClient cli = SDCApp.Kernel.Get<IRedisClient>();
                 var masterSet = cli.Sets["activity-master"];
                 var currentSetKey = "activity-" + DateTime.Now.ToString("dd-hh-mm");
                 masterSet.Add(currentSetKey);
@@ -36,7 +37,7 @@ namespace SDC.Library.Redis
         {
             try
             {
-                ServiceStack.Redis.RedisClient cli = new ServiceStack.Redis.RedisClient();
+                IRedisClient cli = SDCApp.Kernel.Get<IRedisClient>();
                 var masterList = cli.Sets["activity-master"];
                 var masterKeys = masterList.GetAll();
 
