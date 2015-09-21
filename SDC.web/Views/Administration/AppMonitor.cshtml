@@ -34,7 +34,7 @@
             break;
         case ControllersOrderBy.AvgResponseAsc:
             averageOrderBy = ControllersOrderBy.AvgResponseDesc;
-            averageOrderBy = "glyphicon glyphicon-arrow-up";
+            averageGlyph = "glyphicon glyphicon-arrow-up";
             break;
     }
 
@@ -74,6 +74,8 @@
 <ul class="list-group">
     @foreach (var user in ActivityTracker.GetActiveUsers())
     {
-        <li class="list-group-item">@user</li>
+        <li class="list-group-item">
+            @user
+        </li>
     }
 </ul>
