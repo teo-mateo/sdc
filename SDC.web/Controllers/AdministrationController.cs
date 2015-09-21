@@ -51,7 +51,7 @@ namespace SDC.web.Controllers
             var all = set.GetAll()
                 .Select(l => JsonConvert.DeserializeObject<ControllerActionLogItem>(l));
 
-            LogViewModel logVM = new LogViewModel();
+            ControllerLogViewModel logVM = new ControllerLogViewModel();
 
             foreach(var item in all)
             {
@@ -101,7 +101,7 @@ namespace SDC.web.Controllers
         public const string AvgResponseDesc = "avgresponse-desc";
     }
 
-    public class LogViewModel : List<LogItem>
+    public class ControllerLogViewModel : List<LogItem>
     {
         public bool ContainsPair(string controllerActionPair)
         {

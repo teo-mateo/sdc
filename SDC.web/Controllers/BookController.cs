@@ -103,6 +103,12 @@ namespace SDC.web.Controllers
                 db.Books.Add(book);
                 db.SaveChanges();
                 id = book.Id;
+
+                //activity
+                SDC.Library.Helpers.ActivityHelper.Activity_BookAdded(
+                    db, profile, book,
+                    Url.Action("ViewBook", "Book", new { id = book.Id }),
+                    Url.Action("Details", "Shelves", new { id = book.Shelf.Id }));
             }
 
             return Json(new { id = id });
@@ -126,6 +132,7 @@ namespace SDC.web.Controllers
                         .Include(b=>b.Genres)
                         .Include(b=>b.Publisher)
                         .Include(b=>b.Language)
+                        .Include(b=>b.Shelf)
                         .First(b => b.Id == bookViewModel.Id);
 
                     AutoMapper.Mapper.Map<BookViewModel, Book>(bookViewModel, book);
@@ -133,6 +140,13 @@ namespace SDC.web.Controllers
                     Book.MapComplexProperties(db, book, bookViewModel, profile);
 
                     db.SaveChanges();
+
+                    //activity
+                    SDC.Library.Helpers.ActivityHelper.Activity_BookUpdated(
+                        db, profile, book,
+                        Url.Action("ViewBook", "Book", new { id = book.Id }),
+                        Url.Action("Details", "Shelves", new { id = book.Shelf.Id }));
+
                     return new HttpStatusCodeResult(HttpStatusCode.OK);
                 }
             }
@@ -189,6 +203,7 @@ namespace SDC.web.Controllers
             using (var db = new SDCContext())
             {
                 var book = db.Books
+                    .Include(b=>b.Pictures)
                     .Include(b=>b.Shelf)
                     .Include(b=>b.Shelf.Owner)
                     .FirstOrDefault(b=>b.Id == deleteBookId);
@@ -202,8 +217,24 @@ namespace SDC.web.Controllers
                         profile.Role == RolesCustom.CURATOR ||
                         book.Shelf.Owner.UserId == profile.UserId)
                     {
+                        //fuck this.
+                        profile = db.UserProfiles.Find(profile.UserId);
+                        
+                        //remove book images
+                        foreach(var pic in book.Pictures)
+                        {
+                            db.BookPictures.Remove(pic);
+                            S3.DeleteFile(pic.Key);
+                        }
+
+                        string shelfName = book.Shelf.Name;
+
                         db.Books.Remove(book);
                         db.SaveChanges();
+
+                        //activity
+                        SDC.Library.Helpers.ActivityHelper.Activity_BookRemoved(db, profile, book, shelfName);
+
                         return RedirectToAction("Details", "Shelves", new { id = shelfId });
                     }
                 }

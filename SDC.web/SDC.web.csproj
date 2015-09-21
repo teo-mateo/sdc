@@ -1111,6 +1111,7 @@
     <Content Include="Content\plugins\jqfu\test\index.html" />
     <Content Include="Content\plugins\jqfu\test\test.js" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
+    <Content Include="Scripts\Custom\DeleteBook.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />
     <Content Include="Scripts\jquery-ui-1.11.4.js" />
@@ -1129,6 +1130,7 @@
     <Content Include="Scripts\tmpl.min.js" />
     <Content Include="Scripts\toastr.js" />
     <Content Include="Scripts\toastr.min.js" />
+    <Content Include="Static\ViewProfile.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -1146,6 +1148,7 @@
     <Compile Include="Controllers\HelperController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="Controllers\PublicProfilesController.cs" />
     <Compile Include="Controllers\SDCController.cs" />
     <Compile Include="Controllers\ShelvesController.cs" />
     <Compile Include="Controllers\WishlistController.cs" />
@@ -1193,6 +1196,7 @@
     <Content Include="Views\Shared\_Pagination.cshtml" />
     <Content Include="Views\Shared\_Breadcrumbs.cshtml" />
     <Content Include="Views\Administration\AppMonitor.cshtml" />
+    <Content Include="Views\PublicProfiles\View.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

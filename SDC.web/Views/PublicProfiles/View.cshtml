@@ -1,0 +1,159 @@
+﻿@model SDC.data.ViewModels.PublicProfileViewModel
+
+@{
+    ViewBag.Title = "User profile";
+}
+<div class="row">
+    <div class="col-md-3">
+        <!-- left-side box -->
+        <div class="box box-primary">
+            <div class="box-body box-profile">
+                <img class="profile-user-img img-responsive img-circle" src="https://almsaeedstudio.com/themes/AdminLTE/dist/img/user4-128x128.jpg"></img>
+                <h3 class="profile-username text-center">Username</h3>
+                <p class="text-muted text-center"> lorem ipsum 1</p>
+                <ul class="list-group list-group-unbordered">
+                    <li class="list-group-item">
+                        <i class="fa fa-user-plus"></i>
+                        <b>Followers:</b>
+                        <a class="pull-right" href="#followers">
+                            10
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fa fa-user"></i>
+                        <b>Following:</b>
+                        <span class="pull-right">
+                            <a href="#followers">
+                                10
+                            </a>
+                        </span>
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fa fa-circle-o"></i>
+                        <b>Status:</b>
+                        <a href="#" class="pull-right"><i class="fa fa-circle text-success"></i> Online</a>
+                    </li>
+                    <li class="list-group-item">
+                        <b><i class="fa fa-map-marker margin-r-5"></i>Location:</b>
+                        <a class="pull-right" href="#location">
+                            Bruxelles
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fa fa-heart"></i>
+                        <b>Favorite genres:</b>
+                        <p>
+                            <a class="label label-primary text-muted sdc-margin2px`" href="#genre-scifi">
+                                Sci-Fi
+                            </a>
+                            <a class="label label-primary text-muted sdc-margin2px" href="#genre-scifi">
+                                Sci-Fi
+                            </a>
+                            <a class="label label-primary text-muted sdc-margin2px" href="#genre-scifi">
+                                Sci-Fi
+                            </a>
+                            <a class="label label-primary text-muted sdc-margin2px" href="#genre-scifi">
+                                Sci-Fi
+                            </a>
+                        </p>
+                    </li>
+                </ul>
+                <a href="#" class="btn btn-primary btn-block"><b>Follow/unfollow</b></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#activity" data-toggle="tab">Activity</a></li>
+                <li><a href="#sendmessage" data-toggle="tab">Send message</a></li>
+                <li><a href="#contact" data-toggle="tab">Contact</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="activity">
+                    <h4>
+                        Books: 10 books in <a href="#shelves">3 shelves</a>
+                    </h4>
+                    <h4>
+                        Completed <a href="#shelves">5 transactions</a> with a rating of
+                        <i class="fa fa-star sdc-icon-y"></i>
+                        <i class="fa fa-star sdc-icon-y"></i>
+                        <i class="fa fa-star sdc-icon-y"></i>
+                        <i class="fa fa-star-half-o sdc-icon-y"></i>
+                    </h4>
+                    <hr />
+
+                    <p>
+                        Added <a href="#peopleware">Peopleware</a> to <a href="#shelf">Username's shelf</a> <span class="text-muted">on 21-Sept-2015</span>
+                    </p>
+                    <p>
+                        Added <a href="#peopleware">Peopleware</a> to <a href="#shelf">Username's shelf</a> on 21-Sept-2015
+                    </p>
+                    <p>
+                        Added <a href="#peopleware">Peopleware</a> to <a href="#shelf">Username's shelf</a> on 21-Sept-2015
+                    </p>
+                    <p>
+                        Added <a href="#peopleware">Peopleware</a> to <a href="#shelf">Username's shelf</a> on 21-Sept-2015
+                    </p>
+                    <p>
+                        Removed <a href="#peopleware">Somebook</a> from the shelf <a href="#shelf">Username's shelf</a> on 21-Sept-2015
+                    </p>
+                    <p>
+                        Updated <a href="#peopleware">Peopleware</a> in <a href="#shelf">Username's shelf</a> on 21-Sept-2015
+                    </p>
+                    <p>
+                        <a href="#seeall" class="pull-right">See activity</a>
+                    </p>
+
+                    <hr />
+                    <h4>Latest reviews:</h4>
+                    <div id="reviews">
+                        <div id="review1" class="row margin">
+                            <div class="col-md-1">
+                                <a href="#profileUser2">
+                                    <img width="30" height="30" class="img-circle" src="https://sdc-dev.s3.amazonaws.com/profile_pics/avatar2.png"></img>
+                                </a>
+                            </div>
+                            <div class="col-md-11">
+                                All went well, thanks for the books!11one
+                                <p>
+                                    <i class="fa fa-star sdc-icon-y"></i>
+                                    <i class="fa fa-star sdc-icon-y"></i>
+                                    <i class="fa fa-star sdc-icon-y"></i>
+                                </p>
+                            </div>
+                        </div>
+                        <div id="review2" class="row margin">
+                            <div class="col-md-1">
+                                <a href="#profileUser1">
+                                    <img width="30" height="30" class="img-circle" src="http://www.bioontology.org/sites/default/files/image/Erich%20Gombocz.png"></img>
+                                </a>
+
+                            </div>
+                            <div class="col-md-11">
+                                Made me wait in the rain for 10 minutes.
+                                <p>
+                                    <i class="fa fa-star sdc-icon-y"></i>
+                                </p>
+                            </div>
+                        </div>
+                        <p>
+                            <a href="#seeall" class="pull-right">See all reviews (4)</a>
+                        </p>
+
+                        <hr />
+                    </div>
+
+                </div>
+                <div class="tab-pane" id="sendmessage">
+
+                </div>
+                <div class="tab-pane" id="contact">
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

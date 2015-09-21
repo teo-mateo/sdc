@@ -77,8 +77,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\ActivityHelper.cs" />
     <Compile Include="Controllers\ControllerActionLogger.cs" />
     <Compile Include="Controllers\SDCController.cs" />
+    <Compile Include="G.cs" />
     <Compile Include="NinjectModules\SDCKernel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Redis\ActivityTracker.cs" />

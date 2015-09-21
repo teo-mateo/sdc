@@ -7,7 +7,6 @@
     ViewBag.Title = Model.Title;
 }
 
-<a class="btn btn-default margin-bottom" href="@Url.Action("Details", "Shelves", new { id = Model.ShelfId})">Go back</a>
 @{
     var profile = ((UserProfile)Session["UserInfo"]);
     var canEditBook = profile.IsAdmin || profile.IsCurator || Model.OwnerId == profile.UserId;
@@ -24,7 +23,20 @@
             });
         </script>
     }
+
+    <script type="text/javascript">
+        var _pageJsObject = {
+            deleteBookUrl: '@Url.Action("DeleteBook", "Book")',
+            redirectUrl: '@Url.Action("Details", "Shelves", new { id = Model.ShelfId})'
+        };
+    </script>
+
+    <script type="text/javascript" src="~/Scripts/Custom/DeleteBook.js"></script>
+
+    <a class="btn btn-danger margin-bottom" onclick="deleteBook(@Model.Id);">Delete</a>
 }
+<a class="btn btn-default margin-bottom" href="@Url.Action("Details", "Shelves", new { id = Model.ShelfId})">View shelf</a>
+
 
 @Html.Partial("Shelves/_EditBookModal")
 
@@ -32,7 +44,7 @@
     <div class="box-body">
         <div class="row">
             <div class="col-sm-6">
-                <h4>@Model.Title</h4>
+                <h4>@Model.ShelfName <span>\</span>@Model.Title</h4>
                 <input type="hidden" value="@Model.Id" id="bookId" />
                 <span>
                     by

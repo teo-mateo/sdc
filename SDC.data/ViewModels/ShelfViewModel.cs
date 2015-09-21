@@ -16,7 +16,7 @@ namespace SDC.data.ViewModels
         public string Name { get; set; }
         public int BookCount { get; set; }
         public bool IsVisible { get; set; }
-
+        public bool CanEdit { get; set; }
         public Language DefaultLanguage { get; set; }
 
         public List<Book> Books { get; set; }

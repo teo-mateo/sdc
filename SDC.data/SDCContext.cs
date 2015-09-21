@@ -101,5 +101,6 @@ namespace SDC.data
         public DbSet<BookPicture> BookPictures { get; set; }
 
         public DbSet<Settings> Settings { get; set; }
+        public DbSet<Activity> Activities { get; set; }
     }
 }

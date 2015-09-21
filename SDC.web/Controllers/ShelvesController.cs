@@ -191,11 +191,6 @@ namespace SDC.web.Controllers
                 if (shelf == null)
                     return RedirectToAction("Index");
 
-                if (!shelf.CanBeEdited(profile))
-                {
-                    return RedirectToAction("Index", "Home");
-                }
-
                 int totalPages = ((int)Math.Ceiling((double)shelf.Books.Count / pagesize));
                 if (page > totalPages)
                     page = totalPages;
@@ -212,6 +207,7 @@ namespace SDC.web.Controllers
                     Id = shelf.Id,
                     Name = shelf.Name,
                     IsVisible = shelf.IsVisible,
+                    CanEdit = shelf.CanBeEdited(profile),
                     BookCount = shelf.Books.Count(),
                     Books = show_books,
                     Languages = Language.GetAll(db),
@@ -230,9 +226,16 @@ namespace SDC.web.Controllers
                     }
                 };
 
-                ViewBag.Breadcrumbs = Breadcrumb.Generate(
-                    "My shelves", Url.Action("Index", "Shelves"),
-                    vm.Name, "");
+                if (profile.UserId == shelf.Owner.UserId)
+                {
+                    ViewBag.Breadcrumbs = Breadcrumb.Generate(
+                        "My shelves", Url.Action("Index", "Shelves"),
+                        vm.Name, "");
+                }
+                else
+                {
+                    ViewBag.Breadcrumbs = Breadcrumb.Generate("Directory", "", vm.Name, "");
+                }
 
                 return View(vm);
             }
@@ -260,35 +263,5 @@ namespace SDC.web.Controllers
 
             return Json(b, JsonRequestBehavior.AllowGet);
         }
-
-        [HttpPost]
-        public ActionResult DeleteBook(int deleteBookId)
-        {
-            using (var db = new SDCContext())
-            {
-                var book = db.Books
-                    .Include(b=>b.Shelf)
-                    .Include(b=>b.Shelf.Owner)
-                    .FirstOrDefault(b=>b.Id == deleteBookId);
-                if(book != null)
-                {
-                    var shelfId = book.Shelf.Id;
-
-                    // only admin, curator or shelf owner can delete it.
-                    var profile = (UserProfile)Session["UserInfo"];
-                    if( profile.Role == RolesCustom.ADMIN || 
-                        profile.Role == RolesCustom.CURATOR ||
-                        book.Shelf.Owner.UserId == profile.UserId)
-                    {
-                        db.Books.Remove(book);
-                        db.SaveChanges();
-                        return RedirectToAction("Details", "Shelves", new { id = shelfId });
-                    }
-                }
-            }
-            //any other case
-            return RedirectToAction("Index", "Home");
-        }
-
     }
 }

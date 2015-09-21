@@ -176,7 +176,7 @@ namespace SDC.web.Controllers
                     draw = 2,
                     recordsTotal = recordsTotal,
                     recordsFiltered = authors.Length,
-                    data = authors.Select(a => new string[] { a.id, a.name, a.isverified, a.bookcount, a.addedby, a.addeddate.ToString(G.DATE) }).ToArray()
+                    data = authors.Select(a => new string[] { a.id, a.name, a.isverified, a.bookcount, a.addedby, a.addeddate.ToString(Library.G.DATE) }).ToArray()
                 };
 
                 return Json(o, JsonRequestBehavior.AllowGet);

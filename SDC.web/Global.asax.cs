@@ -14,10 +14,7 @@ using WebMatrix.WebData;
 
 namespace SDC.web
 {
-    public class G
-    {
-        public static readonly string DATE = "MMM dd, yyyy";
-    }
+
 
     public class SDCWebApp : SDCApp
     {

@@ -57,6 +57,7 @@ namespace SDC.Tests.Books
                     Publisher = publisher,
                     Language = language,
                     ShelfId = shelf.Id,
+                    ShelfName = shelf.Name,
                     ISBN = Guid.NewGuid().ToString(),
                     AddedDate = DateTime.Now
                 };  

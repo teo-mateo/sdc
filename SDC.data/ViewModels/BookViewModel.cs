@@ -25,6 +25,7 @@ namespace SDC.data.ViewModels
         public List<BookPicture> Pictures { get; set; }
         public Language Language { get; set; }
         public int ShelfId { get; set; }
+        public string ShelfName { get; set; }
         public string Description { get; set; }
         public int OwnerId { get; set; }
         public string OwnerName { get; set; }

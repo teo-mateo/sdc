@@ -69,6 +69,7 @@
     <Compile Include="Entity\Audit\LogInTrace.cs" />
     <Compile Include="Entity\IEntity.cs" />
     <Compile Include="Entity\Location\Country.cs" />
+    <Compile Include="Entity\Profile\Activity.cs" />
     <Compile Include="Entity\Profile\Avatar.cs" />
     <Compile Include="Entity\Profile\ChangeEmailModel.cs" />
     <Compile Include="Entity\Profile\ChangePasswordModel.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="ViewModels\Breadcrumb.cs" />
     <Compile Include="ViewModels\ImageUpload.cs" />
     <Compile Include="ViewModels\PaginationViewModel.cs" />
+    <Compile Include="ViewModels\PublicProfileViewModel.cs" />
     <Compile Include="ViewModels\ShelfViewModel.cs" />
     <Compile Include="ViewModels\ShelvesViewModel.cs" />
     <Compile Include="ViewModels\UserProfileViewModel.cs" />

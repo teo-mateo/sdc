@@ -28,6 +28,25 @@ textarea {
     height:400px;
     overflow:auto;
 }
+.sdc-margin2px{
+    margin:2px;
+}
+
+.sdc-icon-g {
+    color: green;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: gray;
+} 
+.sdc-icon-r {
+    color: red;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: gray;
+}
+.sdc-icon-y {
+    color: yellow;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: gray;
+}
 
 @media screen and (min-width: 768px) {
 	
