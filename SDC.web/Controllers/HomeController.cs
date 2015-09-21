@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace SDC.web.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : SDCController
     {
         // GET: Home
         public ActionResult Index()

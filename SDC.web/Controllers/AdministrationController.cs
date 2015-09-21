@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace SDC.web.Controllers
 {
-    public class AdministrationController : Controller
+    public class AdministrationController : SDCController
     {
         // GET: Administration
         public ActionResult Index()

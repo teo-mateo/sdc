@@ -9,7 +9,7 @@ using System.Data.Entity;
 
 namespace SDC.web.Filters
 {
-    public class MyActionFilterAttribute : ActionFilterAttribute, IAuthorizationFilter
+    public class SDCAuthorizationFilterAttribute : ActionFilterAttribute, IAuthorizationFilter
     {
         /// <summary>
         /// on every's request OnAuthorization: 

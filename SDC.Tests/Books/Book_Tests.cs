@@ -24,7 +24,6 @@ namespace SDC.Tests.Books
         public void AddBook_Test()
         {
             BookController c = CreateController<BookController>();
-
             BookViewModel vm; int bookCount;
 
             using (var db = new SDCContext())

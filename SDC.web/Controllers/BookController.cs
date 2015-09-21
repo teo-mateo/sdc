@@ -16,7 +16,7 @@ using SDC.Library.S3;
 
 namespace SDC.web.Controllers
 {
-    public class BookController : Controller
+    public class BookController : SDCController
     {
         /// <summary>
         /// not to be used. 

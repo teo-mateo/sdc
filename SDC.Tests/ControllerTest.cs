@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rhino.Mocks;
 using SDC.data.Entity;
+using SDC.web.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,7 @@ namespace SDC.Tests
             return new ControllerContext(mockContext, new RouteData(), c);
         }
 
-        protected T CreateController<T>() where T : Controller, new()
+        protected T CreateController<T>() where T : SDCController, new()
         {
             T controller = Activator.CreateInstance<T>();
             controller.ControllerContext = GetContext(controller);

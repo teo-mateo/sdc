@@ -3,8 +3,10 @@
     ViewBag.Title = "Index";
 }
 
-<h1>Active users: @Model.Length</h1>
-@foreach(var user in Model)
-{
-    <p>@user</p>
-}
+<h1>User tracking done with REDIS - Active users: @Model.Length</h1>
+<ul class="list-group">
+    @foreach (var user in Model)
+    {
+        <li class="list-group-item">@user</li>
+    }
+</ul>

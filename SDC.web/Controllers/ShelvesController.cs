@@ -14,7 +14,7 @@ using SDC.data.ViewModels;
 
 namespace SDC.web.Controllers
 {
-    public class ShelvesController : Controller
+    public class ShelvesController : SDCController
     {
         // GET: Shelves
         [HttpGet]
@@ -56,6 +56,7 @@ namespace SDC.web.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost]
         public ActionResult NewShelf(ShelvesViewModel model)
         {
@@ -64,19 +65,24 @@ namespace SDC.web.Controllers
                 return RedirectToAction("Index");
             }
 
+            UserProfile profile = null;
+
             //save
-            using(var db = new SDCContext())
+            using (var db = new SDCContext())
             {
+                profile = db.UserProfiles.Find(((UserProfile)Session["UserInfo"]).UserId);
+
                 Shelf newShelf = new Shelf()
                 {
                     CreationDate = DateTime.Now,
                     Name = model.Name,
                     IsVisible = model.IsVisible,
-                    Owner = db.UserProfiles.Find(((UserProfile)Session["UserInfo"]).UserId)
+                    Owner = profile
                 };
 
                 db.Shelves.Add(newShelf);
                 db.SaveChanges();
+                Session["UserInfoEx"] = profile.GetExtendedInfo(db);
             }
 
             return RedirectToAction("Index");

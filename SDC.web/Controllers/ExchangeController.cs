@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace SDC.web.Controllers
 {
-    public class ExchangeController : Controller
+    public class ExchangeController : SDCController
     {
         // GET: Exchange
         public ActionResult Index()

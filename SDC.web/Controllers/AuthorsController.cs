@@ -13,7 +13,7 @@ using SDC.Library.S3;
 
 namespace SDC.web.Controllers
 {
-    public class AuthorsController : Controller
+    public class AuthorsController : SDCController
     {
         // GET: Authors
         /// <summary>

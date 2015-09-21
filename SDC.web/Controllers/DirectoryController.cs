@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace SDC.web.Controllers
 {
-    public class DirectoryController : Controller
+    public class DirectoryController : SDCController
     {
         // GET: Directory
         public ActionResult Index()

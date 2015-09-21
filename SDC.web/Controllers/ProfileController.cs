@@ -19,7 +19,7 @@ namespace SDC.web.Controllers
     /// this controller manages the user profile page from the perspective of the same user.
     /// .. global user management (and their profiles) will be done somewhere else.
     /// </summary>
-    public class ProfileController : Controller
+    public class ProfileController : SDCController
     {
         private SDCContext db = new SDCContext();
 

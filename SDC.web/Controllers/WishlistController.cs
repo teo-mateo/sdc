@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace SDC.web.Controllers
 {
-    public class WishlistController : Controller
+    public class WishlistController : SDCController
     {
         // GET: Wishlist
         public ActionResult Index()

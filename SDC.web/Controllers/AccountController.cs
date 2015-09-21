@@ -18,7 +18,7 @@ using System.Data.Entity;
 namespace SDC.web.Controllers
 {
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : SDCController
     {
         private void SaveLoginTrace(string userName)
         {

@@ -1,4 +1,7 @@
-﻿using SDC.web.AutoMapperConfig;
+﻿using log4net;
+using Ninject;
+using SDC.Library.NinjectModules;
+using SDC.web.AutoMapperConfig;
 using SDC.web.Filters;
 using System;
 using System.Collections.Generic;
@@ -15,7 +18,7 @@ namespace SDC.web
         public static readonly string DATE = "MMM dd, yyyy";
     }
 
-    public class MvcApplication : System.Web.HttpApplication
+    public class SDCApp : System.Web.HttpApplication
     {
 
         protected void Application_Start()
@@ -23,12 +26,15 @@ namespace SDC.web
             WebSecurity.InitializeDatabaseConnection("SDCConnectionString", "UserProfile", "UserId", "UserName", autoCreateTables: true);
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            GlobalFilters.Filters.Add(new MyActionFilterAttribute());
+            GlobalFilters.Filters.Add(new SDCAuthorizationFilterAttribute());
 
             MappingsConfig.RegisterMappings();
+            SDCApp.Kernel = new StandardKernel(new SDCModule());
         }
 
-
-
+        public static IKernel Kernel
+        {
+            get; private set;
+        }
     }
 }

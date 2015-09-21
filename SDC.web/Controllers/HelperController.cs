@@ -12,7 +12,7 @@ using System.Collections;
 
 namespace SDC.web.Controllers
 {
-    public class HelperController : Controller
+    public class HelperController : SDCController
     {
         // GET: Helper
         public ActionResult Index()
