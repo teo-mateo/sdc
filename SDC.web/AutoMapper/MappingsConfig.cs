@@ -72,7 +72,8 @@ namespace SDC.web.AutoMapperConfig
                 .ForMember(vm => vm.Authors, opt => opt.Ignore())
                 .ForMember(vm => vm.Genres, opt => opt.Ignore())
                 .ForMember(vm => vm.Publisher, opt => opt.Ignore())
-                .ForMember(vm => vm.Language, opt => opt.Ignore());
+                .ForMember(vm => vm.Language, opt => opt.Ignore())
+                .ForMember(vm => vm.Pictures, opt => opt.Ignore());
         }
     }
 }

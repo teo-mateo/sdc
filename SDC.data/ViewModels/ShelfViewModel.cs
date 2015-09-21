@@ -19,7 +19,7 @@ namespace SDC.data.ViewModels
         public bool CanEdit { get; set; }
         public Language DefaultLanguage { get; set; }
 
-        public List<Book> Books { get; set; }
+        public IEnumerable<BookViewModel> Books { get; set; }
         public Language[] Languages { get; set; }
         public Genre[] Genres { get; set; }
 

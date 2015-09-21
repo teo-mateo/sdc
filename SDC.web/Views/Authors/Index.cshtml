@@ -30,7 +30,12 @@
 <div class="pull-left">
     @if (ViewBag.CanEdit)
     {
-        <a class="btn btn-primary margin-bottom" onclick="$('#authorModal').modal('show');">New author</a>
+        <div class="btn-group margin-bottom">
+            <a class="btn btn-default" onclick="$('#authorModal').modal('show');">
+            <i class="fa fa-plus"></i> New author
+            </a>
+        </div>
+        
     }
 </div>
 

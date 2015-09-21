@@ -170,23 +170,24 @@ namespace SDC.web.Controllers
             if (pagesize < 1 || pagesize > 100)
                 pagesize = profile.PageSize;
 
-            using (var db= new SDCContext())
+            using (var db = new SDCContext())
             {
                 //update profile page size
                 if (pagesize != profile.PageSize)
                 {
                     profile = db.UserProfiles
-                        .Include(p=>p.Country)
-                        .FirstOrDefault(p=>p.UserId == profile.UserId);
+                        .Include(p => p.Country)
+                        .FirstOrDefault(p => p.UserId == profile.UserId);
                     profile.PageSize = pagesize;
                     db.SaveChanges();
                 }
 
                 var shelf = db.Shelves
-                    .Include("Books")
-                    .Include(a => a.Books.Select(b=>b.Authors))
+                    .Include(a => a.Books)
+                    .Include(a => a.Books.Select(b => b.Pictures))
+                    .Include(a => a.Books.Select(b => b.Authors))
                     .Include(a => a.Books.Select(b => b.Genres))
-                    .Include(a => a.Books.Select(b=>b.Publisher))
+                    .Include(a => a.Books.Select(b => b.Publisher))
                     .FirstOrDefault(p => p.Id == id);
                 if (shelf == null)
                     return RedirectToAction("Index");
@@ -200,7 +201,7 @@ namespace SDC.web.Controllers
                         .OrderBy(b => b.AddedDate)
                         .Skip((page - 1) * pagesize)
                         .Take(pagesize)
-                        .ToList();
+                        .Select(b => AutoMapper.Mapper.Map<BookViewModel>(b));
 
                 var vm = new ShelfViewModel()
                 {

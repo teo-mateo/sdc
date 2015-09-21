@@ -6,6 +6,7 @@
     prepareJqueryUpload(_m, _editBookModal, function () {
         //reload images area.
         //would be nice to only add the uploaded image. 
+        loadPictures();
     });
 
     _m.on('hidden.bs.modal', function () {
@@ -15,6 +16,70 @@
 
     _m.on('shown.bs.modal', function () {
         //load the book, ajax call to the Book controller
+        loadPictures();
+    });
+
+    //click on the save button
+    $('.btnUpdateBook').click(function () {
+        _editBookModal.bookJson.AddedDate = changeDateFormat(_editBookModal.bookJson.AddedDate);
+        _editBookModal.bookJson.Title = _m.find(".bookTitle").val();
+        _editBookModal.bookJson.Year = _m.find(".bookYear").val();
+        _editBookModal.bookJson.ISBN = _m.find('.bookISBN').val();
+        _editBookModal.bookJson.Description = _m.find('.bookDescription').val();
+        _editBookModal.bookJson.Language = {
+            "Code": _m.find('.bookLanguage').find(":selected").attr("value"),
+            "Name": _m.find('.bookLanguage').find(":selected").val()
+        };
+        _editBookModal.bookJson.Publisher = {
+            "Id": _m.find('.bookPublisher').attr('data-selected-id'),
+            "Name": _m.find('.bookPublisher').attr('data-selected-name')
+        };
+
+        //gather all authors
+        var authors_li = _m.find('.listAuthors').find('li').toArray();
+        _editBookModal.bookJson.Authors = authors_li.map(function (li) {
+            return {
+                "Id": $(li).attr('data-auth-id'),
+                "Name": $(li).attr('data-auth-name')
+            };
+        });
+
+        //and all genres
+        var genres = $('.bookGenres option:selected').toArray();
+        _editBookModal.bookJson.Genres = genres.map(function (g) {
+            return {
+                "Id": g.value,
+                "Name": g.innerText
+            };
+        });
+
+        var valid = validateBook(_m, _editBookModal.bookJson);
+
+        if (valid) {
+            //send json 
+            $.ajax({
+                url: _editBookModal.updateBookUrl,
+                type: "POST",
+                data: JSON.stringify(_editBookModal.bookJson),
+                contentType: "application/json; charset=utf-8",
+                error: function (response) {
+                    toastr.error('error saving book', 'error');
+                },
+                success: function (response) {
+                    _m.modal('hide');
+                    history.pushState('', '', _editBookModal.viewBookUrl);
+                    location.reload();
+                }
+            });
+        }
+    });
+
+    var loadPictures = function () {
+
+        //empty area
+        $('#picturesArea').empty();
+
+        //load pictures
         $.ajax({
             url: _editBookModal.fetchBookUrl,
             type: 'GET',
@@ -89,70 +154,17 @@
                 $('#UploadForBookId').val(_editBookModal.bookJson.Id);
             }
         });
-    });
-
-    //click on the save button
-    $('.btnUpdateBook').click(function () {
-        _editBookModal.bookJson.AddedDate = changeDateFormat(_editBookModal.bookJson.AddedDate);
-        _editBookModal.bookJson.Title = _m.find(".bookTitle").val();
-        _editBookModal.bookJson.Year = _m.find(".bookYear").val();
-        _editBookModal.bookJson.ISBN = _m.find('.bookISBN').val();
-        _editBookModal.bookJson.Description = _m.find('.bookDescription').val();
-        _editBookModal.bookJson.Language = {
-            "Code": _m.find('.bookLanguage').find(":selected").attr("value"),
-            "Name": _m.find('.bookLanguage').find(":selected").val()
-        };
-        _editBookModal.bookJson.Publisher = {
-            "Id": _m.find('.bookPublisher').attr('data-selected-id'),
-            "Name": _m.find('.bookPublisher').attr('data-selected-name')
-        };
-
-        //gather all authors
-        var authors_li = _m.find('.listAuthors').find('li').toArray();
-        _editBookModal.bookJson.Authors = authors_li.map(function (li) {
-            return {
-                "Id": $(li).attr('data-auth-id'),
-                "Name": $(li).attr('data-auth-name')
-            };
-        });
-
-        //and all genres
-        var genres = $('.bookGenres option:selected').toArray();
-        _editBookModal.bookJson.Genres = genres.map(function (g) {
-            return {
-                "Id": g.value,
-                "Name": g.innerText
-            };
-        });
-
-        var valid = validateBook(_m, _editBookModal.bookJson);
-
-        if (valid) {
-            //send json 
-            $.ajax({
-                url: _editBookModal.updateBookUrl,
-                type: "POST",
-                data: JSON.stringify(_editBookModal.bookJson),
-                contentType: "application/json; charset=utf-8",
-                error: function (response) {
-                    toastr.error('error saving book', 'error');
-                },
-                success: function (response) {
-                    _m.modal('hide');
-                    history.pushState('', '', _editBookModal.viewBookUrl);
-                    location.reload();
-                }
-            });
-        }
-    });
+    };
 });
 
 function appendBookImage(container, p) {
     //poor man's template
     var template = '<div class="row" id="bookImage-{imgid}">\n';
     template += '<div class="col-md-12">\n';
-    template += '<img src="{imgurl}" class="col-md-4" />\n';
-    template += '<div class="col-md-8 pull-right">\n';
+    template += '<div class="col-md-4 margin-bottom">\n';
+    template += '<img src="{imgurl}" class="img-rounded" width="100"/>\n';
+    template += '</div>';
+    template += '<div class="col-md-7">\n';
     template += '<div>\n';
     template += '<input type="text" class="col-md-12" id="imgTitle-{imgid}"/>\n';
     template += '</div>\n';

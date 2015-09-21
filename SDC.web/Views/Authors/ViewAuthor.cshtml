@@ -5,12 +5,15 @@
     ViewBag.User = (SDC.data.Entity.UserProfile)Session["UserInfo"];
 }
 
-@if (ViewBag.User.IsAdmin || ViewBag.User.IsCurator)
-{
-    <a href="@Url.Action("EditAuthor", "Authors", new { id = Model.Id})"
-       class="btn btn-primary">Edit</a>
-}
+<div class="btn-group margin-bottom">
+    @if (ViewBag.User.IsAdmin || ViewBag.User.IsCurator)
+    {
+        <a href="@Url.Action("EditAuthor", "Authors", new { id = Model.Id})" class="btn btn-default">
+             <i class="fa fa-edit"></i> Edit</a>
+    }
 
-<a href="javascript:void(0);" onclick="window.history.back();"
-   class="btn btn-default">Go back</a>
+    <a href="javascript:void(0);" onclick="window.history.back();" class="btn btn-default">
+    <i class="fa fa-list"></i> Go back</a>
+
+</div>
 

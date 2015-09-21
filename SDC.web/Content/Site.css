@@ -24,9 +24,10 @@ textarea {
     border-left: 1px dashed #333;
 }
 
-.sdc-scroll-container{
+.sdc-scroll-container400{
     height:400px;
-    overflow:auto;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 .sdc-margin2px{
     margin:2px;
@@ -46,6 +47,12 @@ textarea {
     color: yellow;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: gray;
+}
+
+.sdc-vertical-center{
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
 }
 
 @media screen and (min-width: 768px) {

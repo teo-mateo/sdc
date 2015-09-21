@@ -40,42 +40,59 @@
 
 }
 
-<h3>Controllers &amp; actions</h3>
-<div class="sdc-scroll-container">
-    <table class="table table-condensed">
-        <thead>
-            <tr>
-                <td><strong><a href='@Url.Action("AppMonitor", "Administration", new { orderby = controllerActionOrderBy })'>
-                    Controller/Action
-                    <span class='@controllerActionGlyph'></span>
-                    </a></strong></td>
-                <td><strong><a href='@Url.Action("AppMonitor", "Administration", new { orderby = countOrderBy })'>
-                    Count
-                    <span class='@countGlyph'></span>
-                    </a></strong></td>
-                <td><strong><a href='@Url.Action("AppMonitor", "Administration", new { orderby = averageOrderBy })'>Average response time (ms)
-                    <span class='@averageGlyph'></span>
-                    </a></strong></td>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var logItem in Model)
-    {
+<div class="box">
+<div class="box-body">
+    <h3>Controllers &amp; actions</h3>
+    <div class="sdc-scroll-container400">
+        <table class="table table-condensed">
+            <thead>
                 <tr>
-                    <td>@logItem.ControllerAction</td>
-                    <td>@logItem.Count</td>
-                    <td>@logItem.Average</td>
+                    <td>
+                        <strong>
+                            <a href='@Url.Action("AppMonitor", "Administration", new { orderby = controllerActionOrderBy })'>
+                                Controller/Action
+                                <span class='@controllerActionGlyph'></span>
+                            </a>
+                        </strong>
+                    </td>
+                    <td>
+                        <strong>
+                            <a href='@Url.Action("AppMonitor", "Administration", new { orderby = countOrderBy })'>
+                                Count
+                                <span class='@countGlyph'></span>
+                            </a>
+                        </strong>
+                    </td>
+                    <td>
+                        <strong>
+                            <a href='@Url.Action("AppMonitor", "Administration", new { orderby = averageOrderBy })'>
+                                Average response time (ms)
+                                <span class='@averageGlyph'></span>
+                            </a>
+                        </strong>
+                    </td>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var logItem in Model)
+                {
+                    <tr>
+                        <td>@logItem.ControllerAction</td>
+                        <td>@logItem.Count</td>
+                        <td>@logItem.Average</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <h3>Active users (last 5 minutes)</h3>
+    <ul class="list-group">
+        @foreach (var user in ActivityTracker.GetActiveUsers())
+        {
+            <li class="list-group-item">
+                @user
+            </li>
+        }
+    </ul>
 </div>
-<h3>Active users (last 5 minutes)</h3>
-<ul class="list-group">
-    @foreach (var user in ActivityTracker.GetActiveUsers())
-    {
-        <li class="list-group-item">
-            @user
-        </li>
-    }
-</ul>
+</div>

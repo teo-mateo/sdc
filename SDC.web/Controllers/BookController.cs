@@ -273,22 +273,36 @@ namespace SDC.web.Controllers
             try
             {
                 var profile = (UserProfile)this.Session["UserInfo"];
+
                 using (var db = new SDCContext())
+                using (var trans = db.Database.BeginTransaction())
                 {
                     var picture = db.BookPictures
                         .Include(p => p.Book)
+                        .Include(p => p.Book.Pictures)
                         .Include(p => p.Book.Shelf)
-                        .Include(p=>p.Book.Shelf.Owner)
+                        .Include(p => p.Book.Shelf.Owner)
                         .FirstOrDefault(p => p.Id == id);
 
-                    if(picture != null)
+                    if (picture != null)
                     {
                         if (picture.Book.Shelf.Owner.UserId == profile.UserId ||
                             profile.IsAdmin || profile.IsCurator)
                         {
-                            db.BookPictures.Remove(picture);
+                            picture.Book.Pictures.Remove(picture);
                             db.SaveChanges();
-                            S3.DeleteFile(picture.Key);
+
+                            try
+                            {
+                                S3.DeleteFile(picture.Key);
+                            }
+                            catch (Exception ex)
+                            {
+                                //todo: log 
+                                trans.Rollback();
+                                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError);
+                            }
+                            trans.Commit();
                         }
                         else
                         {

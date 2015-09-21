@@ -30,13 +30,16 @@
 <script type="text/javascript" src="~/Scripts/Custom/DeleteBook.js"></script>
 @if (Model.CanEdit)
 {
-    <a class="btn btn-primary margin-bottom" onclick="$('#newBookModal').modal('show');">
-        Add a book
-    </a>
+    <div class="btn-group margin-bottom">
+        <a class="btn btn-default" onclick="$('#newBookModal').modal('show');">
+            <i class="fa fa-plus"></i> Add a book
+        </a>
 
-    <a class="btn btn-default margin-bottom" href="@Url.Action("Index")">Go back</a>
+        <a class="btn btn-default" href="@Url.Action("Index")"> 
+        <i class="fa fa-list"></i> View shelves</a>
 
-    @Html.Partial("Shelves/_AddBookModal", Model)
+        @Html.Partial("Shelves/_AddBookModal", Model)
+    </div>
 }
 
 
@@ -53,6 +56,7 @@
         <table class="table table-hover table-striped">
             <thead>
                 <tr>
+                    <td></td>
                     <td><strong>Title</strong></td>
                     <td><strong>Author(s)</strong></td>
                     <td><strong>Genre</strong></td>
@@ -65,13 +69,19 @@
             @if(Model.BookCount == 0)
             {
                 <tr>
-                    <td colspan="6">There are no books on this shelf.</td>
+                    <td colspan="7">There are no books on this shelf.</td>
                 </tr>
             }
 
             @foreach(var book in Model.Books)
             {
                 <tr id="book-@book.Id">
+                    <td>
+                        @if(book.Pictures.Count > 0)
+                        {
+                            <img class="img-rounded" width="50" height="50" src="@book.Pictures.First().Url" />
+                        }
+                    </td>
                     <td>
                         <strong>
                             <a href="@Url.Action("ViewBook", "Book", new { id = book.Id })">

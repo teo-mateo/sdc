@@ -31,7 +31,6 @@ namespace SDC.data.ViewModels
         public string OwnerName { get; set; }
 
         public DateTime AddedDate { get; set; }
-        
     }
 
     //public class AuthorViewModel

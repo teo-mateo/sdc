@@ -12,10 +12,18 @@
     var canEditBook = profile.IsAdmin || profile.IsCurator || Model.OwnerId == profile.UserId;
 }
 
-@if (canEditBook)
-{
-    <a class="btn btn-primary margin-bottom" href="javascript:void(0);" onclick="$('#editBookModal').modal('show');">Change</a>
-    if (ViewBag.ShowEditor)
+<div class="btn-group margin-bottom">
+    @if (canEditBook)
+    {
+        <a class="btn btn-default"  href="javascript:void(0);" onclick="$('#editBookModal').modal('show');">
+            <i class="fa fa-edit"></i> Change</a>
+        <a class="btn btn-default" onclick="deleteBook(@Model.Id);">
+            <i class="fa fa-remove sdc-icon-r"></i> Delete</a>
+    }
+    <a class="btn btn-default" href="@Url.Action("Details", "Shelves", new { id = Model.ShelfId})">
+        <i class="fa fa-list"></i> View shelf</a>
+</div>
+    @if (ViewBag.ShowEditor)
     {
         <script>
             $(function () {
@@ -24,40 +32,45 @@
         </script>
     }
 
-    <script type="text/javascript">
-        var _pageJsObject = {
-            deleteBookUrl: '@Url.Action("DeleteBook", "Book")',
-            redirectUrl: '@Url.Action("Details", "Shelves", new { id = Model.ShelfId})'
-        };
-    </script>
+    @if (canEditBook)
+    {
+        <!-- set up delete book urls-->
+        <script type="text/javascript">
+            var _pageJsObject = {
+                deleteBookUrl: '@Url.Action("DeleteBook", "Book")',
+                redirectUrl: '@Url.Action("Details", "Shelves", new { id = Model.ShelfId })'
+            };
+        </script>
+        <!-- load shared delete book script-->
+        <script type="text/javascript" src="~/Scripts/Custom/DeleteBook.js"></script>
+        <!-- load modal for editing a book-->
+        @Html.Partial("Shelves/_EditBookModal")
+    }
 
-    <script type="text/javascript" src="~/Scripts/Custom/DeleteBook.js"></script>
-
-    <a class="btn btn-danger margin-bottom" onclick="deleteBook(@Model.Id);">Delete</a>
-}
-<a class="btn btn-default margin-bottom" href="@Url.Action("Details", "Shelves", new { id = Model.ShelfId})">View shelf</a>
-
-
-@Html.Partial("Shelves/_EditBookModal")
 
 <div class="box">
     <div class="box-body">
         <div class="row">
-            <div class="col-sm-6">
-                <h4>@Model.ShelfName <span>\</span>@Model.Title</h4>
+            <div class="col-md-6">
+                <h4>@Model.Title</h4>
                 <input type="hidden" value="@Model.Id" id="bookId" />
                 <span>
                     by
                     @{
-
-                        List<string> links = Model.Authors.Select(p =>
+                        IEnumerable<string> links = Model.Authors.Select(p =>
                         {
                             return String.Format("<a href='{0}'>{1}</a>",
                                                 Url.Action("ViewAuthor", "Authors", new { id = p.Id }),
                                                 p.Name);
-                        }).ToList();
-
-                        WriteLiteral(links.Aggregate((f, s) => f + ", " + s));
+                        });
+                        if(links.Count() > 0)
+                        {
+                            WriteLiteral(links.Aggregate((f, s) => f + ", " + s));
+                        }
+                        else
+                        {
+                            WriteLiteral("-");
+                        }
                     }
                 </span>
                 <p>
@@ -85,7 +98,19 @@
                     </a>
                 </div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-md-6">
+
+                    <div class="row margin">
+                        @foreach (var picture in Model.Pictures)
+                        {
+                            <div class="col-md-3 margin-bottom">
+                                <img src="@picture.Url"
+                                     class="img-rounded"
+                                     width="75" height="75" />
+                            </div>
+                        }
+                    </div>
+                
 
             </div>
         </div>

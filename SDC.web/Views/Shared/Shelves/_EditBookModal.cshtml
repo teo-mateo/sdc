@@ -102,7 +102,7 @@
                                     <input type="hidden" id="UploadForBookId" name="UploadForBookId" />
                                     <span class="btn btn-success fileinput-button">
                                         <i class="glyphicon glyphicon-plus"></i>
-                                        <span>Add files...</span>
+                                        <span>Add picture</span>
                                         <input type="file" name="ImageUpload" id="ImageUpload" multiple />
                                     </span>
                                     <ul id="fileList" name="fileList"></ul>
@@ -111,7 +111,7 @@
 
                         </div>
                         <!-- pictures area-->
-                        <div id="picturesArea">
+                        <div id="picturesArea" class="sdc-scroll-container400">
 
                         </div>
                     </div>
@@ -121,9 +121,10 @@
             </div>
 
             <div class="modal-footer row">
-                <div class="btn-toolbar">
-                    <button type="button" class="btn btn-default pull-right" onclick="$('#editBookModal').modal('hide');">Cancel</button>
-                    <button type="button" class="btn btn-primary pull-right btnUpdateBook">Save and close</button>
+                <div class="btn-group pull-right">
+                    <button type="button" class="btn btn-default" onclick="$('#editBookModal').modal('hide');">Cancel</button>
+                    <button type="button" class="btn btn-default pull-right btnUpdateBook">
+                    <i class="fa fa-save"></i> Save and close</button>
                 </div>
             </div>
         </div>
