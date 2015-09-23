@@ -80,10 +80,10 @@ namespace SDC.Library.S3
             return UploadImage(key, inputStream);
         }
 
-        public static S3File UploadBookImage(string id, string filename, Stream inputStream)
+        public static S3File UploadBookImage(string bookid, string filename, Stream inputStream)
         {
             //root_folder/id/pic.jpg
-            string key = String.Format("{0}/{1}/{2}", root_book_pics, id, Guid.NewGuid().ToString() + "-" + filename);
+            string key = String.Format("{0}/{1}/{2}", root_book_pics, bookid, Guid.NewGuid().ToString() + "-" + filename);
             return UploadImage(key, inputStream);
         }
 
