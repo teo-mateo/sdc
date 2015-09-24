@@ -12,17 +12,17 @@ $('.importLink').on('click', function () {
 });
 
 function importData(max){
-    var d = { "Max": max };
+    var d = { "Max": max, "ImportPassword": $('#importPwd').val() };
     $.ajax({
         url: _jsPageObject.importUrl,
         type: 'POST',
         data: JSON.stringify(d),
         contentType: 'application/json',
-        success: function (response) {
+        success: function (response, status, xhr) {
             toastr.info('import started.');
             startStatusCheck();
         },
-        error: function (response) {
+        error: function (response, status, xhr) {
             toastr.error('failed to start import');
         }
     });
@@ -32,11 +32,11 @@ $('#cancelLink').on('click', function () {
     $.ajax({
         url: _jsPageObject.cancelUrl,
         type: 'GET',
-        success: function (response) {
+        success: function (response, status, xhr) {
             toastr.info('canceled.');
             clearImportTimer();
         },
-        error: function (response) {
+        error: function (response, status, xhr) {
             toastr.error('error canceling import');
             clearImportTimer();
         }

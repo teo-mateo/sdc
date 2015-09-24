@@ -1,7 +1,14 @@
 ﻿
 @{
-    ViewBag.Title = "Data import";
+    ViewBag.Title = "Test data import";
 }
+<h4>For my use only. Unless you can guess the password.</h4>
+<p>I am using an async controller to import up to 270k books, users and publishers from some CSV files. 
+ You can find the CSVs <a href="https://github.com/teo-mateo/sdc/tree/master/SDC.Library/DummyDataImport">here.</a><br />
+ The books CSV is about 80MBytes.</p>
+<p>
+    <input type="password" id="importPwd" />
+</p>
 <ul class="list-group">
     <li class="list-group-item">
         <a href='javascript:void(0);' class="importLink" data-sdc-max="10">Import async 10</a>

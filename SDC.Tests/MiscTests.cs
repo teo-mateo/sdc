@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SDC.data;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace SDC.Tests
 {
@@ -25,6 +26,14 @@ namespace SDC.Tests
                 var bookProjections = db.Books.Select(b => new BookProjection() { Title = b.Title }).ToList();
                 Assert.IsTrue(db.Books.Local.Count == 0);
             }
+        }
+
+        [TestMethod]
+        public void MD5_Test()
+        {
+            var md5 = MD5.Create();
+            byte[] bytes = md5.ComputeHash(System.Text.Encoding.Unicode.GetBytes("a"));
+            var s = BitConverter.ToString(bytes).Replace("-", String.Empty).ToLower();
         }
     }
 }

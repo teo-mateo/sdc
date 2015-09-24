@@ -82,33 +82,24 @@ namespace SDC.Library.DummyDataImport
         /// </summary>
         public ImportUtility()
         {
-            var basePath = AssemblyDirectory;
-            //var basePath = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName;
-            _firstNamesCsv = Path.Combine(basePath, FirstNamesCsv);
-            _lastNamesCsv = Path.Combine(basePath, LastNamesCsv);
-            _booksCsv = Path.Combine(basePath, BooksCsv);
-
-            if (!File.Exists(_firstNamesCsv) || !File.Exists(_lastNamesCsv) || !File.Exists(_booksCsv))
+            var importDirectory = ConfigurationManager.AppSettings["CSVImportSource"];
+            if (Directory.Exists(importDirectory))
             {
-                //attempt to use web.config
-                var importDirectory = ConfigurationManager.AppSettings["CSVImportSource"];
-                if (Directory.Exists(importDirectory))
-                {
-                    _firstNamesCsv = Path.Combine(basePath, FirstNamesCsv);
-                    _lastNamesCsv = Path.Combine(basePath, LastNamesCsv);
-                    _booksCsv = Path.Combine(basePath, BooksCsv);
+                _firstNamesCsv = Path.Combine(importDirectory, FirstNamesCsv);
+                _lastNamesCsv = Path.Combine(importDirectory, LastNamesCsv);
+                _booksCsv = Path.Combine(importDirectory, BooksCsv);
 
-                    if (!File.Exists(_firstNamesCsv) || !File.Exists(_lastNamesCsv) || !File.Exists(_booksCsv))
-                    {
-                        throw new Exception("One or more CSV files are missing.");
-                    }
+                if (File.Exists(_firstNamesCsv) && File.Exists(_lastNamesCsv) && File.Exists(_booksCsv))
+                {
+                    //all good
+                    if (!WebSecurity.Initialized)
+                        WebSecurity.InitializeDatabaseConnection("SDCConnectionString", "UserProfile", "UserId", "UserName", autoCreateTables: true);
+
+                    return;
                 }
             }
 
-            if(!WebSecurity.Initialized)
-                WebSecurity.InitializeDatabaseConnection("SDCConnectionString", "UserProfile", "UserId", "UserName", autoCreateTables: true);
-
-            _csvDataLoaded = false;
+            throw new Exception("One or more CSV files are missing.");
         }
 
         /// <summary>

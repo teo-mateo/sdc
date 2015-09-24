@@ -9,5 +9,6 @@ namespace SDC.Library.DummyDataImport
     public class DataImportViewModel
     {
         public int Max { get; set; }
+        public string ImportPassword { get; set; }
     }
 }
