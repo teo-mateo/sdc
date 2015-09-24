@@ -16,18 +16,18 @@ namespace SDC.Library.Redis
         /// </summary>
         public static void TrackActive(string userName)
         {
-            try
-            {
-                IRedisClient cli = SDCApp.Kernel.Get<IRedisClient>();
-                var masterSet = cli.Sets["activity-master"];
-                var currentSetKey = "activity-" + DateTime.Now.ToString("dd-hh-mm");
-                masterSet.Add(currentSetKey);
-                var set = cli.Sets[currentSetKey];
-                set.Add(userName);
-            }
-            catch (Exception)
-            {
-            }
+            //try
+            //{
+            //    IRedisClient cli = SDCApp.Kernel.Get<IRedisClient>();
+            //    var masterSet = cli.Sets["activity-master"];
+            //    var currentSetKey = "activity-" + DateTime.Now.ToString("dd-hh-mm");
+            //    masterSet.Add(currentSetKey);
+            //    var set = cli.Sets[currentSetKey];
+            //    set.Add(userName);
+            //}
+            //catch (Exception)
+            //{
+            //}
         }
 
         /// <summary>
@@ -35,23 +35,25 @@ namespace SDC.Library.Redis
         /// </summary>
         public static string[] GetActiveUsers()
         {
-            try
-            {
-                IRedisClient cli = SDCApp.Kernel.Get<IRedisClient>();
-                var masterList = cli.Sets["activity-master"];
-                var masterKeys = masterList.GetAll();
+            //try
+            //{
+            //    IRedisClient cli = SDCApp.Kernel.Get<IRedisClient>();
+            //    var masterList = cli.Sets["activity-master"];
+            //    var masterKeys = masterList.GetAll();
 
-                var lastSetKeys = GetActivitySets();
-                string[] lastSetIds = lastSetKeys
-                    .Where(k => masterKeys.Contains(k))
-                    .Select(k => cli.Sets[k].Id).ToArray();
+            //    var lastSetKeys = GetActivitySets();
+            //    string[] lastSetIds = lastSetKeys
+            //        .Where(k => masterKeys.Contains(k))
+            //        .Select(k => cli.Sets[k].Id).ToArray();
 
-                return cli.GetUnionFromSets(lastSetIds).ToArray();
-            }
-            catch (Exception)
-            {
-                return new string[0];
-            }
+            //    return cli.GetUnionFromSets(lastSetIds).ToArray();
+            //}
+            //catch (Exception)
+            //{
+            //    return new string[0];
+            //}
+
+            return new string[0];
         }
 
         /// <summary>

@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace SDC.web.Controllers
 {
-    public class PublicProfilesController : Controller
+    public class PublicProfilesController : SDCController
     {
         // GET: PublicProfiles
         /// <summary>

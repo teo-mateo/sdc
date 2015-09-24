@@ -170,8 +170,11 @@ namespace SDC.web.Controllers
             if (pagesize < 1 || pagesize > 100)
                 pagesize = profile.PageSize;
 
+            ShelfViewModel vm = null;
+
             using (var db = new SDCContext())
             {
+                db.Configuration.AutoDetectChangesEnabled = false;
                 //update profile page size
                 if (pagesize != profile.PageSize)
                 {
@@ -183,6 +186,7 @@ namespace SDC.web.Controllers
                 }
 
                 var shelf = db.Shelves
+                    .AsNoTracking()
                     .Include(a => a.Books)
                     .Include(a => a.Books.Select(b => b.Pictures))
                     .Include(a => a.Books.Select(b => b.Authors))
@@ -203,7 +207,7 @@ namespace SDC.web.Controllers
                         .Take(pagesize)
                         .Select(b => AutoMapper.Mapper.Map<BookViewModel>(b));
 
-                var vm = new ShelfViewModel()
+                vm = new ShelfViewModel()
                 {
                     Id = shelf.Id,
                     Name = shelf.Name,
@@ -238,8 +242,10 @@ namespace SDC.web.Controllers
                     ViewBag.Breadcrumbs = Breadcrumb.Generate("Directory", "", vm.Name, "");
                 }
 
-                return View(vm);
+                db.Dispose();
             }
+
+            return View(vm);
         }
 
 

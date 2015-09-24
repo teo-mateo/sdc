@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewBag.Title = "Data import";
+}
+<ul class="list-group">
+    <li class="list-group-item">
+        <a href='javascript:void(0);' class="importLink" data-sdc-max="10">Import async 10</a>
+    </li>
+    <li class="list-group-item">
+        <a href='javascript:void(0);' class="importLink" data-sdc-max="30">Import async 30</a>
+    </li>
+    <li class="list-group-item">
+        <a href='javascript:void(0);' class="importLink" data-sdc-max="100">Import async 100</a>
+    </li>
+    <li class="list-group-item">
+        <a href='javascript:void(0);' class="importLink" data-sdc-max="500">Import async 500</a>
+    </li>
+    <li class="list-group-item">
+        <a href='javascript:void(0);' class="importLink" data-sdc-max="1000">Import async 1000</a>
+    </li>
+    <li class="list-group-item">
+        <a href='javascript:void(0);' class="importLink" data-sdc-max="0">Import async ALL</a>
+    </li>
+</ul>
+
+<h3 id="status"></h3>
+<a href='javascript:void(0);' id="cancelLink" class="btn btn-danger">Cancel</a>
+<script>
+
+    var _jsPageObject = {
+        importUrl: '@Url.Action("Import")',
+        cancelUrl: '@Url.Action("Cancel")',
+        statusUrl: '@Url.Action("Status")'
+    };
+
+
+</script>
+
+<script type="text/javascript" src="~/Scripts/Custom/Import/Import.js"></script>

@@ -13,8 +13,10 @@ namespace SDC.Tests.Books
             SDC.Library.DummyDataImport.ImportUtility import = new Library.DummyDataImport.ImportUtility();
             import.LoadData();
 
-            Task t = import.Import();
-            t.RunSynchronously();
+            Task t = import.Import(max:10);
+            t.Wait();
+
+            Assert.Fail();
         }
     }
 }

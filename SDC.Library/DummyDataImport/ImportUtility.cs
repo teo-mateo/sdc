@@ -14,6 +14,9 @@ using WebMatrix.WebData;
 using SDC.Library.Extensions;
 using System.Net;
 using SDC.Library.S3;
+using SDC.data.Entity.Location;
+using System.Threading;
+using System.Diagnostics;
 
 namespace SDC.Library.DummyDataImport
 {
@@ -29,7 +32,7 @@ namespace SDC.Library.DummyDataImport
     {
         Random _rnd = new Random(Guid.NewGuid().GetHashCode());
 
-        const string _tmp = @"C:\temp";
+        const string _tmp = @"D:\HEAPZILLA\sdc\SDC.Library";
         const string FirstNamesCsv = "DummyDataImport\\firstNames.csv";
         const string LastNamesCsv = "DummyDataImport\\firstNames.csv";
         const string BooksCsv = "DummyDataImport\\books.csv";
@@ -41,17 +44,11 @@ namespace SDC.Library.DummyDataImport
         private string[] _firstNames;
         private string[] _lastNames;
         private string[] _books;
+        private string[,] _booksSplit;
         private bool _csvDataLoaded = false;
 
         public int TotalBookCount { get { return _books == null ? 0 : _books.Length; } }
-        private int _loadedBooksCount;
-        public int LoadedBooksCount
-        {
-            get
-            {
-                return _loadedBooksCount;
-            }
-        }
+        private int _max;
 
         public static string AssemblyDirectory
         {
@@ -64,12 +61,28 @@ namespace SDC.Library.DummyDataImport
             }
         }
 
+        public static int Progress { get; set; }
+        public static bool Running { get; set; }
+        public static DateTime ImportStart { get; set; }
+        public static bool Cancel { get; set; }
+        public static double AvgBookImportTime { get; set; }
+        public static int TargetCount { get; set; }
+
+        private SortedDictionary<String, Publisher> _publishersSet = new SortedDictionary<string, Publisher>();
+        private SortedDictionary<String, Author> _authorsSet = new SortedDictionary<string, Author>();
+
+        Genre[] _allGenres;
+        Language _lang;
+        Country _country;
+        City _city;
+
         /// <summary>
         /// Initializes the paths and verifies that the csv files are present.
         /// </summary>
         public ImportUtility()
         {
-            var basePath = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName;
+            var basePath = AssemblyDirectory;
+            //var basePath = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName;
             _firstNamesCsv = Path.Combine(basePath, FirstNamesCsv);
             _lastNamesCsv = Path.Combine(basePath, LastNamesCsv);
             _booksCsv = Path.Combine(basePath, BooksCsv);
@@ -79,8 +92,8 @@ namespace SDC.Library.DummyDataImport
                 throw new FileNotFoundException("One of the required csv files is missing.");
             }
 
-            
-            WebSecurity.InitializeDatabaseConnection("SDCConnectionString", "UserProfile", "UserId", "UserName", autoCreateTables: true);
+            if(!WebSecurity.Initialized)
+                WebSecurity.InitializeDatabaseConnection("SDCConnectionString", "UserProfile", "UserId", "UserName", autoCreateTables: true);
 
             _csvDataLoaded = false;
         }
@@ -97,35 +110,30 @@ namespace SDC.Library.DummyDataImport
                 _firstNames = File.ReadAllLines(_firstNamesCsv);
                 _lastNames = File.ReadAllLines(_lastNamesCsv);
                 _books = File.ReadAllLines(_booksCsv);
+
+                _booksSplit = new string[_books.Length,7];
+
+                for (int i = 0; i < _books.Length; i++)
+                {
+                    string bookraw = _books[i];
+                    bookraw = bookraw.Replace("&amp;", "&");
+                    bookraw = bookraw.TrimDoubleQuotes();
+                    string[] split = bookraw.Split(new string[] { "\";" }, StringSplitOptions.RemoveEmptyEntries);
+                    _booksSplit[i, 0] = split[0].TrimDoubleQuotes();
+                    _booksSplit[i, 1] = split[1].TrimDoubleQuotes();
+                    _booksSplit[i, 2] = split[2].TrimDoubleQuotes();
+                    _booksSplit[i, 3] = split[3].TrimDoubleQuotes();
+                    _booksSplit[i, 4] = split[4].TrimDoubleQuotes();
+                    _booksSplit[i, 5] = split[split.Length - 1].TrimDoubleQuotes();
+                    _booksSplit[i, 6] = _books[i];
+                }
+
                 _csvDataLoaded = true;
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 throw;
             }
-        }
-
-        public Task Import()
-        {
-            if (!_csvDataLoaded)
-                throw new Exception("CSV data not loaded.");
-
-            return new Task(() =>
-            {
-                using (var db = new SDCContext())
-                {
-                    do
-                    {
-                        string firstName = _firstNames[_rnd.Next(0, _firstNames.Length - 1)];
-                        string lastName = _lastNames[_rnd.Next(0, _lastNames.Length - 1)];
-
-                        Shelf shelf;
-                        var profile = CreateUser(db, firstName, lastName, out shelf);
-                        LoadBooks(db, profile, shelf, 10);
-
-                    } while (_loadedBooksCount < TotalBookCount);
-                }
-            });
         }
 
         private UserProfile CreateUser(SDCContext db, string firstName, string lastName, out Shelf shelf)
@@ -148,6 +156,9 @@ namespace SDC.Library.DummyDataImport
 
             //get profile
             var profile = db.UserProfiles.FirstOrDefault(p => p.UserName == username);
+            profile.Country = _country;
+            profile.City = _city;
+            profile.PageSize = 10;
 
             //create default shelf
             //create default shelf
@@ -159,28 +170,26 @@ namespace SDC.Library.DummyDataImport
                 Owner = profile
             };
             db.Shelves.Add(defaultShelf);
-            db.SaveChanges();
-
             shelf = defaultShelf;
 
             return profile;
         }
 
-        private void LoadBooks(SDCContext db, UserProfile profile, Shelf shelf, int howMany)
+        private void LoadBooks(SDCContext db, UserProfile profile, Shelf shelf)
         {
-            for(int i = 0; i < howMany; i++)
+            int perShelf = _rnd.Next(10, 50);
+            for(int i = Progress; i < Progress + perShelf && Progress < _max; i++)
             {
-                string bookraw = _books[_loadedBooksCount++];
-                string[] split = bookraw.Split(new char[] { ';' });
-                string isbn = split[0].TrimDoubleQuotes();
-                string title = split[1].TrimDoubleQuotes();
-                string author = split[2].TrimDoubleQuotes();
-                int year = Int32.Parse(split[3].TrimDoubleQuotes());
-                string publisher = split[4].TrimDoubleQuotes();
-                string imgurl = split[split.Length - 1].TrimDoubleQuotes();
+                string isbn = _booksSplit[i, 0];
+                string title = _booksSplit[i, 1];
+                string author = _booksSplit[i, 2];
+                int year = Int32.Parse(_booksSplit[i, 3]);
+                string publisher = _booksSplit[i, 4];
+                string imgurl = _booksSplit[i, 5];
 
-                Author a = db.Authors.FirstOrDefault(x => x.Name.Equals(author));
-                if(a == null)
+                DateTime d1 = DateTime.Now;
+                Author a = null;
+                if (!_authorsSet.ContainsKey(author))
                 {
                     a = new Author()
                     {
@@ -191,10 +200,17 @@ namespace SDC.Library.DummyDataImport
                         IsVerified = true
                     };
                     db.Authors.Add(a);
+                    _authorsSet.Add(author, a);
                 }
+                else
+                {
+                    a = _authorsSet[author];
+                }
+                Debug.WriteLine("Author lookup in " + DateTime.Now.Subtract(d1).TotalMilliseconds);
 
-                Publisher p = db.Publishers.FirstOrDefault(x => x.Name.Equals(publisher));
-                if(p == null)
+                DateTime d2 = DateTime.Now;
+                Publisher p = null;
+                if (!_publishersSet.ContainsKey(publisher))
                 {
                     p = new Publisher()
                     {
@@ -203,52 +219,121 @@ namespace SDC.Library.DummyDataImport
                         IsVerified = true
                     };
                     db.Publishers.Add(p);
+                    _publishersSet.Add(publisher, p);
                 }
+                else
+                {
+                    p = _publishersSet[publisher];
+                }
+                Debug.WriteLine("Author lookup in " + DateTime.Now.Subtract(d2).TotalMilliseconds);
 
                 Book book = new Book()
                 {
                     Authors = new List<Author>(new Author[] { a }),
                     Title = title,
                     AddedDate = DateTime.Now,
-                    Language = db.Languages.First(),
+                    Language = _lang,
                     Shelf = shelf,
                     ISBN = isbn,
                     Publisher = p,
                     Year = year,
-                    Description = bookraw,
+                    Description = _booksSplit[i, 6],
                     Pages = _rnd.Next(1, 500),
                     Price = _rnd.Next(10, 100)
                 };
 
+                //3 random genres bongo bong!
+                var bookGenres = _allGenres.OrderBy(x => Guid.NewGuid().ToString()).Take(3).ToArray();
+                book.Genres.Add(bookGenres[0]);
+
                 db.Books.Add(book);
-                db.SaveChanges();
 
-                S3File s3file = null;
-                using(WebClient wc = new WebClient())
-                {
-                    string localtmp = Path.Combine(_tmp, Guid.NewGuid().ToString() + ".jpg");
-                    wc.DownloadFile(imgurl, localtmp);
-                    using (var fs = new FileStream(localtmp, FileMode.Open))
-                    {
-                        s3file = S3.S3.UploadBookImage(book.Id.ToString(), Guid.NewGuid().ToString(), fs);
-                    }
-                    File.Delete(localtmp);
-                }
-
+                //book pictures
                 BookPicture bp = new BookPicture()
                 {
                     Book = book,
-                    Key = (s3file != null) ? s3file.Key : null,
-                    Url = (s3file != null) ? s3file.Url : null,
+                    Key = null,
+                    Url = imgurl,
                     IsMain = true,
                     Title = "img title"
                 };
 
                 //book.Pictures = new List<BookPicture>();
                 book.Pictures.Add(bp);
-                //db.BookPictures.Add(bp);
-                db.SaveChanges();
+
+                Progress++;
+                if (Cancel)
+                    break;
             }
         }
+
+        public Task<int> Import(int max = 0)
+        {
+            if (!_csvDataLoaded)
+                throw new Exception("CSV data not loaded.");
+
+            if (max == 0)
+                _max = TotalBookCount;
+            else
+                _max = max;
+
+            Task<int> importTask = new Task<int>(() =>
+            {
+                try {
+                    Progress = 0;
+                    Running = true;
+                    Cancel = false;
+                    ImportStart = DateTime.Now;
+                    TargetCount = _max;
+                    using (var db = new SDCContext())
+                    {
+                        db.Configuration.AutoDetectChangesEnabled = false;
+
+                        _allGenres = db.Genres.ToArray();
+                        _lang = db.Languages.Find("FR");
+                        _country = db.Countries.Find("CA");
+                        _city = db.Cities.Find(4);
+
+                        var authors = db.Authors.ToList();
+                        authors.ForEach(a =>
+                        {
+                            if (!_authorsSet.ContainsKey(a.Name))
+                                _authorsSet.Add(a.Name, a);
+                        });
+                        var publishers = db.Publishers.ToList();
+                        publishers.ForEach(p =>
+                        {
+                            if (!_publishersSet.ContainsKey(p.Name))
+                                _publishersSet.Add(p.Name, p);
+                        });
+
+                        do
+                        {
+                            string firstName = _firstNames[_rnd.Next(0, _firstNames.Length - 1)];
+                            string lastName = _lastNames[_rnd.Next(0, _lastNames.Length - 1)];
+
+                            Shelf shelf;
+                            var profile = CreateUser(db, firstName, lastName, out shelf);
+                            LoadBooks(db, profile, shelf);
+
+                            db.ChangeTracker.DetectChanges();
+                            db.SaveChanges();
+
+                        } while (Progress < _max && !Cancel);
+                    }
+
+                    return Progress;
+                }
+                finally
+                {
+                    Running = false;
+                }
+            });
+
+
+            importTask.Start();
+            return importTask;
+        }
+
     }
 }
