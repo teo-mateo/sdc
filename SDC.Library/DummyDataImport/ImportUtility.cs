@@ -102,6 +102,7 @@ namespace SDC.Library.DummyDataImport
                     {
                         throw new Exception("One or more CSV files are missing.");
                     }
+                }
             }
 
             if(!WebSecurity.Initialized)
