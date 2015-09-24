@@ -17,6 +17,7 @@ using SDC.Library.S3;
 using SDC.data.Entity.Location;
 using System.Threading;
 using System.Diagnostics;
+using System.Configuration;
 
 namespace SDC.Library.DummyDataImport
 {
@@ -89,7 +90,18 @@ namespace SDC.Library.DummyDataImport
 
             if (!File.Exists(_firstNamesCsv) || !File.Exists(_lastNamesCsv) || !File.Exists(_booksCsv))
             {
-                throw new FileNotFoundException("One of the required csv files is missing.");
+                //attempt to use web.config
+                var importDirectory = ConfigurationManager.AppSettings["CSVImportSource"];
+                if (Directory.Exists(importDirectory))
+                {
+                    _firstNamesCsv = Path.Combine(basePath, FirstNamesCsv);
+                    _lastNamesCsv = Path.Combine(basePath, LastNamesCsv);
+                    _booksCsv = Path.Combine(basePath, BooksCsv);
+
+                    if (!File.Exists(_firstNamesCsv) || !File.Exists(_lastNamesCsv) || !File.Exists(_booksCsv))
+                    {
+                        throw new Exception("One or more CSV files are missing.");
+                    }
             }
 
             if(!WebSecurity.Initialized)
@@ -178,14 +190,22 @@ namespace SDC.Library.DummyDataImport
         private void LoadBooks(SDCContext db, UserProfile profile, Shelf shelf)
         {
             int perShelf = _rnd.Next(10, 50);
-            for(int i = Progress; i < Progress + perShelf && Progress < _max; i++)
+            int startindex = Progress;
+            for(int i = startindex; i < startindex + perShelf && Progress < _max; i++)
             {
-                string isbn = _booksSplit[i, 0];
-                string title = _booksSplit[i, 1];
-                string author = _booksSplit[i, 2];
-                int year = Int32.Parse(_booksSplit[i, 3]);
-                string publisher = _booksSplit[i, 4];
-                string imgurl = _booksSplit[i, 5];
+                string isbn, title, author, publisher, imgurl;
+                int year;
+                try {
+                    isbn = _booksSplit[i, 0];
+                    title = _booksSplit[i, 1];
+                    author = _booksSplit[i, 2];
+                    year = Int32.Parse(_booksSplit[i, 3]);
+                    publisher = _booksSplit[i, 4];
+                    imgurl = _booksSplit[i, 5];
+                }catch(Exception)
+                {
+                    continue;
+                }
 
                 DateTime d1 = DateTime.Now;
                 Author a = null;
@@ -318,6 +338,17 @@ namespace SDC.Library.DummyDataImport
 
                             db.ChangeTracker.DetectChanges();
                             db.SaveChanges();
+
+                            var localBooks = db.Books.Local.ToArray();
+                            foreach(var le in localBooks)
+                            {
+                                db.Entry(le).State = System.Data.Entity.EntityState.Detached;
+                            }
+                            var localPictures = db.BookPictures.Local.ToArray();
+                            foreach(var le in localPictures)
+                            {
+                                db.Entry(le).State = System.Data.Entity.EntityState.Detached;
+                            }
 
                         } while (Progress < _max && !Cancel);
                     }

@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "etc", "etc", "{89BA8EB6-F6B
 		etc\clear_iis_express.ps1 = etc\clear_iis_express.ps1
 		etc\countriesToCities.json = etc\countriesToCities.json
 		etc\membership.sql = etc\membership.sql
+		etc\rebuild-all-indexes.sql = etc\rebuild-all-indexes.sql
 		etc\util.sql = etc\util.sql
 	EndProjectSection
 EndProject
