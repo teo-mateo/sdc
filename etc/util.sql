@@ -3,7 +3,7 @@ phystat.avg_fragmentation_in_percent FROM
 sys.dm_db_index_physical_stats(DB_ID(), NULL, NULL, NULL, 'DETAILED') phystat inner JOIN sys.indexes i ON i.object_id = phystat.object_id AND i.index_id = phystat.index_id WHERE phystat.avg_fragmentation_in_percent > 10 AND phystat.avg_fragmentation_in_percent > 40
 
 
-
+--warning: this loads the entire db to the memory cache
 SELECT db_name(a.database_id) [Db Name]
 ,object_name(a.object_id) Table_Name
 ,a.index_id
