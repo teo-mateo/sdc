@@ -21,7 +21,7 @@
         'handleWidth': 75
     });
     $('#chkBooksFilter').on('switchChange.bootstrapSwitch', (function (event, state) {
-        $('#authorsTable').DataTable().ajax.url(getJsonUrl());
+        $('#authorsTable').DataTable().ajax.url(getJsonUrl()).load();
         
     }));
 
