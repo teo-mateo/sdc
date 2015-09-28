@@ -15,6 +15,8 @@
 
     _links.table = $('#authorsTable').DataTable({
         'paging': true,
+        'serverSide': true,
+        'processing': true,
         'ajax': _links.fetchAuthorsJson + '?onlyWithBooks=' + $('#chkBooksFilter').is(':checked'),
         'columnDefs': [
             {

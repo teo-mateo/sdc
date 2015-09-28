@@ -1251,7 +1251,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>58525</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/SDC.web</IISUrl>
+          <IISUrl>http://localhost:809/SDC.web</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

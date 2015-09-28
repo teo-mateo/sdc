@@ -88,29 +88,43 @@ namespace SDC.web.Controllers
                 if (profile == null || profile.Role == RolesCustom.USER)
                     return RedirectToAction("Index", "Home");
 
-                using(var db = new SDCContext())
+                using (var db = new SDCContext())
+                using(var trans = db.Database.BeginTransaction())
                 {
                     //delete books
                     //delete book images
                     //delete author
+
+                    var books = db.Books
+                        .Include(b => b.Pictures)
+                        .Where(b => b.Authors.Any(a => a.Id == id)).ToArray();
+
+                    foreach (var book in books)
+                    {
+                        //delete book images
+                        foreach (var pic in book.Pictures.ToArray())
+                        {
+                            //delete from s3
+                            if (!String.IsNullOrEmpty(pic.Key))
+                            {
+                                S3.DeleteFile(pic.Key);
+                            }
+                            //delete from db
+                            db.BookPictures.Remove(pic);
+                        }
+
+                        //delete book
+                        db.Books.Remove(book);
+                    }
 
                     var author = db.Authors
                         .Include(a => a.Books)
                         .Include(a => a.Books.Select(b => b.Pictures))
                         .First(a => a.Id == id);
 
-                    foreach(var b in author.Books)
-                    {
-                        foreach(var p in b.Pictures)
-                        {
-                            S3.DeleteFile(p.Key);
-                            db.BookPictures.Remove(p);
-                        }
-                        b.Pictures.Clear();
-                        db.Books.Remove(b);
-                    }
                     db.Authors.Remove(author);
                     db.SaveChanges();
+                    trans.Commit();
                 }
 
                 return new HttpStatusCodeResult(HttpStatusCode.OK);
@@ -149,17 +163,21 @@ namespace SDC.web.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetAllAuthorsJson(string term = "")
+        public JsonResult GetAllAuthorsJson()
         {
             using (var db = new SDCContext())
             {
                 bool filterOnlyWithBooks = false;
                 bool.TryParse(this.Request.QueryString["onlyWithBooks"], out filterOnlyWithBooks);
 
-                int recordsTotal = db.Authors.Count();
+                int skip = Int32.Parse(this.Request.QueryString["start"]);
+                int take = Int32.Parse(this.Request.QueryString["length"]);
+                int draw = Int32.Parse(this.Request.QueryString["draw"]);
 
-                var authors = db.Authors
-                    .Where(p => !filterOnlyWithBooks || p.Books.Count > 0)
+                string nameFilter = Request.QueryString["search[value]"];
+                
+                var allAuthors = db.Authors
+                    .Where(p => (!filterOnlyWithBooks || p.Books.Count > 0) && (String.IsNullOrEmpty(nameFilter) || p.Name.Contains(nameFilter)))
                     .OrderBy(p => p.Name)
                     .Select(a => new
                     {
@@ -169,14 +187,17 @@ namespace SDC.web.Controllers
                         bookcount = a.Books.Count.ToString(),
                         addedby = (a.AddedBy != null) ? a.AddedBy.UserName : "-",
                         addeddate = a.AddedDate.Value
-                    }).ToArray();
+                    })
+                    .ToArray();
+                int recordsTotal = allAuthors.Count();
+                var filtered = allAuthors.Skip(skip).Take(take).ToArray();
 
                 var o = new
                 {
-                    draw = 2,
+                    draw = draw,
                     recordsTotal = recordsTotal,
-                    recordsFiltered = authors.Length,
-                    data = authors.Select(a => new string[] { a.id, a.name, a.isverified, a.bookcount, a.addedby, a.addeddate.ToString(Library.G.DATE) }).ToArray()
+                    recordsFiltered = allAuthors.Length,
+                    data = filtered.Select(a => new string[] { a.id, a.name, a.isverified, a.bookcount, a.addedby, a.addeddate.ToString(Library.G.DATE) }).ToArray()
                 };
 
                 return Json(o, JsonRequestBehavior.AllowGet);
