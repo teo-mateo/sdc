@@ -18,10 +18,12 @@
 
 <script>
     var _links = {
+        current: '@Url.Action("Index")',
         viewAuthor: '@Url.Action("ViewAuthor")',
         fetchAuthorsJson: '@Url.Action("GetAllAuthorsJson")',
         deleteAuthor: '@Url.Action("DeleteAuthor")',
-        approveAuthor: '@Url.Action("ApproveAuthor")'
+        approveAuthor: '@Url.Action("ApproveAuthor")',
+        viewUserProfile: '@Url.Action("View", "PublicProfiles")'
     };
 </script>
 
@@ -40,6 +42,9 @@
 </div>
 
 @Html.Partial("Authors/_EditAuthorModal")
+
+<input type="hidden" id="colSortIndex" value="@ViewBag.ColSortIndex"/>
+<input type="hidden" id="colSortDirection" value="@ViewBag.ColSortDirection"/>
 
 <div class="hidden">
     <!-- Single button -->

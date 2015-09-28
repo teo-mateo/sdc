@@ -1,31 +1,52 @@
 ﻿$(function () {
 
+    var getJsonUrl = function () {
+        var onlyWithBooks = $('#chkBooksFilter').is(':checked');
+        return _links.fetchAuthorsJson + "?onlyWithBooks=" + onlyWithBooks;
+    }
+
+    //returns the column to sort to, based on the hidden value (it comes from the URL)
+    var getSortCol = function () {
+        var v = $('#colSortIndex').val();
+        return v === '' ? 0 : v;
+    }
+
+    //returns the sort direction, based on the hidden value (it comes from the URL)
+    var getSortDirection = function () {
+        var v = $('#colSortDirection').val();
+        return v === '' ? 'asc' : v;
+    }
+
     $('#chkBooksFilter').bootstrapSwitch({
         'handleWidth': 75
     });
     $('#chkBooksFilter').on('switchChange.bootstrapSwitch', (function (event, state) {
-        if ($(this).is(":checked")) {
-            $('#authorsTable').DataTable().ajax.url(_links.fetchAuthorsJson + '?onlyWithBooks=true').load();
-        }
-        else {
-            $('#authorsTable').DataTable().ajax.url(_links.fetchAuthorsJson).load();
-        }
+        $('#authorsTable').DataTable().ajax.url(getJsonUrl());
         
     }));
 
+    //initialize Datatable
     _links.table = $('#authorsTable').DataTable({
         'paging': true,
         'serverSide': true,
         'processing': true,
-        'ajax': _links.fetchAuthorsJson + '?onlyWithBooks=' + $('#chkBooksFilter').is(':checked'),
+        'ajax': getJsonUrl(),
         'columnDefs': [
             {
+                //author link
                 "render": function (data, type, row) {
                     var viewAuthorUrl = _links.viewAuthor + '/' + row[0];
                     return "<a href='" + viewAuthorUrl + "'>" + data + "</a>";
                 },
                 "targets": 1
             }, {
+                //link to the profile of the user that added the author
+                "render": function (data, type, row) {
+                    var viewUserProfileUrl = _links.viewUserProfile + '/' + row[4]; 
+                    return "<a href='" + viewUserProfileUrl + "'>" + data + "</a>";
+                }, targets:4
+            }, {
+                //quick-action button.
                 "render": function (data, type, row) {
                     var singleButton = $('.singleButton');
                     var clone = singleButton.clone();
@@ -39,8 +60,14 @@
                     return data + '&nbsp;' + html;
                 }, targets:5
             }
-        ]
+        ],
+        'order': [[getSortCol(), getSortDirection()]] // use the default sort column and direction 
     });
+
+    //reset sort values to nothing
+    $('#colSortIndex').val('');
+    $('#colSortDirection').val('');
+
 
     $('#authorsTable').on('draw.dt', function () {
         var c = 1;
@@ -85,5 +112,10 @@
                 })
             });
         });
+
+        var sort_col_id = _links.table.order()[0][0];
+        var sort_col_order = _links.table.order()[0][1];
+        var url=_links.current + "?col=" + sort_col_id + "&ord=" + sort_col_order;
+        window.history.pushState("", "Authors", url);
     });
 });

@@ -37,6 +37,11 @@ namespace SDC.web.Controllers
             }
             ViewBag.Breadcrumbs = Breadcrumb.Generate("Authors", "");
 
+            //these values may be missing from the query string.
+            //these will be used by Datatables to "remember" the sorting 
+            ViewBag.ColSortIndex = Request.QueryString["col"];
+            ViewBag.ColSortDirection = Request.QueryString["ord"];
+
             return View();
         }
 
@@ -219,11 +224,15 @@ namespace SDC.web.Controllers
                 var allAuthorsQuery = db.Authors
                     .Where(p => (!filterOnlyWithBooks || p.Books.Count > 0) && (String.IsNullOrEmpty(nameFilter) || p.Name.Contains(nameFilter)))
                     .AsQueryable();
+                
+                string orderByField = TranslateColumnOrderBy(
+                    !String.IsNullOrEmpty(Request.QueryString["col"]) ? Request.QueryString["col"] :
+                    Request.QueryString["order[0][column]"]);
+                string orderDirection = TranslateColumnOrderDirection(
+                    !String.IsNullOrEmpty(Request.QueryString["ord"]) ? Request.QueryString["ord"] :
+                    Request.QueryString["order[0][dir]"]);
 
                 
-                string orderByField = TranslateColumnOrderBy(Request.QueryString["order[0][column]"]);
-                string orderDirection = TranslateColumnOrderDirection(Request.QueryString["order[0][dir]"]);
-
                 var orderedQuery = allAuthorsQuery.OrderByAnyDirection(orderByField, orderDirection);
 
                 int filteredCount = orderedQuery.Count();
@@ -245,7 +254,14 @@ namespace SDC.web.Controllers
                     draw = draw,
                     recordsTotal = filteredCount,
                     recordsFiltered = filteredCount,
-                    data = allAuthors.Select(a => new string[] { a.id, a.name, a.isverified, a.bookcount, a.addedby, a.addeddate.ToString(Library.G.DATE) }).ToArray()
+                    data = allAuthors.Select(a => new string[] {
+                        a.id,
+                        a.name,
+                        a.isverified,
+                        a.bookcount,
+                        a.addedby,
+                        a.addeddate.ToString(Library.G.DATE)
+                    }).ToArray()
                 };
 
                 return Json(o, JsonRequestBehavior.AllowGet);
