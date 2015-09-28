@@ -21,7 +21,10 @@ namespace SDC.data.ViewModels
         public string AddedBy { get; set; }
         public string LastModifiedBy { get; set; }
         public int BookCount { get; set; }
+        public List<BookViewModel> Books { get; set; }
         //link to wikipedia url
         public string ExternalUrl { get; set; }
+
+        public PaginationViewModel Pagination { get; set; }
     }
 }

@@ -44,17 +44,17 @@ namespace SDC.web.Controllers
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            _logger.StartAction(filterContext.ActionDescriptor.UniqueId);
+            //_logger.StartAction(filterContext.ActionDescriptor.UniqueId);
             base.OnActionExecuting(filterContext);
         }
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            _logger.EndAction(
-                filterContext.ActionDescriptor.UniqueId,
-                filterContext.ActionDescriptor.ActionName,
-                filterContext.ActionDescriptor.ControllerDescriptor.ControllerName,
-                filterContext.HttpContext.Response.StatusCode.ToString());
+            //_logger.EndAction(
+            //    filterContext.ActionDescriptor.UniqueId,
+            //    filterContext.ActionDescriptor.ActionName,
+            //    filterContext.ActionDescriptor.ControllerDescriptor.ControllerName,
+            //    filterContext.HttpContext.Response.StatusCode.ToString());
             base.OnActionExecuted(filterContext);
         }
     }

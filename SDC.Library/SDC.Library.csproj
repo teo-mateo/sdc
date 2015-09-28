@@ -89,6 +89,7 @@
   <ItemGroup>
     <Compile Include="DummyDataImport\DataImportViewModel.cs" />
     <Compile Include="DummyDataImport\ImportUtility.cs" />
+    <Compile Include="Extensions\IQueryableExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Helpers\ActivityHelper.cs" />

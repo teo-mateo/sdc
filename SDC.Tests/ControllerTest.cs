@@ -1,9 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rhino.Mocks;
 using SDC.data.Entity;
+using SDC.Tests.Mocks;
 using SDC.web.Controllers;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
@@ -14,6 +16,10 @@ using System.Web.Routing;
 
 namespace SDC.Tests
 {
+    /// <summary>
+    /// base class for all tests that test controllers.
+    /// derive the test class from this and call CreateController
+    /// </summary>
     public class ControllerTest
     {
         [TestInitialize]
@@ -22,73 +28,24 @@ namespace SDC.Tests
             SDC.web.AutoMapperConfig.MappingsConfig.RegisterMappings();
         }
 
-        protected ControllerContext GetContext(ControllerBase c)
+        protected ControllerContext GetContext(
+            ControllerBase c, 
+            NameValueCollection queryString = null)
         {
             //mock the session
             var mockContext = MockRepository.GenerateMock<HttpContextBase>();
-            mockContext.Expect(p => p.Session).Return(new TestSession());
-            mockContext.Expect(p => p.User).Return(new TestPrincipal());
-            return new ControllerContext(mockContext, new RouteData(), c);
+            mockContext.Expect(p => p.Session).Return(new MockSession());
+            mockContext.Expect(p => p.User).Return(new MockPrincipal());
+            mockContext.Expect(p => p.Request).Return(new MockRequest(queryString));
+            return new ControllerContext(mockContext,  new RouteData(), c);
         }
 
-        protected T CreateController<T>() where T : SDCController, new()
+        protected T CreateController<T>(NameValueCollection queryString = null) where T : SDCController, new()
         {
             T controller = Activator.CreateInstance<T>();
-            controller.ControllerContext = GetContext(controller);
+            controller.ControllerContext = GetContext(controller, queryString);
             return controller;
         }
 
-
     }
-
-
-    /// <summary>
-    /// I think I should be able to use mock         ... instead of these
-    /// 
-    /// </summary>
-    public class TestPrincipal : IPrincipal
-    {
-        public IIdentity Identity
-        {
-            get
-            {
-                return new TestIdentity();
-            }
-        }
-
-        public bool IsInRole(string role)
-        {
-            return true;
-        }
-    }
-
-    public class TestIdentity : IIdentity
-    {
-        public string AuthenticationType
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public bool IsAuthenticated
-        {
-            get
-            {
-                return true;
-            }
-        }
-
-        public string Name
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-    }
-
-
-
 }

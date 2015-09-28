@@ -10,6 +10,9 @@ using SDC.data.Entity.Profile;
 using SDC.data.ViewModels;
 using System.Net;
 using SDC.Library.S3;
+using System.Diagnostics;
+using SDC.data.Entity.Books;
+using SDC.Library.Extensions;
 
 namespace SDC.web.Controllers
 {
@@ -43,18 +46,55 @@ namespace SDC.web.Controllers
         /// <param name="id">id of author</param>
         /// <returns>view</returns>
         [HttpGet]
-        public ActionResult ViewAuthor(int id)
+        public ActionResult ViewAuthor(int id, int page=1, int pagesize=0)
         {
+            if (id == 0)
+                return RedirectToAction("Index", "Home");
+
+            var profile = (UserProfile)this.Session["UserInfo"];
+            if (profile == null)
+                return RedirectToAction("Index", "Home");
+
+            if (pagesize < 1 || pagesize > 100)
+                pagesize = profile.PageSize;
 
             using (var db = new SDCContext())
             {
+                profile.UpdatePageSize(db, pagesize);
+
                 var author = db.Authors
                     .Include(a => a.AddedBy)
                     .Include(a => a.LastModifiedBy)
                     .Include(a => a.Books)
-                    .First(a => a.Id == id);
+                    .FirstOrDefault(a => a.Id == id);
+
+                if (author == null)
+                    return RedirectToAction("Index", "Home");
+
+                int totalPages = ((int)Math.Ceiling((double)author.Books.Count / pagesize));
+                if (page > totalPages)
+                    page = totalPages;
 
                 var model = AutoMapper.Mapper.Map<AuthorViewModel>(author);
+
+                //actual pagination takes place here
+                var show_books = author.Books
+                        .OrderBy(b => b.AddedDate)
+                        .Skip((page - 1) * pagesize)
+                        .Take(pagesize)
+                        .Select(b => AutoMapper.Mapper.Map<BookViewModel>(b));
+
+                model.Pagination = new PaginationViewModel()
+                {
+                    Id = author.Id,
+                    Action = "ViewAuthor",
+                    Controller = "Authors",
+                    Page = page,
+                    PageSize = pagesize,
+                    TotalPages = totalPages,
+                    EntityCount = show_books.Count(),
+                    EntityName = "Books"
+                };
 
                 ViewBag.Breadcrumbs = Breadcrumb.Generate(
                     "Authors", Url.Action("Index", "Authors"),
@@ -175,10 +215,21 @@ namespace SDC.web.Controllers
                 int draw = Int32.Parse(this.Request.QueryString["draw"]);
 
                 string nameFilter = Request.QueryString["search[value]"];
-                
-                var allAuthors = db.Authors
+
+                var allAuthorsQuery = db.Authors
                     .Where(p => (!filterOnlyWithBooks || p.Books.Count > 0) && (String.IsNullOrEmpty(nameFilter) || p.Name.Contains(nameFilter)))
-                    .OrderBy(p => p.Name)
+                    .AsQueryable();
+
+                
+                string orderByField = TranslateColumnOrderBy(Request.QueryString["order[0][column]"]);
+                string orderDirection = TranslateColumnOrderDirection(Request.QueryString["order[0][dir]"]);
+
+                var orderedQuery = allAuthorsQuery.OrderByAnyDirection(orderByField, orderDirection);
+
+                int filteredCount = orderedQuery.Count();
+
+                var allAuthors = orderedQuery
+                    .Skip(skip).Take(take)
                     .Select(a => new
                     {
                         id = a.Id.ToString(),
@@ -187,20 +238,61 @@ namespace SDC.web.Controllers
                         bookcount = a.Books.Count.ToString(),
                         addedby = (a.AddedBy != null) ? a.AddedBy.UserName : "-",
                         addeddate = a.AddedDate.Value
-                    })
-                    .ToArray();
-                int recordsTotal = allAuthors.Count();
-                var filtered = allAuthors.Skip(skip).Take(take).ToArray();
+                    }).ToArray();
 
                 var o = new
                 {
                     draw = draw,
-                    recordsTotal = recordsTotal,
-                    recordsFiltered = allAuthors.Length,
-                    data = filtered.Select(a => new string[] { a.id, a.name, a.isverified, a.bookcount, a.addedby, a.addeddate.ToString(Library.G.DATE) }).ToArray()
+                    recordsTotal = filteredCount,
+                    recordsFiltered = filteredCount,
+                    data = allAuthors.Select(a => new string[] { a.id, a.name, a.isverified, a.bookcount, a.addedby, a.addeddate.ToString(Library.G.DATE) }).ToArray()
                 };
 
                 return Json(o, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        /// <summary>
+        /// Translates the column index into the property name by wich the ordering will be done.
+        /// </summary>
+        /// <param name="colIndex">column index</param>
+        /// <returns></returns>
+        private string TranslateColumnOrderBy(string colIndex)
+        {
+            switch (colIndex)
+            {
+                case "0":
+                    return "Id";
+                case "1":
+                    return "Name";
+                case "2":
+                    return "IsVerified";
+                case "3":
+                    return "Books.Count"; 
+                case "4":
+                    return "AddedBy.UserName";
+                case "5":
+                    return "AddedDate";
+                default:
+                    return "Id";
+            }
+        }
+
+        /// <summary>
+        /// Translates the ordering direction into strings more appropriate for Linq.
+        /// </summary>
+        /// <param name="direction">asc/desc</param>
+        /// <returns>OrderBy/OrderByDescending</returns>
+        private string TranslateColumnOrderDirection(string direction)
+        {
+            switch (direction)
+            {
+                case "asc":
+                    return "OrderBy";
+                case "desc":
+                    return "OrderByDescending";
+                default:
+                    return "OrderBy";
             }
         }
     }

@@ -94,7 +94,18 @@ namespace SDC.data.Entity
             //o.Prop = "a property";
         }
 
-
+        public void UpdatePageSize(SDCContext db, int pagesize)
+        {
+            //update profile page size
+            if (pagesize != this.PageSize)
+            {
+                var profile = db.UserProfiles
+                    .Include(p => p.Country)
+                    .FirstOrDefault(p => p.UserId == this.UserId);
+                profile.PageSize = pagesize;
+                db.SaveChanges();
+            }
+        }
     }
 
     public class RegisterExternalLoginModel

@@ -174,16 +174,11 @@ namespace SDC.web.Controllers
 
             using (var db = new SDCContext())
             {
-                db.Configuration.AutoDetectChangesEnabled = false;
-                //update profile page size
-                if (pagesize != profile.PageSize)
-                {
-                    profile = db.UserProfiles
-                        .Include(p => p.Country)
-                        .FirstOrDefault(p => p.UserId == profile.UserId);
-                    profile.PageSize = pagesize;
-                    db.SaveChanges();
-                }
+                profile.UpdatePageSize(db, pagesize);
+
+                ViewBag.Languages = db.Languages.Where(p => p.IsVisible).OrderBy(p => p.Code).ToList();
+                ViewBag.Genres = db.Genres.OrderBy(p => p.Name).ToList();
+
 
                 var shelf = db.Shelves
                     .AsNoTracking()
@@ -194,7 +189,7 @@ namespace SDC.web.Controllers
                     .Include(a => a.Books.Select(b => b.Publisher))
                     .FirstOrDefault(p => p.Id == id);
                 if (shelf == null)
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index", "Home");
 
                 int totalPages = ((int)Math.Ceiling((double)shelf.Books.Count / pagesize));
                 if (page > totalPages)
