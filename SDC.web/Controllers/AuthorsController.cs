@@ -225,12 +225,8 @@ namespace SDC.web.Controllers
                     .Where(p => (!filterOnlyWithBooks || p.Books.Count > 0) && (String.IsNullOrEmpty(nameFilter) || p.Name.Contains(nameFilter)))
                     .AsQueryable();
                 
-                string orderByField = TranslateColumnOrderBy(
-                    !String.IsNullOrEmpty(Request.QueryString["col"]) ? Request.QueryString["col"] :
-                    Request.QueryString["order[0][column]"]);
-                string orderDirection = TranslateColumnOrderDirection(
-                    !String.IsNullOrEmpty(Request.QueryString["ord"]) ? Request.QueryString["ord"] :
-                    Request.QueryString["order[0][dir]"]);
+                string orderByField = TranslateColumnOrderBy(Request.QueryString["order[0][column]"]);
+                string orderDirection = TranslateColumnOrderDirection(Request.QueryString["order[0][dir]"]);
 
                 
                 var orderedQuery = allAuthorsQuery.OrderByAnyDirection(orderByField, orderDirection);
