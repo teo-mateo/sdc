@@ -1206,6 +1206,9 @@
     <Content Include="Views\DataImport\Index.cshtml" />
     <Content Include="Views\DataImport\Import.cshtml" />
     <Content Include="Views\Search\BookSearch.cshtml" />
+    <Content Include="Views\Shared\Search\_BookResult.cshtml" />
+    <Content Include="Views\Shared\Search\_AuthorResult.cshtml" />
+    <Content Include="Views\Shared\Search\_SearchForm.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

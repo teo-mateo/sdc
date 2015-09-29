@@ -10,5 +10,6 @@ namespace SDC.Library.ServiceLayer
     public interface ISDCService
     {
         SearchResultDTO Search(string term, int? userid = null);
+        SearchResultDTO SearchSubset(int id, int page, int pageSize);   
     }
 }

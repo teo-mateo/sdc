@@ -11,13 +11,4 @@
     }
 </ul>
 
-@using (Html.BeginForm("BookSearch", "Search"))
-{
-    <div class="input-group input-group-lg">
-        <input type="text" class="form-control"
-               id="searchTerm" name="searchTerm">
-        <span class="input-group-btn">
-            <button type="submit" class="btn btn-info btn-flat">Go!</button>
-        </span>
-    </div>
-}
+@Html.Partial("Search/_SearchForm", "")

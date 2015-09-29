@@ -104,6 +104,7 @@
     <Compile Include="SDCApplication.cs" />
     <Compile Include="ServiceLayer\ISDCService.cs" />
     <Compile Include="ServiceLayer\SDCService.cs" />
+    <Compile Include="ServiceLayer\SearchCache.cs" />
     <Compile Include="Tools\CopySimpleProperties.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,36 @@
+﻿@model SDC.Library.DTO.SearchResultBookDTO
+
+
+<div class="searchItem">
+    <span class="pull-left lead margin">@Model.Rank</span>
+    <div><h4>@Model.Title</h4></div>
+    <div class="text-sm">
+        by
+        @for (int i = 0; i < Model.Authors.Count; i++)
+        {
+            <a href="#GoToAuthor">@Model.Authors[i].Name</a>
+
+            if(i < Model.Authors.Count-1)
+            {
+                <span>,</span>
+            }
+        }
+        | owned by
+        <a href="#GoToOwner">
+            <img src="@Model.OwnerAvatarUrl" class="img-circle" width="35"> <span class="">@Model.OwnerUserName
+        </a>
+        <a href="#rating">
+            <i class="fa fa-star sdc-icon-y"></i>
+            <i class="fa fa-star sdc-icon-y"></i>
+            <i class="fa fa-star sdc-icon-y"></i>
+            <i class="fa fa-star sdc-icon-y"></i>
+            <i class="fa fa-star sdc-icon-y"></i>
+        </a>
+
+        @foreach (var picUrl in Model.BookPictures)
+        {
+            <img src="@picUrl.Url" class="img-rounded sdc-margin2px" width="40" height="40">
+        }
+
+    </div>
+</div>

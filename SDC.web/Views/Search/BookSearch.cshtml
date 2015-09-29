@@ -1,0 +1,42 @@
+﻿@model SDC.Library.DTO.SearchResultViewModel
+
+@using SDC.Library.DTO;
+
+@Html.Partial("Search/_SearchForm", Model.Result.SearchTerm)
+
+
+
+@if (Model.Result.Id > 0)
+{
+    <h3>Results: @Model.Result.Total</h3>
+    <ul class="list-group">
+        @foreach (var result in Model.Result.Results)
+        {
+            if (result is SearchResultBookDTO)
+            {
+                <li class="list-group-item">
+                    @Html.Partial("Search/_BookResult", result)
+                </li>
+            }
+            else if (result is SearchResultAuthorDTO)
+            {
+                <li class="list-group-item">
+                    @Html.Partial("Search/_AuthorResult", result)
+                </li>
+            }
+        }
+    </ul>
+    <h4>Page: @Model.Pagination.Page </h4>
+    <!-- next page-->
+    <a href='@Url.Action("BookSearch", "Search", new { searchTerm=Model.Result.SearchTerm, searchId=Model.Result.Id, page=Model.Pagination.Page+1 })'>Next page</a>
+
+
+    @Html.Partial("_Pagination", Model.Pagination)
+}
+else
+{
+    <h4>Invalid search.</h4>
+    <p>Search for a word of at least 3 characters.</p>
+
+}
+
