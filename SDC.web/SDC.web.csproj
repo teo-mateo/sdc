@@ -1155,6 +1155,7 @@
     <Compile Include="Controllers\PublicProfilesController.cs" />
     <Compile Include="Controllers\SDCAsyncController.cs" />
     <Compile Include="Controllers\SDCController.cs" />
+    <Compile Include="Controllers\Search\SearchController.cs" />
     <Compile Include="Controllers\ShelvesController.cs" />
     <Compile Include="Controllers\WishlistController.cs" />
     <Compile Include="Filters\MyActionFilterAttribute.cs" />
@@ -1204,6 +1205,7 @@
     <Content Include="Views\PublicProfiles\View.cshtml" />
     <Content Include="Views\DataImport\Index.cshtml" />
     <Content Include="Views\DataImport\Import.cshtml" />
+    <Content Include="Views\Search\BookSearch.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

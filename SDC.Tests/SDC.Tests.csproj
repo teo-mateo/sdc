@@ -112,6 +112,7 @@
     <Compile Include="MiscTests.cs" />
     <Compile Include="Mocks\TestSession.cs" />
     <Compile Include="ControllerActionLoggerTests.cs" />
+    <Compile Include="SDCService\SDCService_Tests.cs" />
     <Compile Include="Utility\U.cs" />
   </ItemGroup>
   <ItemGroup>

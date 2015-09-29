@@ -4,6 +4,7 @@ using SDC.data.Entity.Audit;
 using SDC.data.Entity.Books;
 using SDC.data.Entity.Location;
 using SDC.data.Entity.Profile;
+using SDC.data.Entity.Search;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -14,17 +15,19 @@ namespace SDC.data
 {
     public class SDCContext : DbContext
     {
-        public void AttachProfile(UserProfile o)
+        public UserProfile AttachProfile(UserProfile profile)
         {
-            if (Set<UserProfile>().Local.Any(local => o == local))
+            if (Set<UserProfile>().Local.Any(local => profile == local))
             {
-                Entry<UserProfile>(o).State = EntityState.Unchanged;
+                Entry<UserProfile>(profile).State = EntityState.Unchanged;
             }
             else
             {
-                Set<UserProfile>().Attach(o);
-                Entry<UserProfile>(o).State = EntityState.Unchanged;
+                Set<UserProfile>().Attach(profile);
+                Entry<UserProfile>(profile).State = EntityState.Unchanged;
             }
+
+            return profile;
         }
 
         public void Attach<T>(T o) where T : class, IEntity
@@ -102,5 +105,7 @@ namespace SDC.data
 
         public DbSet<Settings> Settings { get; set; }
         public DbSet<Activity> Activities { get; set; }
+
+        public DbSet<BookSearch> BookSearches { get; set; }
     }
 }

@@ -96,20 +96,28 @@
             }
 
             b.find('.lnkDelete').click(function (args) {
-                var deleteAuthorUrl = _links.deleteAuthor + '/' + b.attr('data-auth-id');
-                $.ajax({
-                    url: deleteAuthorUrl,
-                    type: 'POST',
-                    success: function (response) {
-                        //just reload for now. 
-                        //todo: figure out how to remove just this row. 
-                        //idea: remove it from the json and then refresh the table
-                        location.reload();
-                    },
-                    error: function (response) {
-                        toastr.error('error deleting author');
+                bootbox.confirm(
+                "Delete this author and all his books?", function (result) {
+                    if (result) {
+
+                        var deleteAuthorUrl = _links.deleteAuthor + '/' + b.attr('data-auth-id');
+                        $.ajax({
+                            url: deleteAuthorUrl,
+                            type: 'POST',
+                            success: function (response) {
+                                //on success, remove row. b is the button group.
+                                var row = _links.table.row(b.parent().parent());
+                                row.remove();
+                                _links.table.draw();
+                            },
+                            error: function (response) {
+                                toastr.error('error deleting author');
+                            }
+                        })
                     }
-                })
+                });
+
+
             });
         });
 

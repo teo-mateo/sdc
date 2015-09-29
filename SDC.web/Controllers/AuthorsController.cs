@@ -196,6 +196,7 @@ namespace SDC.web.Controllers
                 {
                     var author = db.Authors.Find(id);
                     author.IsVerified = true;
+                    author.LastModifiedBy = db.AttachProfile(profile);
                     db.SaveChanges();
                 }
 

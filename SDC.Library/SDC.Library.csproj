@@ -87,6 +87,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTO\SearchResultDTO.cs" />
     <Compile Include="DummyDataImport\DataImportViewModel.cs" />
     <Compile Include="DummyDataImport\ImportUtility.cs" />
     <Compile Include="Extensions\IQueryableExtensions.cs" />
@@ -101,6 +102,8 @@
     <Compile Include="Redis\ActivityTracker.cs" />
     <Compile Include="S3\S3.cs" />
     <Compile Include="SDCApplication.cs" />
+    <Compile Include="ServiceLayer\ISDCService.cs" />
+    <Compile Include="ServiceLayer\SDCService.cs" />
     <Compile Include="Tools\CopySimpleProperties.cs" />
   </ItemGroup>
   <ItemGroup>
